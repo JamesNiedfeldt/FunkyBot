@@ -5,3 +5,4 @@ FunkyBot/token.txt
 FunkyBot/__pycache__
 !FunkyBot/reaction_pics/.gitkeep
 !FunkyBot/shiba_pics/.gitkeep
+!FunkyBot/Logs/.gitkeep

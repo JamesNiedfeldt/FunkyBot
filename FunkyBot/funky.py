@@ -5,7 +5,7 @@ import funktions
 
 #==== Definitions ====
 client = discord.Client()
-version = "1.2.1"
+version = "1.2.2"
 with open('Lists/blacklist.txt','r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()

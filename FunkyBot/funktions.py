@@ -170,7 +170,7 @@ def fetchCard(message):
 
 #==== Send random reaction image ====
 def reactionPic():
-    pics = os.listdir("Reaction pics") #Paths to images
+    pics = os.listdir("reaction_pics") #Paths to images
     selection = "" #Image path to post
     found = False #Image found or not
 
@@ -178,7 +178,8 @@ def reactionPic():
         validFolder(pics) #Check if folder is empty
         while not found: #Search for a valid file path
             selection = random.choice(pics)
-            if selection != "Thumbs.db":
+            if (selection != "Thumbs.db" and
+                selection != ".gitkeep"):
                 found = True
                 return ("Reaction pics/%s" % selection)
     except RuntimeError: #Folder is empty
@@ -236,7 +237,7 @@ def rollDice(message):
 
 #==== Send random Shiba Inu picture ====
 def shibaPic():
-    pics = os.listdir("Shiba pics") #Paths to images
+    pics = os.listdir("shiba_pics") #Paths to images
     selection = "" #Image path to post
     found = False #Image found or not
 
@@ -244,7 +245,8 @@ def shibaPic():
         validFolder(pics) #Check if folder is empty
         while not found: #Search for a valid file path
             selection = random.choice(pics)
-            if selection != "Thumbs.db":
+            if (selection != "Thumbs.db" and
+                selection != ".gitkeep"):
                 found = True
                 return ("Shiba pics/%s" % selection)
     except RuntimeError: #Folder is empty

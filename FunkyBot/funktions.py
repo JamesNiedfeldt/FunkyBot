@@ -74,7 +74,7 @@ def sayHello(sender,version,uptime):
     **Current uptime:** %s 
     """ % (sender.display_name, version, formatTime(uptime)))
 
-#==== Send a help .pdf ====
+#==== Send a help message ====
 def sendHelp(message):
     #Parse command
     command = parse(message.content)
@@ -181,7 +181,7 @@ def reactionPic():
             if (selection != "Thumbs.db" and
                 selection != ".gitkeep"):
                 found = True
-                return ("Reaction pics/%s" % selection)
+                return ("reaction_pics/%s" % selection)
     except RuntimeError: #Folder is empty
         raise
 
@@ -248,7 +248,7 @@ def shibaPic():
             if (selection != "Thumbs.db" and
                 selection != ".gitkeep"):
                 found = True
-                return ("Shiba pics/%s" % selection)
+                return ("shiba_pics/%s" % selection)
     except RuntimeError: #Folder is empty
         raise
 

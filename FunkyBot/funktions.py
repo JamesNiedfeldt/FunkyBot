@@ -12,7 +12,7 @@ import funkyHelp
 
 #==== Answer a yes/no question ====
 def eightBall():
-    file = open('Lists/answers.txt', 'r')
+    file = open(filePath('Lists/answers.txt'), 'r')
     answers = file.readlines()
     randInt = random.randint(0, (len(answers)) - 1)
     file.close()
@@ -27,9 +27,9 @@ def toBin(message):
     number = parse(message.content)
     
     if len(number) == 0: #Nothing to convert
-        return("I couldn't understand your command!")
+        return "I couldn't understand your command!"
     elif len(number) > 1: #Too many numbers
-        return("I can only convert one number!")
+        return "I can only convert one number!"
     
     for i in set(number): number = i #Change number back to int
 
@@ -42,12 +42,12 @@ def toBin(message):
                 remainder = quotient % 2
                 quotient = int((quotient - remainder) / 2)
                 value = str(remainder)+value
-            return("%s in binary is: %s" % (number, value))
+            return "%s in binary is: %s" % (number, value)
         
     except TypeError: #Non-integer sent
-        return("Sorry, I can't convert %s to binary!" % number)
+        return "Sorry, I can't convert %s to binary!" % number
     except ValueError: #Non-integer sent or invalid number
-        return("Sorry, I can't convert %s to binary!" % number)
+        return "Sorry, I can't convert %s to binary!" % number
 
 #==== Choose randomly from choices ====
 def choose(message):
@@ -55,15 +55,15 @@ def choose(message):
     choices = parse(message.content)
 
     if len(choices) == 0: #No choices
-        return("I couldn't understand your command!")
+        return "I couldn't understand your command!"
     elif len(choices) == 1: #Not enough choices
-        return("I need more than one thing to choose from!")
+        return "I need more than one thing to choose from!"
     elif len(choices) > 10: #Too many choices
-        return("There are too many things to choose from!")
+        return "There are too many things to choose from!"
 
     #for i in set(choices): choices[i] = i #Turn back to strings
 
-    return("I choose %s!" % choices[random.randint(0,len(choices)-1)])
+    return "I choose %s!" % choices[random.randint(0,len(choices)-1)]
     
 #==== Introduce FunkyBot ====
 def sayHello(sender,version,uptime):
@@ -80,12 +80,12 @@ def sendHelp(message):
     command = parse(message.content)
 
     if len(command) == 0: #Nothing to help with
-        return("I couldn't understand the command! Make sure you send a single command you want help with in double brackets and don't include options. For example: `!help [[!binary]]`")
+        return "I couldn't understand the command! Make sure you send a single command you want help with in double brackets and don't include options. For example: `!help [[!binary]]`"
     elif len(command) > 1: #Too many commands
-        return("I can only help you with one command at a time!")
+        return "I can only help you with one command at a time!"
     else:
         for i in set(command): command = i #Change back to string
-        return(funkyHelp.getHelp(command))
+        return funkyHelp.getHelp(command)
     
 #==== Get a list of commands ====
 def commandList():
@@ -106,9 +106,9 @@ def toHex(message):
     number = parse(message.content)
 
     if len(number) == 0: #Nothing to convert
-        return("I couldn't understand your command!")
+        return "I couldn't understand your command!"
     elif len(number) > 1: #Too many numbers
-        return("I can only convert one number!")
+        return "I can only convert one number!"
 
     for i in set(number): number = i #Change number back to int
 
@@ -123,16 +123,16 @@ def toHex(message):
                 if remainder >= 10:
                     remainder = chr(remainder + 55)
                 value = str(remainder)+value
-            return("%s in hexadecimal is: %s" % (number, value))
+            return "%s in hexadecimal is: %s" % (number, value)
         
     except TypeError: #Non-integer sent
-        return("Sorry, I can't convert %s to hexadecimal!" % number)
+        return "Sorry, I can't convert %s to hexadecimal!" % number
     except ValueError: #Non-integer sent or invalid number
-        return("Sorry, I can't convert %s to hexadecimal!" % number)
+        return "Sorry, I can't convert %s to hexadecimal!" % number
 
 #==== Tell a joke ====
 def findOneLiner():
-    file = open('Lists/jokes.txt', 'r')
+    file = open(filePath('Lists/jokes.txt'), 'r')
     jokes = file.readlines()
     randInt = random.randint(0, (len(jokes)) - 1)
     file.close()
@@ -170,7 +170,7 @@ def fetchCard(message):
 
 #==== Send random reaction image ====
 def reactionPic():
-    pics = os.listdir("reaction_pics") #Paths to images
+    pics = os.listdir(filePath("reaction_pics/")) #Paths to images
     selection = "" #Image path to post
     found = False #Image found or not
 
@@ -181,13 +181,13 @@ def reactionPic():
             if (selection != "Thumbs.db" and
                 selection != ".gitkeep"):
                 found = True
-                return ("reaction_pics/%s" % selection)
+                return filePath("reaction_pics/%s" % selection)
     except RuntimeError: #Folder is empty
         raise
 
 #==== Rate something ====
 def rateSomething(message):
-    with open('Lists/ratings.txt','r') as file:
+    with open(filePath('Lists/ratings.txt'),'r') as file:
         ratings = file.readlines()
         file.close()
     score = random.randint(1, 10)
@@ -196,20 +196,20 @@ def rateSomething(message):
     toRate = parse(message.content)
 
     if len(toRate) == 0: #Nothing to rate
-        return("I couldn't understand your command!")
+        return "I couldn't understand your command!"
     elif len(toRate) > 1: #Too many things to rate
-        return("I can only rate one thing!")
+        return "I can only rate one thing!"
 
     for i in set(toRate): toRate = i #Change back to string
 
     if toRate.upper() in {
         "FUNKYBOT","FUNKY","YOU"}:
-        return("I give myself an 11/10. Literally the best ever.")
+        return "I give myself an 11/10. Literally the best ever." 
     elif toRate.upper() in {
         "ME","MYSELF"}:
-        return("I give %s a %s out of 10. %s" % (message.author.display_name, score, ratings[score-1]))
+        return "I give %s a %s out of 10. %s" % (message.author.display_name, score, ratings[score-1])
     else:
-        return("I give %s a %s out of 10. %s" % (toRate, score, ratings[score-1]))
+        return "I give %s a %s out of 10. %s" % (toRate, score, ratings[score-1])
 
 #==== Roll a die ====
 def rollDice(message):
@@ -217,9 +217,9 @@ def rollDice(message):
     number = parse(message.content)
 
     if len(number) == 0: #No number to roll
-        return("I couldn't understand your command!")
+        return "I couldn't understand your command!"
     elif len(number) > 1: #Too many dies to roll
-        return("I can only roll one die!")
+        return "I can only roll one die!"
     
     for i in set(number): number = i #Convert back to a number
     
@@ -228,16 +228,16 @@ def rollDice(message):
         if number <= 0 or number > 1000:
             raise ValueError('Invalid number')
         else:
-            return("You rolled %s!" % random.randint(1,number))
+            return "You rolled %s!" % random.randint(1,number)
         
     except TypeError: #Non-integer sent
-        return("I can't roll a die with %s sides!" % number)
+        return "I can't roll a die with %s sides!" % number
     except ValueError: #Non-integer sent or invalid number
-        return("I can't roll a die with %s sides!" % number)
+        return "I can't roll a die with %s sides!" % number
 
 #==== Send random Shiba Inu picture ====
 def shibaPic():
-    pics = os.listdir("shiba_pics") #Paths to images
+    pics = os.listdir(filePath("shiba_pics/")) #Paths to images
     selection = "" #Image path to post
     found = False #Image found or not
 
@@ -248,7 +248,7 @@ def shibaPic():
             if (selection != "Thumbs.db" and
                 selection != ".gitkeep"):
                 found = True
-                return ("shiba_pics/%s" % selection)
+                return filePath("shiba_pics/%s" % selection)
     except RuntimeError: #Folder is empty
         raise
 
@@ -273,7 +273,7 @@ def parse(string):
 #==== Log deleted messages ====
 def logMessage(message):
     try:
-        log = open('Logs/'+str(message.server)+'-log.txt','a+')
+        log = open(filePath('Logs/'+str(message.server)+'-log.txt'),'a+')
         toLog = "%s - %s - %s: %s\n" % (message.timestamp.strftime("%Y-%b-%d %H:%M"),message.channel,message.author.name,message.content)
         log.write(toLog)
         log.close()
@@ -300,4 +300,12 @@ def formatTime(inTime):
     hours = int((totalSec % 86400) / 3600)
     days = int(totalSec / 86400)
 
-    return("%s days, %s hours, %s minutes, and %s seconds" % (days, hours, minutes, seconds))
+    formatted = "%s days, %s hours, %s minutes, and %s seconds" % (days, hours, minutes, seconds)
+
+    return formatted
+
+#==== Return relative path ====
+def filePath(directory):
+    absolute = os.path.abspath(os.path.dirname(__file__))
+    path = os.path.join(absolute, directory)
+    return path

@@ -5,8 +5,8 @@ import funktions
 
 #==== Definitions ====
 client = discord.Client()
-version = "1.2.2"
-with open('Lists/blacklist.txt','r') as o: #Load blacklist
+version = "1.2.3"
+with open(funktions.filePath("Lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
     o.close()
@@ -100,7 +100,7 @@ async def on_message(message):
             await client.send_message(message.channel, "I didn't find any images!")
 
 #==== Log on ====
-with open('token.txt','r') as o:
+with open(funktions.filePath("token.txt"),'r') as o:
     token = o.readline()
     client.run(token)
     o.close()

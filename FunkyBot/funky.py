@@ -5,7 +5,7 @@ import funktions
 
 #==== Definitions ====
 client = discord.Client()
-version = "1.2.3"
+version = "1.2.4"
 with open(funktions.filePath("Lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
@@ -71,9 +71,9 @@ async def on_message(message):
         try: 
             message.content.encode('ascii','strict')
             message.author.name.encode('ascii','strict')
-            try: 
-                await client.delete_message(message)
+            try:
                 funktions.logMessage(message)
+                await client.delete_message(message)
             except discord.errors.Forbidden: #Can't delete
                 pass
         except UnicodeEncodeError: #There is a non-ASCII char in name/message

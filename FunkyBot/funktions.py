@@ -80,7 +80,11 @@ def sendHelp(message):
     command = parse(message.content)
 
     if len(command) == 0: #Nothing to help with
-        return "I couldn't understand the command! Make sure you send a single command you want help with in double brackets and don't include options. For example: `!help [[!binary]]`"
+        return """
+I couldn't understand the command! Make sure you send a single command you want help with in double brackets and don't include options. For example: `!help [[!binary]]`
+
+If you want a list of commands, send `!commands`.
+    """
     elif len(command) > 1: #Too many commands
         return "I can only help you with one command at a time!"
     else:

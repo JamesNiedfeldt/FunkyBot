@@ -68,17 +68,13 @@ async def on_message(message):
 
     #Send a random reaction image
     elif message.content.startswith('!react'):
-        try: 
-            message.content.encode('ascii','strict')
-            message.author.name.encode('ascii','strict')
-            try:
-                funktions.logMessage(message)
-                await client.delete_message(message)
-            except discord.errors.Forbidden: #Can't delete
-                pass
-        except UnicodeEncodeError: #There is a non-ASCII char in name/message
+        try:
+            funktions.logMessage(message)
+            await client.delete_message(message)
+        except discord.errors.Forbidden: #Can't delete
             pass
-
+        except UnicodeError: #There is a non-ASCII char in name/message
+            pass
         try:
             await client.send_file(message.channel, funktions.reactionPic())
         except RuntimeError: #If there are no valid images

@@ -281,7 +281,7 @@ def logMessage(message):
         toLog = "%s - %s - %s: %s\n" % (message.timestamp.strftime("%Y-%b-%d %H:%M"),message.channel,message.author.name,message.content)
         log.write(toLog)
         log.close()
-    except UnicodeEncodeError: #Message or username contains non-unicode char
+    except UnicodeError: #Message or username contains non-unicode char
         raise
 
 #==== Check directories for valid images ====

@@ -1,0 +1,7 @@
+Here's how to use `!help`:
+
+This is the command you're using! Send `!help [[X]]` to have me explain a command in detail.
+- For example, to get an explanation of the `!binary` command, you should send: `!help [[!binary]]`.
+- You can also send just the name of the command without the ! character.
+- I can only send an explanation of one command at a time.
+- For commands with options in double brackets, you just need to send the name of the command. Don't send any brackets.

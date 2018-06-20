@@ -1,0 +1,4 @@
+Here's how to use `!react`:
+
+Send `!react` to have me send a random reaction image.
+- If I am allowed to delete messages, the message you send will be deleted and its contents logged on my server.

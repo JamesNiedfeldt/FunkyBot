@@ -1,0 +1,5 @@
+Here's how to use `!binary`:
+
+Send `!binary [[X]]` to have me convert your number to binary.
+- For example, to convert 5 to binary, you should send: `!binary [[5]]`.
+- I can only convert one number at a time and no numbers higher than 1024.

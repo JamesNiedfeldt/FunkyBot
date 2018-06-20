@@ -1,0 +1,6 @@
+Here's how to use `!choose`:
+
+Send `!choose [[X|Y|...]]` to have me choose from your options.
+- For example, to choose from cats or dogs, you should send: `!choose [[cats|dogs]]`.
+- I need at least two choices to choose from, but you can send up to ten.
+- Make sure you separate each choice by using the | character.

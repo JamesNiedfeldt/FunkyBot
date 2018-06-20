@@ -1,0 +1,3 @@
+Here's how to use `!shibe`:
+
+Send `!shibe` to have me send a random picture of a shiba inu.

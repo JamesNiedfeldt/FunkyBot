@@ -73,20 +73,23 @@ def sayHello(sender,version,uptime):
 
 #==== Send a help message ====
 def sendHelp(message):
-        #Parse command
+            #Parse command
     command = parse(message.content)
 
     if len(command) == 0: #Nothing to help with
-        return """
-I couldn't understand the command! Make sure you send a single command you want help with in double brackets and don't include options. For example: `!help [[!binary]]`
-
-If you want a list of commands, send `!commands`.
-    """
+        return badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."
     elif len(command) > 1: #Too many commands
         return "I can only help you with one command at a time!"
     else:
         for i in set(command): command = i #Change back to string
-        return funkyHelp.getHelp(command)
+        if(command.startswith("!")):
+            command = command[1:]
+        try:
+            with open(filePath(('help_files/%s.txt' % command)), 'r') as file:
+                toReturn = file.read()
+        except FileNotFoundError:
+            toReturn = badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."
+        return toReturn
     
 #==== Get a list of commands ====
 def commandList():

@@ -6,10 +6,9 @@ import funktions
 #==== Definitions ====
 client = discord.Client()
 version = "1.2.4"
-with open(funktions.filePath("Lists/blacklist.txt"), 'r') as o: #Load blacklist
+with open(funktions.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
-    o.close()
 begin = funktions.upTime() #Time when Funky begins running
 
 #==== Alert that Funky is ready ====

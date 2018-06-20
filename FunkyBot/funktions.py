@@ -12,10 +12,9 @@ import funkyHelp
 
 #==== Answer a yes/no question ====
 def eightBall():
-    file = open(filePath('Lists/answers.txt'), 'r')
-    answers = file.readlines()
-    randInt = random.randint(0, (len(answers)) - 1)
-    file.close()
+    with open(filePath('lists/answers.txt'), 'r') as file:
+        answers = file.readlines()
+        randInt = random.randint(0, (len(answers)) - 1)
 
     return answers[randInt]
 
@@ -27,7 +26,7 @@ def toBin(message):
     number = parse(message.content)
     
     if len(number) == 0: #Nothing to convert
-        return "I couldn't understand your command!"
+        return badArgs("binary")
     elif len(number) > 1: #Too many numbers
         return "I can only convert one number!"
     
@@ -55,13 +54,11 @@ def choose(message):
     choices = parse(message.content)
 
     if len(choices) == 0: #No choices
-        return "I couldn't understand your command!"
+        return badArgs("choose")
     elif len(choices) == 1: #Not enough choices
         return "I need more than one thing to choose from!"
     elif len(choices) > 10: #Too many choices
         return "There are too many things to choose from!"
-
-    #for i in set(choices): choices[i] = i #Turn back to strings
 
     return "I choose %s!" % choices[random.randint(0,len(choices)-1)]
     
@@ -76,7 +73,7 @@ def sayHello(sender,version,uptime):
 
 #==== Send a help message ====
 def sendHelp(message):
-    #Parse command
+        #Parse command
     command = parse(message.content)
 
     if len(command) == 0: #Nothing to help with
@@ -110,7 +107,7 @@ def toHex(message):
     number = parse(message.content)
 
     if len(number) == 0: #Nothing to convert
-        return "I couldn't understand your command!"
+        return badArgs("hex")
     elif len(number) > 1: #Too many numbers
         return "I can only convert one number!"
 
@@ -136,10 +133,9 @@ def toHex(message):
 
 #==== Tell a joke ====
 def findOneLiner():
-    file = open(filePath('Lists/jokes.txt'), 'r')
-    jokes = file.readlines()
+    with open(filePath('lists/jokes.txt'), 'r') as file:
+        jokes = file.readlines()
     randInt = random.randint(0, (len(jokes)) - 1)
-    file.close()
 
     return jokes[randInt]
 
@@ -155,7 +151,7 @@ def fetchCard(message):
         toReturn.append("That's too many cards to search for!")
         return list(toReturn)
     elif len(cards) == 0: #Nothing to search for
-        toReturn.append("I couldn't understand your command!")
+        toReturn.append(badArgs("magic"))
         return list(toReturn)
     for i in set(cards):
         i = i.split('/')[0]
@@ -191,16 +187,15 @@ def reactionPic():
 
 #==== Rate something ====
 def rateSomething(message):
-    with open(filePath('Lists/ratings.txt'),'r') as file:
+    with open(filePath('lists/ratings.txt'),'r') as file:
         ratings = file.readlines()
-        file.close()
     score = random.randint(1, 10)
     
     #Parse string
     toRate = parse(message.content)
 
     if len(toRate) == 0: #Nothing to rate
-        return "I couldn't understand your command!"
+        return badArgs("rate")
     elif len(toRate) > 1: #Too many things to rate
         return "I can only rate one thing!"
 
@@ -221,7 +216,7 @@ def rollDice(message):
     number = parse(message.content)
 
     if len(number) == 0: #No number to roll
-        return "I couldn't understand your command!"
+        return badArgs("roll")
     elif len(number) > 1: #Too many dies to roll
         return "I can only roll one die!"
     
@@ -277,10 +272,9 @@ def parse(string):
 #==== Log deleted messages ====
 def logMessage(message):
     try:
-        log = open(filePath('Logs/'+str(message.server)+'-log.txt'),'a+')
-        toLog = "%s - %s - %s: %s\n" % (message.timestamp.strftime("%Y-%b-%d %H:%M"),message.channel,message.author.name,message.content)
-        log.write(toLog)
-        log.close()
+        with open(filePath('logs/'+str(message.server)+'-log.txt'),'a+') as log:
+            toLog = "%s - %s - %s: %s\n" % (message.timestamp.strftime("%Y-%b-%d %H:%M"),message.channel,message.author.name,message.content)
+            log.write(toLog)
     except UnicodeError: #Message or username contains non-unicode char
         raise
 
@@ -313,3 +307,8 @@ def filePath(directory):
     absolute = os.path.abspath(os.path.dirname(__file__))
     path = os.path.join(absolute, directory)
     return path
+
+#==== Error in command arguments ====
+def badArgs(command):
+    message = ("I couldn't understand your command! If you need help, send `!help [[!%s]]`." % command)
+    return message

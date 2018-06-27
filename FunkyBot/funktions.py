@@ -8,7 +8,7 @@ import re
 import urllib.request, urllib.error
 import os
 import time
-import funkyHelp
+import reminder
 
 #==== Answer a yes/no question ====
 def eightBall():
@@ -253,6 +253,43 @@ def shibaPic():
                 return filePath("shiba_pics/%s" % selection)
     except RuntimeError: #Folder is empty
         raise
+
+#==== Create a Reminder ====
+def makeReminder(message):
+    timer = reminder.Reminder(time.time())
+    request = message.content
+    duration = 0
+    parts = parse(request)
+
+    if(len(parts) != 1):
+        duration = 30
+    else:
+        for i in set(parts): parts = i
+        try:
+            parts = float(parts)
+            duration = parts * 60
+        except ValueError:
+            duration = 30
+
+    request = re.sub("\[\[.*\]\]","",request)
+    request = request.replace("!remind","")
+    if(request[0] == " "):
+        request = request[1:]
+    
+    timer.setMessage(request)
+    timer.setDuration(duration)
+    timer.setAuthor(message.author)
+    timer.setChannel(message.channel)
+    timer.setFormattedMessage()
+    return timer
+
+#==== Send confirmation message of reminder ====
+def confirmReminder(message,reminder):
+    if(reminder.live):
+        return "Ok %s, I will remind you in %.2f minutes." % (
+            message.author.display_name,(reminder.duration/60))
+    else:
+        return "Something went wrong."
 
 #==== NON-COMMAND METHODS ====
 

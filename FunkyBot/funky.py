@@ -10,6 +10,7 @@ with open(funktions.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
 begin = funktions.upTime() #Time when Funky begins running
+reminders = []
 
 #==== Alert that Funky is ready ====
 @client.event
@@ -94,6 +95,12 @@ async def on_message(message):
         except RuntimeError: #No valid images
             await client.send_message(message.channel, "I didn't find any images!")
 
+    elif message.content.startswith('!remind'):
+        reminder = funktions.makeReminder(message)
+        func = client.send_message(message.channel, reminder.formattedMessage)
+        reminder.beginThread(func,asyncio.get_event_loop())
+        await client.send_message(message.channel, funktions.confirmReminder(message,reminder))
+        
 #==== Log on ====
 with open(funktions.filePath("token.txt"),'r') as o:
     token = o.readline()

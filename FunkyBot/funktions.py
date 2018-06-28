@@ -69,11 +69,11 @@ def sayHello(sender,version,uptime):
 
     **Current version:** %s 
     **Current uptime:** %s 
-    """ % (sender.display_name, version, formatTime(uptime)))
+    """ % (sender.display_name, version, formatTime(time.time(),offset=uptime)))
 
 #==== Send a help message ====
 def sendHelp(message):
-            #Parse command
+    #Parse command
     command = parse(message.content)
 
     if len(command) == 0: #Nothing to help with
@@ -255,33 +255,54 @@ def shibaPic():
         raise
 
 #==== Create a Reminder ====
-def makeReminder(message):
+def makeReminder(message,func):
     timer = reminder.Reminder(time.time())
-    request = message.content
+    request = re.sub("(\[\[.*\]\])|(!remind)","",message.content)
     duration = 0
-    parts = parse(request)
+    timeArgs = parse(message.content)
 
-    if(len(parts) != 1):
+    if(len(timeArgs) == 0):
+        return "I need a time to remind you after!"
+
+    if(len(timeArgs) < 1):
         duration = 30
     else:
-        for i in set(parts): parts = i
-        try:
-            parts = float(parts)
-            duration = parts * 60
-        except ValueError:
-            duration = 30
+        if(len(timeArgs) > 3):
+            timeArgs = timeArgs[0:3]
+        for i in set(timeArgs):
+            timeArgs = i
+            if('s' in i):
+                i = "".join(re.split("\D",i))
+                duration = duration + float(i)
+            elif('m' in i):
+                i = "".join(re.split("\D",i))
+                duration = duration + float(i)*60
+            elif('h' in i):
+                i = "".join(re.split("\D",i))
+                duration = duration + float(i)*3600
+            elif('d' in i):
+                i = "".join(re.split("\D",i))
+                duration = duration + float(i)*86400
 
-    request = re.sub("\[\[.*\]\]","",request)
-    request = request.replace("!remind","")
-    if(request[0] == " "):
+    #Max of 7 days
+    if(duration > 604800):
+        duration = 604800
+    elif(duration == 0):
+        duration = 300
+
+    if(request[0] == " " and request != ""):
         request = request[1:]
     
-    timer.setMessage(request)
-    timer.setDuration(duration)
-    timer.setAuthor(message.author)
-    timer.setChannel(message.channel)
+    timer.message = request
+    timer.duration = duration
+    timer.author = message.author
+    timer.channel = message.channel
     timer.setFormattedMessage()
-    return timer
+    timer.beginThread(func(timer.formattedMessage))
+
+    if(timer.live):
+        return "Ok %s, I will remind you in %s." % (
+            message.author.display_name,formatTime(duration))
 
 #==== Send confirmation message of reminder ====
 def confirmReminder(message,reminder):
@@ -330,8 +351,8 @@ def upTime():
     return time.time()
 
 #==== Format uptime ====
-def formatTime(inTime):
-    totalSec = int(time.time() - inTime)
+def formatTime(time,offset=0):
+    totalSec = int(time - offset)
 
     seconds = totalSec % 60
     minutes = int((totalSec % 3600) / 60)

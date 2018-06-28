@@ -49,29 +49,17 @@ class Reminder():
         if(db == None):
             dbConnect()
 
-    def setMessage(self,message):
-        self.message = message
-
-    def setDuration(self,duration):
-        self.duration = duration
-
-    def setAuthor(self,author):
-        self.author = author
-
-    def setChannel(self,channel):
-        self.channel = channel
-
     def setFormattedMessage(self):
         self.formattedMessage = "%s %s" % (self.author.mention,self.message)
 
-    def beginThread(self,func,loop):
+    def beginThread(self,func):
         self.func = func
         self.live = True
         asyncio.ensure_future(self.run())
 
     @asyncio.coroutine
     async def run(self):
-        print("started thread")
+        #print("started thread")
         self.begin = time.time()
         while(self.live):
             if(time.time() >= self.begin + self.duration):

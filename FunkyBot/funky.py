@@ -5,7 +5,7 @@ import funktions
 
 #==== Definitions ====
 client = discord.Client()
-version = "1.2.4"
+version = "1.3.0 beta"
 with open(funktions.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
@@ -95,11 +95,10 @@ async def on_message(message):
         except RuntimeError: #No valid images
             await client.send_message(message.channel, "I didn't find any images!")
 
+    #Setup a reminder
     elif message.content.startswith('!remind'):
-        reminder = funktions.makeReminder(message)
-        func = client.send_message(message.channel, reminder.formattedMessage)
-        reminder.beginThread(func,asyncio.get_event_loop())
-        await client.send_message(message.channel, funktions.confirmReminder(message,reminder))
+        func = lambda msg: client.send_message(message.channel, msg)
+        await client.send_message(message.channel, funktions.makeReminder(message,func))        
         
 #==== Log on ====
 with open(funktions.filePath("token.txt"),'r') as o:

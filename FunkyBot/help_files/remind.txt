@@ -1,0 +1,12 @@
+Here's how to use `!remind`:
+
+Send `!remind [[x|x|x]]` to have me send a notification to you after the set time.
+- Time can be set with s(econds), m(inutes), h(ours), and d(ays).
+- Time cannot exceed 7 days.
+- Separate each argument in the brackets with the | character.
+- I can only take the first three arguments you give me.
+- You can set a custom message by typing anywhere in the message outside the brackets.
+- If you enter arguments wrong, I will set a default time.
+- For example, to set a reminder to go to sleep in 2 and a half hours, send `!remind [[2h|30m]] go to sleep`.
+
+This is an experimental command, so it may be missing features or not work quite properly!

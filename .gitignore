@@ -3,6 +3,7 @@ FunkyBot/reaction_pics/**
 FunkyBot/shiba_pics/**
 FunkyBot/token.txt
 FunkyBot/__pycache__
+FunkyBot/reminders.db
 !FunkyBot/reaction_pics/.gitkeep
 !FunkyBot/shiba_pics/.gitkeep
 !FunkyBot/Logs/.gitkeep

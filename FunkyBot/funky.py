@@ -10,19 +10,18 @@ with open(funktions.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
 begin = funktions.upTime() #Time when Funky begins running
-reminders = []
 
 #==== Alert that Funky is ready ====
 @client.event
 async def on_ready():
     print(client.user.name+" "+version)
-    print("I'm ready to work!")
+    print("I'm ready to work!\n")
+    funktions.setUpReminders(client)
 
 #==== Listen to commands ====
 @client.event
 async def on_message(message):
     author = message.author
-    cardList = [] #List of cards for card search
 
     if author == client.user: #Do not refer to self
         pass
@@ -97,8 +96,7 @@ async def on_message(message):
 
     #Setup a reminder
     elif message.content.startswith('!remind'):
-        func = lambda msg: client.send_message(message.channel, msg)
-        await client.send_message(message.channel, funktions.makeReminder(message,func))        
+        await client.send_message(message.channel, funktions.makeReminder(message))        
         
 #==== Log on ====
 with open(funktions.filePath("token.txt"),'r') as o:

@@ -23,10 +23,10 @@ def toBin(message):
     remainder = -1 #Remainder used for conversion
     value = "" #Value to print
     #Parse number, convert it to usable string
-    number = parse(message.content)
+    number = __parse(message.content)
     
     if len(number) == 0: #Nothing to convert
-        return badArgs("binary")
+        return __badArgs("binary")
     elif len(number) > 1: #Too many numbers
         return "I can only convert one number!"
     
@@ -51,10 +51,10 @@ def toBin(message):
 #==== Choose randomly from choices ====
 def choose(message):
     #Parse choices
-    choices = parse(message.content)
+    choices = __parse(message.content)
 
     if len(choices) == 0: #No choices
-        return badArgs("choose")
+        return __badArgs("choose")
     elif len(choices) == 1: #Not enough choices
         return "I need more than one thing to choose from!"
     elif len(choices) > 10: #Too many choices
@@ -69,15 +69,15 @@ def sayHello(sender,version,uptime):
 
     **Current version:** %s 
     **Current uptime:** %s 
-    """ % (sender.display_name, version, formatTime(time.time(),offset=uptime)))
+    """ % (sender.display_name, version, __formatTime(time.time(),offset=uptime)))
 
 #==== Send a help message ====
 def sendHelp(message):
     #Parse command
-    command = parse(message.content)
+    command = __parse(message.content)
 
     if len(command) == 0: #Nothing to help with
-        return badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."
+        return __badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."
     elif len(command) > 1: #Too many commands
         return "I can only help you with one command at a time!"
     else:
@@ -88,7 +88,7 @@ def sendHelp(message):
             with open(filePath(('help_files/%s.txt' % command)), 'r') as file:
                 toReturn = file.read()
         except FileNotFoundError:
-            toReturn = badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."
+            toReturn = __badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."
         return toReturn
     
 #==== Get a list of commands ====
@@ -96,7 +96,7 @@ def commandList():
     return("""
     Here are my commands:\n
     - **Information:** `!commands` `!hello` `!help [[X]]`
-    - **Useful:** `!binary [[X]]` `!hex [[X]]` `!magic [[X|...|...]]` `!roll [[X]]`
+    - **Useful:** `!binary [[X]]` `!hex [[X]]` `!magic [[X|...|...]]` `!remind [[X|...]]`!roll [[X]]`
     - **Fun:** `!ask` `!choose [[X|Y|...]]` `!joke` `!react` `!rate [[X]]` `!shibe`
 \nIf you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [[!ask]]`.
     """)
@@ -107,10 +107,10 @@ def toHex(message):
     remainder = -1 #Remainder used for conversion
     value = "" #Value to print
     #Parse number, convert it to usable string
-    number = parse(message.content)
+    number = __parse(message.content)
 
     if len(number) == 0: #Nothing to convert
-        return badArgs("hex")
+        return __badArgs("hex")
     elif len(number) > 1: #Too many numbers
         return "I can only convert one number!"
 
@@ -149,12 +149,12 @@ def fetchCard(message):
     toReturn = [] #List of found cards to return
     
     #Parse card name
-    cards = parse(message.content)
+    cards = __parse(message.content)
     if len(cards) > 3: #Too many cards in search
         toReturn.append("That's too many cards to search for!")
         return list(toReturn)
     elif len(cards) == 0: #Nothing to search for
-        toReturn.append(badArgs("magic"))
+        toReturn.append(__badArgs("magic"))
         return list(toReturn)
     for i in set(cards):
         i = i.split('/')[0]
@@ -178,7 +178,7 @@ def reactionPic():
     found = False #Image found or not
 
     try:
-        validFolder(pics) #Check if folder is empty
+        __validFolder(pics) #Check if folder is empty
         while not found: #Search for a valid file path
             selection = random.choice(pics)
             if (selection != "Thumbs.db" and
@@ -195,10 +195,10 @@ def rateSomething(message):
     score = random.randint(1, 10)
     
     #Parse string
-    toRate = parse(message.content)
+    toRate = __parse(message.content)
 
     if len(toRate) == 0: #Nothing to rate
-        return badArgs("rate")
+        return __badArgs("rate")
     elif len(toRate) > 1: #Too many things to rate
         return "I can only rate one thing!"
 
@@ -216,10 +216,10 @@ def rateSomething(message):
 #==== Roll a die ====
 def rollDice(message):
     #Parse number, convert it to usable string
-    number = parse(message.content)
+    number = __parse(message.content)
 
     if len(number) == 0: #No number to roll
-        return badArgs("roll")
+        return __badArgs("roll")
     elif len(number) > 1: #Too many dies to roll
         return "I can only roll one die!"
     
@@ -244,7 +244,7 @@ def shibaPic():
     found = False #Image found or not
 
     try:
-        validFolder(pics) #Check if folder is empty
+        __validFolder(pics) #Check if folder is empty
         while not found: #Search for a valid file path
             selection = random.choice(pics)
             if (selection != "Thumbs.db" and
@@ -255,11 +255,9 @@ def shibaPic():
         raise
 
 #==== Create a Reminder ====
-def makeReminder(message,func):
-    timer = reminder.Reminder(time.time())
-    request = re.sub("(\[\[.*\]\])|(!remind)","",message.content)
+def makeReminder(message):
     duration = 0
-    timeArgs = parse(message.content)
+    timeArgs = __parse(message.content)
 
     if(len(timeArgs) == 0):
         return "I need a time to remind you after!"
@@ -284,25 +282,19 @@ def makeReminder(message,func):
                 i = "".join(re.split("\D",i))
                 duration = duration + float(i)*86400
 
-    #Max of 7 days
-    if(duration > 604800):
-        duration = 604800
+    #Max of 30 days
+    if(duration > 2592000):
+        duration = 2592000
     elif(duration == 0):
         duration = 300
 
-    if(request[0] == " " and request != ""):
-        request = request[1:]
-    
-    timer.message = request
-    timer.duration = duration
-    timer.author = message.author
-    timer.channel = message.channel
-    timer.setFormattedMessage()
-    timer.beginThread(func(timer.formattedMessage))
+    timer = reminder.Reminder(duration=duration,msg=message)
+    timer.beginThread()
+    reminder.database.insertToDb(timer)
 
     if(timer.live):
         return "Ok %s, I will remind you in %s." % (
-            message.author.display_name,formatTime(duration))
+            message.author.display_name,__formatTime(duration))
 
 #==== Send confirmation message of reminder ====
 def confirmReminder(message,reminder):
@@ -315,7 +307,7 @@ def confirmReminder(message,reminder):
 #==== NON-COMMAND METHODS ====
 
 #==== Parse a string ====
-def parse(string):
+def __parse(string):
     contents = re.findall("\[\[([^\[\]]*)\]\]", string) #Find contents of '[[]]'
     
     if len(contents) == 0: #Nothing was found
@@ -340,7 +332,7 @@ def logMessage(message):
         raise
 
 #==== Check directories for valid images ====
-def validFolder(files):
+def __validFolder(files):
     if len(files) > 1:
         return
     else:
@@ -351,7 +343,7 @@ def upTime():
     return time.time()
 
 #==== Format uptime ====
-def formatTime(time,offset=0):
+def __formatTime(time,offset=0):
     totalSec = int(time - offset)
 
     seconds = totalSec % 60
@@ -370,6 +362,11 @@ def filePath(directory):
     return path
 
 #==== Error in command arguments ====
-def badArgs(command):
+def __badArgs(command):
     message = ("I couldn't understand your command! If you need help, send `!help [[!%s]]`." % command)
     return message
+
+#==== Setup and pull from reminder database at startup ====
+def setUpReminders(client):
+    reminder.client = client
+    reminder.database.runThreads()

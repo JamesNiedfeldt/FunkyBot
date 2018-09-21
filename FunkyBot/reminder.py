@@ -9,6 +9,7 @@ import time
 import asyncio
 import re
 import discord
+import os
 
 #==== Globals ====
 client = None
@@ -23,7 +24,8 @@ class Database():
 
     #==== Connect to/create database ====
     def dbConnect(self):
-        self.db = sqlite3.connect("reminders.db")
+        absolute = os.path.abspath(os.path.dirname(__file__))
+        self.db = sqlite3.connect(os.path.join(absolute,"reminders.db"))
         cursor = self.db.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS reminders
         (id INTEGER PRIMARY KEY,

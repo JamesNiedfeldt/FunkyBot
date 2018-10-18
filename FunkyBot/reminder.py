@@ -87,7 +87,7 @@ class Reminder():
             if(self.message[0] == " " and self.message != ""):
                 self.message = self.message[1:]
             self.duration = duration
-            self.begin = time.time()
+            self.begin = 0
             self.destination = msg.channel.id
             self.author = msg.author.mention
         self.live = False
@@ -95,6 +95,7 @@ class Reminder():
 
     def beginThread(self):
         self.formattedMessage = "%s %s" % (self.author,self.message)
+        self.begin = time.time()
         self.live = True
         asyncio.ensure_future(self.__run())
 

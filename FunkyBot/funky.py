@@ -5,7 +5,7 @@ import funktions
 
 #==== Definitions ====
 client = discord.Client()
-version = "1.3.0 beta"
+version = "1.3.0"
 with open(funktions.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
@@ -14,6 +14,7 @@ begin = funktions.upTime() #Time when Funky begins running
 #==== Alert that Funky is ready ====
 @client.event
 async def on_ready():
+    print("===============")
     print(client.user.name+" "+version)
     print("I'm ready to work!\n")
     funktions.setUpReminders(client)
@@ -96,7 +97,25 @@ async def on_message(message):
 
     #Setup a reminder
     elif message.content.startswith('!remind'):
-        await client.send_message(message.channel, funktions.makeReminder(message))        
+        reminder = funktions.makeReminder(message)
+        
+        await client.send_message(message.channel, funktions.confirmReminder(message,reminder))
+
+        def check(msg):
+            return msg.content.startswith('!yes') or msg.content.startswith('!no')
+
+        if(reminder != None):
+            reply = await client.wait_for_message(author=message. author,channel=message.channel,
+                                                  timeout=60, check=check)
+            
+            if(reply == None):
+                await client.send_message(message.channel, "%s, you took too long to respond so I discarded your reminder."
+                                          % message.author.mention)
+            elif(reply.content.startswith('!yes')):
+                await client.send_message(message.channel, funktions.startReminder(reminder))
+            elif(reply.content.startswith('!no')):
+                await client.send_message(message.channel, "Ok, I will discard that reminder.")
+        
         
 #==== Log on ====
 with open(funktions.filePath("token.txt"),'r') as o:

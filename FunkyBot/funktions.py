@@ -96,7 +96,7 @@ def commandList():
     return("""
     Here are my commands:\n
     - **Information:** `!commands` `!hello` `!help [[X]]`
-    - **Useful:** `!binary [[X]]` `!hex [[X]]` `!magic [[X|...|...]]` `!remind [[X|...]]`!roll [[X]]`
+    - **Useful:** `!binary [[X]]` `!hex [[X]]` `!magic [[X|...|...]]` `!remind [[X|...]]` `!roll [[X]]`
     - **Fun:** `!ask` `!choose [[X|Y|...]]` `!joke` `!react` `!rate [[X]]` `!shibe`
 \nIf you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [[!ask]]`.
     """)
@@ -260,7 +260,7 @@ def makeReminder(message):
     timeArgs = __parse(message.content)
 
     if(len(timeArgs) == 0):
-        return "I need a time to remind you after!"
+        return None
 
     if(len(timeArgs) < 1):
         duration = 30
@@ -277,6 +277,7 @@ def makeReminder(message):
                 duration = duration + float(i)*60
             elif('h' in i):
                 i = "".join(re.split("\D",i))
+                print(i)
                 duration = duration + float(i)*3600
             elif('d' in i):
                 i = "".join(re.split("\D",i))
@@ -289,20 +290,26 @@ def makeReminder(message):
         duration = 300
 
     timer = reminder.Reminder(duration=duration,msg=message)
+
+    return timer
+
+#==== Send confirmation message of reminder ====
+def confirmReminder(message,timer):
+    if(timer == None):
+        return __badArgs('remind')
+    else:
+        return "Ok %s, I will remind you in %s. If that is ok, reply with `!yes`. If not, reply with `!no`." % (
+            message.author.display_name,__formatTime(timer.duration))
+
+#==== Send confirmation message of reminder ====
+def startReminder(timer):
     timer.beginThread()
     reminder.database.insertToDb(timer)
 
     if(timer.live):
-        return "Ok %s, I will remind you in %s." % (
-            message.author.display_name,__formatTime(duration))
-
-#==== Send confirmation message of reminder ====
-def confirmReminder(message,reminder):
-    if(reminder.live):
-        return "Ok %s, I will remind you in %.2f minutes." % (
-            message.author.display_name,(reminder.duration/60))
+        return "Ok, I set a reminder for you!"
     else:
-        return "Something went wrong."
+        return "Sorry, something went wrong!"
 
 #==== NON-COMMAND METHODS ====
 

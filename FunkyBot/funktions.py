@@ -277,7 +277,6 @@ def makeReminder(message):
                 duration = duration + float(i)*60
             elif('h' in i):
                 i = "".join(re.split("\D",i))
-                print(i)
                 duration = duration + float(i)*3600
             elif('d' in i):
                 i = "".join(re.split("\D",i))

@@ -62,15 +62,17 @@ class Database():
         cursor.execute("SELECT * FROM reminders")
         for i in cursor.fetchall():
             reminder = Reminder()
+            
+            #Add reminder only if an identical one isn't presently running
+            if(not any(r.id == i[0] for r in self.reminders)):
+                reminder.id = i[0]
+                reminder.begin = i[1]
+                reminder.duration = i[2]
+                reminder.message = i[3]
+                reminder.destination = i[4]
+                reminder.author = i[5]
 
-            reminder.id = i[0]
-            reminder.begin = i[1]
-            reminder.duration = i[2]
-            reminder.message = i[3]
-            reminder.destination = i[4]
-            reminder.author = i[5]
-
-            self.reminders.append(reminder)
+                self.reminders.append(reminder)
 
     #==== Create threads from reminders ====
     def runThreads(self):

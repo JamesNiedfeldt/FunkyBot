@@ -113,7 +113,31 @@ async def on_message(message):
                 await client.send_message(message.channel, useful.startReminder(reminder))
             elif(reply.content.startswith('!no')):
                 await client.send_message(message.channel, "Ok, I will discard that reminder.")
+
+
+    #Setup reminder for everyone
+    elif message.content.startswith('!announce'):
+        if(message.author.server_permissions.administrator):
+            reminder = useful.makeReminder(message,announcement=True)
         
+            await client.send_message(message.channel, useful.confirmReminder(message,reminder))
+
+            def check(msg):
+                return msg.content.startswith('!yes') or msg.content.startswith('!no')
+
+            if(reminder != None):
+                reply = await client.wait_for_message(author=message. author,channel=message.channel,
+                                                      timeout=60, check=check)
+                
+                if(reply == None):
+                    await client.send_message(message.channel, "%s, you took too long to respond so I discarded your reminder."
+                                              % message.author.mention)
+                elif(reply.content.startswith('!yes')):
+                    await client.send_message(message.channel, useful.startReminder(reminder))
+                elif(reply.content.startswith('!no')):
+                    await client.send_message(message.channel, "Ok, I will discard that reminder.")
+        else:
+            await client.send_message(message.channel, "Sorry, only administrators can use that command!")
         
 #==== Log on ====
 with open(helpers.filePath("token.txt"),'r') as o:

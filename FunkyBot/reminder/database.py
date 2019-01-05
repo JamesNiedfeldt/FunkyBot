@@ -1,19 +1,16 @@
 #==== Description ====
 """
-Keeps track of reminder requests from users and sends reminders when ready
+Handles database work for FunkyBot reminders
 """
 
 #==== Imports ====
 import sqlite3
 import time
-import asyncio
-import re
-import discord
 import os
+from reminder import reminder
 
 #==== Globals ====
-client = None
-database = None
+db = None
 
 #==== Database class ====
 class Database():
@@ -24,7 +21,7 @@ class Database():
 
     #==== Connect to/create database ====
     def dbConnect(self):
-        absolute = os.path.abspath(os.path.dirname(__file__))
+        absolute = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
         self.db = sqlite3.connect(os.path.join(absolute,"reminders.db"))
         cursor = self.db.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS reminders
@@ -61,18 +58,18 @@ class Database():
         cursor = self.db.cursor()
         cursor.execute("SELECT * FROM reminders")
         for i in cursor.fetchall():
-            reminder = Reminder()
+            newReminder = reminder.Reminder()
             
             #Add reminder only if an identical one isn't presently running
             if(not any(r.id == i[0] for r in self.reminders)):
-                reminder.id = i[0]
-                reminder.begin = i[1]
-                reminder.duration = i[2]
-                reminder.message = i[3]
-                reminder.destination = i[4]
-                reminder.author = i[5]
+                newReminder.id = i[0]
+                newReminder.begin = i[1]
+                newReminder.duration = i[2]
+                newReminder.message = i[3]
+                newReminder.destination = i[4]
+                newReminder.author = i[5]
 
-                self.reminders.append(reminder)
+                self.reminders.append(newReminder)
 
     #==== Create threads from reminders ====
     def runThreads(self):
@@ -81,37 +78,4 @@ class Database():
             i.beginThread()
         print("Number of reminders from DB: %s" % len(self.reminders))
 
-#==== Reminder class ====
-class Reminder():
-    def __init__(self,duration=0,msg=None):
-        if(msg != None):
-            self.message = re.sub("(\[\[.*\]\])|(!remind)","",msg.content)
-            if(self.message[0] == " " and self.message != ""):
-                self.message = self.message[1:]
-            self.duration = duration
-            self.begin = -1
-            self.destination = msg.channel.id
-            self.author = msg.author.mention
-        self.live = False
-        self.id = -1
-
-    def beginThread(self):
-        self.formattedMessage = "%s %s" % (self.author,self.message)
-        if(self.begin == -1):
-            self.begin = time.time()
-        self.live = True
-        asyncio.ensure_future(self.__run())
-
-    @asyncio.coroutine
-    async def __run(self):
-        while(self.live):
-            if(time.time() >= self.begin + self.duration):
-                self.live = False
-                await client.send_message(client.get_channel(str(self.destination)),
-                                          self.formattedMessage)
-                database.deleteFromDb(self)
-                
-            else:
-                await asyncio.sleep(1)
-
-database = Database()
+db = Database()

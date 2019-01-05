@@ -7,7 +7,7 @@ from funktions import helpers as h
 import random
 import re
 import urllib.request, urllib.error
-import reminder
+from reminder import reminder
 
 #==== Convert a number to binary ====
 def toBin(message):
@@ -101,7 +101,7 @@ def fetchCard(message):
     return list(toReturn)
 
 #==== Create a Reminder ====
-def makeReminder(message):
+def makeReminder(message,announcement=False):
     duration = 0
     timeArgs = h.parse(message.content)
 
@@ -134,7 +134,10 @@ def makeReminder(message):
     elif(duration == 0):
         duration = 300
 
-    timer = reminder.Reminder(duration=duration,msg=message)
+    if(announcement):
+        timer = reminder.Announcement(duration=duration,msg=message)
+    else:
+        timer = reminder.Reminder(duration=duration,msg=message)
 
     return timer
 

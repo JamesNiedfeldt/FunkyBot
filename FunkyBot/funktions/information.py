@@ -10,7 +10,7 @@ def commandList():
     return("""
     Here are my commands:\n
     - **Information:** `!commands` `!hello` `!help [[X]]`
-    - **Useful:** `!binary [[X]]` `!hex [[X]]` `!magic [[X|...|...]]` `!remind [[X|...]]` `!roll [[X]]`
+    - **Useful:** `!announce [[X|...]]` `!binary [[X]]` `!hex [[X]]` `!magic [[X|...|...]]` `!remind [[X|...]]` `!roll [[X]]`
     - **Fun:** `!ask` `!choose [[X|Y|...]]` `!joke` `!react` `!rate [[X]]` `!shibe`
 \nIf you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [[!ask]]`.
     """)

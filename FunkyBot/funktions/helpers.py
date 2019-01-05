@@ -4,7 +4,7 @@ Contains the non-command functions needed to run
 """
 
 import time
-import reminder
+from reminder import reminder, database
 import os
 import re
 
@@ -68,4 +68,4 @@ def badArgs(command):
 #==== Setup and pull from reminder database at startup ====
 def setUpReminders(client):
     reminder.client = client
-    reminder.database.runThreads()
+    database.db.runThreads()

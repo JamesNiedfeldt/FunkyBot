@@ -5,7 +5,7 @@ import funktions
 
 #==== Definitions ====
 client = discord.Client()
-version = "1.3.1"
+version = "1.3.2"
 with open(funktions.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
@@ -69,11 +69,9 @@ async def on_message(message):
     #Send a random reaction image
     elif message.content.startswith('!react'):
         try:
-            funktions.logMessage(message)
             await client.delete_message(message)
+            funktions.logMessage(message)
         except discord.errors.Forbidden: #Can't delete
-            pass
-        except UnicodeError: #There is a non-ASCII char in name/message
             pass
         try:
             await client.send_file(message.channel, funktions.reactionPic())

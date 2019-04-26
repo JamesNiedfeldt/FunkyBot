@@ -60,4 +60,4 @@ class Announcement(Reminder):
         super().beginThread()
 
     def _formatMessage(self):
-        self.formattedMessage = "@everyone %s" % self.message
+        self.formattedMessage = "@everyone" + " " + self.message

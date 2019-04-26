@@ -7,6 +7,7 @@ from funktions import helpers as h
 import random
 import re
 import urllib.request, urllib.error
+import requests
 from reminder import reminder
 
 #==== Convert a number to binary ====
@@ -73,9 +74,8 @@ def toHex(message):
 
 #==== Fetch a card ====
 def fetchCard(message):
-    cardID = "" #Gatherer ID
-    search = "" #Search query
-    toReturn = [] #List of found cards to return
+    URL = "https://api.scryfall.com/cards/search"
+    toReturn = []
     
     #Parse card name
     cards = h.parse(message.content)
@@ -83,21 +83,33 @@ def fetchCard(message):
         toReturn.append("That's too many cards to search for!")
         return list(toReturn)
     elif len(cards) == 0: #Nothing to search for
-        toReturn.append(__badArgs("magic"))
+        toReturn.append(h.badArgs("magic"))
         return list(toReturn)
     for i in set(cards):
         i = i.split('/')[0]
-        j = urllib.request.quote(i.encode('utf-8'))
-        #Search for card id
-        search = urllib.request.urlopen("http://gatherer.wizards.com/Pages/Card/Details.aspx?name=%s" % j.replace("&", "%26")).read()
+        c = i.encode('utf-8')
+        
+        response = requests.get(url = URL, params = {'q':c})
+        results = response.json()
+
         try:
-            cardID = re.search(b"multiverseid=([0-9]*)", search).group(1)
-            #Parse card ID, convert it to usable string
-            cardID = re.findall("b'([^\[\]]*)'", str(cardID))
-            for d in set(cardID): cardID = d
-            toReturn.append("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=%s&type=card&.jpg" % cardID)
-        except AttributeError: #Couldn't find card
-            toReturn.append("Sorry, I couldn't find \"%s\" !" % i)
+            if(results['object'] == "list"): #Found a list
+                card = results['data'][0]
+
+                if(card['layout'] == "transform"): #Double-faced card
+                    transform = ""
+                    for f in card['card_faces']:
+                        transform = transform + "\n" + f['image_uris']['normal']
+                    toReturn.append(transform)
+                else: #Normal card
+                    toReturn.append(card['image_uris']['normal'])
+                    
+            else: #No results or got something weird
+                toReturn.append("Sorry, I couldn't find \"%s\"!" % i)
+
+        except KeyError as e: #Couldn't find JSON key
+            toReturn = "Something went wrong!"
+            
     return list(toReturn)
 
 #==== Create a Reminder ====

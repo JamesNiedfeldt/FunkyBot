@@ -5,9 +5,8 @@ Contains the useful FunkyBot commands
 
 from funktions import helpers as h
 import random
-import re
-import urllib.request, urllib.error
 import requests
+import re
 from reminder import reminder
 
 #==== Convert a number to binary ====

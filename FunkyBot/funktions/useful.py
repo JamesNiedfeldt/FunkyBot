@@ -73,7 +73,9 @@ def toHex(message):
 
 #==== Fetch a card ====
 def fetchCard(message):
-    URL = "https://api.scryfall.com/cards/search"
+    #This whole method can probably be cleaned up
+    name = "https://api.scryfall.com/cards/named"
+    search = "https://api.scryfall.com/cards/search"
     toReturn = []
     
     #Parse card name
@@ -87,14 +89,20 @@ def fetchCard(message):
     for i in set(cards):
         i = i.split('/')[0]
         c = i.encode('utf-8')
-        
-        response = requests.get(url = URL, params = {'q':c})
-        results = response.json()
 
         try:
-            if(results['object'] == "list"): #Found a list
-                card = results['data'][0]
+            #Try finding by name first
+            response = requests.get(url = name, params = {'fuzzy':c})
+            results = response.json()
 
+            if(results['object'] == "error"):
+                #If name doesn't work, try a search
+                response = requests.get(url = search, params = {'q':c})
+                results = response.json()
+
+            #Found a list
+            if(results['object'] == "list"):
+                card = results['data'][0]
                 if(card['layout'] == "transform"): #Double-faced card
                     transform = ""
                     for f in card['card_faces']:
@@ -102,6 +110,16 @@ def fetchCard(message):
                     toReturn.append(transform)
                 else: #Normal card
                     toReturn.append(card['image_uris']['normal'])
+
+            #Single card
+            elif(results['object'] == "card"): 
+                if(results['layout'] == "transform"): #Double-faced card
+                    transform = ""
+                    for f in results['card_faces']:
+                        transform = transform + "\n" + f['image_uris']['normal']
+                    toReturn.append(transform)
+                else: #Normal card
+                    toReturn.append(results['image_uris']['normal'])
                     
             else: #No results or got something weird
                 toReturn.append("Sorry, I couldn't find \"%s\"!" % i)

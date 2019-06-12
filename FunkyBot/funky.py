@@ -5,7 +5,7 @@ from funktions import fun, helpers, information, useful
 
 #==== Definitions ====
 client = discord.Client()
-version = "1.4.3"
+version = "1.4.4"
 with open(helpers.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
@@ -63,7 +63,7 @@ async def on_message(message):
 
     #Search for a Magic card
     elif message.content.startswith('!magic'):
-        for c in set(useful.fetchCard(message)):
+        for c in useful.fetchCard(message):
             await client.send_message(message.channel, c)
 
     #Send a random reaction image

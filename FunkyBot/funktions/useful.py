@@ -76,6 +76,7 @@ def fetchCard(message):
     #This whole method can probably be cleaned up
     name = "https://api.scryfall.com/cards/named"
     search = "https://api.scryfall.com/cards/search"
+    random = "https://api.scryfall.com/cards/random"
     toReturn = []
     
     #Parse card name
@@ -86,19 +87,25 @@ def fetchCard(message):
     elif len(cards) == 0: #Nothing to search for
         toReturn.append(h.badArgs("magic"))
         return list(toReturn)
-    for i in set(cards):
+    for i in cards:
         i = i.split('/')[0]
         c = i.encode('utf-8')
 
         try:
-            #Try finding by name first
-            response = requests.get(url = name, params = {'fuzzy':c})
-            results = response.json()
-
-            if(results['object'] == "error"):
-                #If name doesn't work, try a search
-                response = requests.get(url = search, params = {'q':c})
+            #Random card requested
+            if(i.upper() == "RANDOM"):
+                response = requests.get(url = random)
                 results = response.json()
+                
+            else:
+                #Try finding by name first
+                response = requests.get(url = name, params = {'fuzzy':c})
+                results = response.json()
+
+                if(results['object'] == "error"):
+                    #If name doesn't work, try a search
+                    response = requests.get(url = search, params = {'q':c})
+                    results = response.json()
 
             #Found a list
             if(results['object'] == "list"):
@@ -126,7 +133,7 @@ def fetchCard(message):
 
         except KeyError as e: #Couldn't find JSON key
             toReturn = "Something went wrong!"
-            
+     
     return list(toReturn)
 
 #==== Create a Reminder ====

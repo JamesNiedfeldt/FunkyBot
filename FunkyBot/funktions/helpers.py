@@ -18,7 +18,7 @@ def parse(string):
     
     contents = re.split("\|", contents[0])  #Split multiple deliminated with '|'
     
-    for i in set(contents):
+    for i in list(contents):
         if i == "": #Is there a blank entry?
            contents.clear()
            pass

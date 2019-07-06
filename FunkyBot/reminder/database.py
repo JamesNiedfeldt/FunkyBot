@@ -29,16 +29,15 @@ class Database():
         begin INTEGER,
         duration INTEGER,
         message STRING,
-        destination STRING,
-        author STRING)''')
+        destination STRING)''')
 
     #==== Register reminder in database ====
     def insertToDb(self,reminder):
         values = (reminder.begin, reminder.duration, reminder.message,
-                  reminder.destination, reminder.author)
+                  reminder.destination)
         cursor = self.db.cursor()
-        cursor.execute("INSERT INTO reminders (begin, duration, message, destination, author)"+
-                       "VALUES(?,?,?,?,?)",(values))
+        cursor.execute("INSERT INTO reminders (begin, duration, message, destination)"+
+                       "VALUES(?,?,?,?)",(values))
         reminder.id = cursor.lastrowid
         self.db.commit()
 
@@ -67,7 +66,6 @@ class Database():
                 newReminder.duration = i[2]
                 newReminder.message = i[3]
                 newReminder.destination = i[4]
-                newReminder.author = i[5]
 
                 self.reminders.append(newReminder)
 

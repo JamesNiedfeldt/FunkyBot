@@ -18,26 +18,27 @@ database = database.db
 class Reminder():
     def __init__(self,duration=0,msg=None):
         if(msg != None):
-            self.message = re.sub("(\[\[.*\]\])|(!remind)|(!announce)","",msg.content)
-            if(self.message[0] == " " and self.message != ""):
-                self.message = self.message[1:]
+            self.message = ""
+            self._formatMessage(msg)
             self.duration = duration
             self.begin = -1
             self.destination = msg.channel.id
-            self.author = msg.author.mention
         self.live = False
         self.id = -1
 
     def beginThread(self):
-        self._formatMessage()
         if(self.begin == -1):
             self.begin = time.time()
         self.live = True
         asyncio.ensure_future(self.__run())
 
     #Shouldn't be called outside of this class or subclasses
-    def _formatMessage(self):
-        self.formattedMessage = "%s %s" % (self.author,self.message)
+    def _formatMessage(self,cmd):
+        message = re.sub("(\[\[.*\]\])|(!remind)|(!announce)","",cmd.content)
+        if(message[0] == " " and message != ""):
+            message = message[1:]
+                
+        self.message = "%s %s" % (cmd.author.mention,message)
         
     @asyncio.coroutine
     async def __run(self):
@@ -45,7 +46,7 @@ class Reminder():
             if(time.time() >= self.begin + self.duration):
                 self.live = False
                 await client.send_message(client.get_channel(str(self.destination)),
-                                          self.formattedMessage)
+                                          self.message)
                 database.deleteFromDb(self)
                 
             else:
@@ -59,5 +60,9 @@ class Announcement(Reminder):
     def beginThread(self):
         super().beginThread()
 
-    def _formatMessage(self):
-        self.formattedMessage = "@everyone" + " " + self.message
+    def _formatMessage(self,cmd):
+        message = re.sub("(\[\[.*\]\])|(!remind)|(!announce)","",cmd.content)
+        if(message[0] == " " and message != ""):
+            message = message[1:]
+             
+        self.message = "@everyone" + " " + message

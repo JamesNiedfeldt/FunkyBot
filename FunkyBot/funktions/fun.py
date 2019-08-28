@@ -27,7 +27,7 @@ def choose(message):
     elif len(choices) > 10: #Too many choices
         return "There are too many things to choose from!"
 
-    return "I choose %s!" % choices[random.randint(0,len(choices)-1)]
+    return "I choose %s!" % random.choice(choices)
 
 #==== Tell a joke ====
 def findOneLiner():

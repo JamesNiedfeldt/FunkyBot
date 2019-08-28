@@ -1,4 +1,4 @@
-Here's how to use `!remind`:
+Here's how to use `!announce`:
 
 Send `!announce [[x|x|x]]` to have me send everyone a notification after the set time.
 - Time can be set with s(econds), m(inutes), h(ours), and d(ays).

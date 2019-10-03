@@ -1,3 +1,4 @@
 #!/bin/bash
 echo "Running FunkyBot Tests"
 python3 -m funktions_test.testfun
+python3 -m funktions_test.testhelpers

@@ -2,5 +2,5 @@
 
 class MockMessage():
     def __init__(self):
-        self.message = ""
+        self.content = ""
         self.author = type("author", (), {"display_name" : ""})

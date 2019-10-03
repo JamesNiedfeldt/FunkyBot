@@ -1,6 +1,6 @@
 Here's how to use `!magic`:
 
 Send `!magic [[X]]` to have me search for a Magic: The Gathering card.
-- For example, to search for Island, you should send: `!magic [[island]]`.
-- I can also search for a random card using the word "random". For example: `!magic [[random]]`.
-- I can search for up to three cards, just make sure they are all in the same double brackets and separate them with the | character.
+> - For example, to search for Island, you should send: `!magic [[island]]`.
+> - I can also search for a random card using the word "random". For example: `!magic [[random]]`.
+> - I can search for up to three cards, just make sure they are all in the same double brackets and separate them with the | character.

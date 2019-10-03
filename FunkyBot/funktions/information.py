@@ -4,25 +4,21 @@ Contains the informational FunkyBot commands
 """
 
 from funktions import helpers as h
+from funktions import constant as c
 
 #==== Get a list of commands ====
 def commandList():
-    return("""
-    Here are my commands:\n
-    - **Information:** `!commands` `!hello` `!help [[X]]`
-    - **Useful:** `!announce [[X|...]]` `!binary [[X]]` `!hex [[X]]` `!magic [[X|...|...]]` `!remind [[X|...]]` `!roll [[X]]`
-    - **Fun:** `!ask` `!choose [[X|Y|...]]` `!joke` `!react` `!rate [[X]]` `!shibe`
-\nIf you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [[!ask]]`.
-    """)
+    return ("Here are some of my commands:\n" +
+            h.blockQuote(c.INFO_LIST) +
+            h.blockQuote(c.USEFUL_LIST) +
+            h.blockQuote(c.FUN_LIST) +
+            c.HELP_REMINDER)
 
 #==== Introduce FunkyBot ====
 def sayHello(sender,version,uptime):
-    return("""
-    Hello %s, my name is FunkyBot! I am a simple bot made for fun as my creator's personal project. Here's some information about me:
-
-    **Current version:** %s 
-    **Current uptime:** %s 
-    """ % (sender.display_name, version, h.formatTime(h.getTime(),offset=uptime)))
+    return ((c.HELLO % sender.display_name) + "\n" +
+            h.blockQuote("**Current version:** %s" % c.VERSION) +
+            h.blockQuote("**Current uptime:** %s" % h.formatTime(h.getTime(),offset=uptime)))
 
 #==== Send a help message ====
 def sendHelp(message):

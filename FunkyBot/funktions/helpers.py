@@ -5,6 +5,7 @@ Contains the non-command functions needed to run
 
 import time
 from reminder import reminder, database
+from funktions import constant as c
 import os
 import re
 
@@ -62,10 +63,14 @@ def filePath(directory):
 
 #==== Error in command arguments ====
 def badArgs(command):
-    message = ("I couldn't understand your command! If you need help, send `!help [[!%s]]`." % command)
+    message = (c.BAD_ARGS % command)
     return message
 
 #==== Setup and pull from reminder database at startup ====
 def setUpReminders(client):
     reminder.client = client
     database.db.runThreads()
+
+#==== Format string to use block quotes ====
+def blockQuote(string):
+    return "> " + string + "\n"

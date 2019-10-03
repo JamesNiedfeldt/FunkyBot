@@ -1,11 +1,11 @@
 #==== Imports ====
 import discord
 import asyncio
-from funktions import fun, helpers, information, useful
+from funktions import fun, helpers, information, useful, constant
 
 #==== Definitions ====
 client = discord.Client()
-version = "1.4.5"
+version = constant.VERSION
 with open(helpers.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
@@ -14,9 +14,7 @@ begin = helpers.getTime() #Time when Funky begins running
 #==== Alert that Funky is ready ====
 @client.event
 async def on_ready():
-    print("===============")
-    print(client.user.name+" "+version)
-    print("I'm ready to work!\n")
+    print((constant.BOOT_UP) % (client.user.name, version) + "\n")
     helpers.setUpReminders(client)
 
 #==== Listen to commands ====

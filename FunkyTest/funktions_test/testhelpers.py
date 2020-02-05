@@ -121,6 +121,13 @@ class TestHelpers(unittest.TestCase):
     def test_setUpReminders(self):
         #Nothing to test
         pass
+
+    def test_blockQuote(self):
+        msg = "> test\n"
+        self.assertEqual(h.blockQuote("test"), msg)
+
+        msg = "> \n"
+        self.assertEqual(h.blockQuote(""), msg)
     
     def tearDown(self):
         if(os.path.isfile(self.logpath)):

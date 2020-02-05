@@ -1,6 +1,9 @@
 import unittest
+import os
+from funktions_test import mockmessage as m
 from funktions import information as i
 from funktions import helpers as h
+from funktions import constant as c
 
 class TestInformation(unittest.TestCase):
     @classmethod
@@ -12,17 +15,40 @@ class TestInformation(unittest.TestCase):
 
     def test_sayHello(self):
         sender = type("sender", (), {"display_name" : ""})
+        uptime = h.getTime()
 
         sender.display_name = "Test Name"
-        version = "x.y.z"
         time = h.formatTime(0)
-        msg = """
-    Hello %s, my name is FunkyBot! I am a simple bot made for fun as my creator's personal project. Here's some information about me:
+        msg = ((c.HELLO % sender.display_name) + "\n" +
+            h.blockQuote("**Current version:** %s" % c.VERSION) +
+            h.blockQuote("**Current uptime:** %s" % h.formatTime(h.getTime(),offset=uptime)))
+        self.assertEqual(i.sayHello(sender, h.getTime()), msg)
 
-    **Current version:** %s
-    **Current uptime:** %s
-    """ % (sender.display_name, version, time)
-        self.assertEqual(i.sayHello(sender, "x.y.z", h.getTime()), msg)
+        sender.display_name = ""
+        time = h.formatTime(0)
+        msg = ((c.HELLO % sender.display_name) + "\n" +
+            h.blockQuote("**Current version:** %s" % c.VERSION) +
+            h.blockQuote("**Current uptime:** %s" % h.formatTime(h.getTime(),offset=uptime)))
+        self.assertEqual(i.sayHello(sender, h.getTime()), msg)
+    
+    def test_sendHelp(self):
+        msg = m.MockMessage()
+
+        msg.content = "[[]]"
+        expected = h.badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."
+        self.assertEqual(i.sendHelp(msg), expected)
+
+        msg.content = "[[x|y]]"
+        expected = "I can only help you with one command at a time!"
+        self.assertEqual(i.sendHelp(msg), expected)
+
+        for command in c.COMMANDS:
+            self.assertIsNotNone(i.sendHelp(command))
+            self.assertIsNotNone(i.sendHelp("!" + command))
+
+        msg.content = "[[fake_command]]"
+        expected = h.badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."
+        self.assertEqual(i.sendHelp(msg), expected)
 
 if __name__ == "__main__":
     unittest.main()

@@ -46,6 +46,9 @@ def getTime():
 def formatTime(time,offset=0):
     totalSec = int(time - offset)
 
+    if totalSec < 0:
+        return "Error: Invalid time"
+
     seconds = totalSec % 60
     minutes = int((totalSec % 3600) / 60)
     hours = int((totalSec % 86400) / 3600)

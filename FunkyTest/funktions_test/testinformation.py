@@ -32,6 +32,10 @@ class TestInformation(unittest.TestCase):
         self.assertEqual(i.sayHello(sender, h.getTime()), msg)
     
     def test_sendHelp(self):
+        commands = ["commands", "hello", "help", "announce", "binary",
+                    "hex", "magic", "remind", "roll", "ask", "choose",
+                    "joke", "react", "rate", "shibe"]
+        
         msg = m.MockMessage()
 
         msg.content = "[[]]"
@@ -42,9 +46,11 @@ class TestInformation(unittest.TestCase):
         expected = "I can only help you with one command at a time!"
         self.assertEqual(i.sendHelp(msg), expected)
 
-        for command in c.COMMANDS:
-            self.assertIsNotNone(i.sendHelp(command))
-            self.assertIsNotNone(i.sendHelp("!" + command))
+        for c in commands:
+            msg.content = "[[%s]]" % c
+            self.assertIsNotNone(i.sendHelp(msg))
+            msg.content = "[[!%s]]" % c
+            self.assertIsNotNone(i.sendHelp(msg))
 
         msg.content = "[[fake_command]]"
         expected = h.badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."

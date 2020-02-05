@@ -15,7 +15,7 @@ def commandList():
             c.HELP_REMINDER)
 
 #==== Introduce FunkyBot ====
-def sayHello(sender,version,uptime):
+def sayHello(sender,uptime):
     return ((c.HELLO % sender.display_name) + "\n" +
             h.blockQuote("**Current version:** %s" % c.VERSION) +
             h.blockQuote("**Current uptime:** %s" % h.formatTime(h.getTime(),offset=uptime)))

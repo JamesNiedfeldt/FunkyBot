@@ -5,7 +5,6 @@ from funktions import fun, helpers, information, useful, constant
 
 #==== Definitions ====
 client = discord.Client()
-version = constant.VERSION
 with open(helpers.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
@@ -14,7 +13,7 @@ begin = helpers.getTime() #Time when Funky begins running
 #==== Alert that Funky is ready ====
 @client.event
 async def on_ready():
-    print((constant.BOOT_UP) % (client.user.name, version) + "\n")
+    print((constant.BOOT_UP) % (client.user.name, constant.VERSION) + "\n")
     helpers.setUpReminders(client)
 
 #==== Listen to commands ====
@@ -45,7 +44,7 @@ async def on_message(message):
 
     #Say hello
     elif message.content.startswith('!hello'):
-        await client.send_message(message.channel, information.sayHello(author,version,begin))
+        await client.send_message(message.channel, information.sayHello(author,begin))
 
     #Send detailed instructions for commands
     elif message.content.startswith('!help'):

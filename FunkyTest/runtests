@@ -1,4 +1,6 @@
 #!/bin/bash
 echo "Running FunkyBot Tests"
-python3 -m funktions_test.testfun
-python3 -m funktions_test.testhelpers
+
+echo "==== Running funktions_test ===="
+mkdir -p test_logs/funktions_test
+python3 -m unittest discover funktions_test 2>&1 | tee test_logs/funktions_test/test_log.txt

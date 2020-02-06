@@ -27,7 +27,7 @@ def toBin(message):
         quotient = int(number)
         if quotient == 0:
             value = 0
-        elif quotient > 1023:
+        elif quotient > 1023 or quotient < 0:
             raise ValueError('Invalid number')
         else:
             while quotient != 0:
@@ -59,7 +59,7 @@ def toHex(message):
         quotient = int(number)
         if quotient == 0:
             value = 0
-        elif quotient > 65535:
+        elif quotient > 65535 or quotient < 0:
             raise ValueError('Invalid number')
         else:
             while quotient != 0:

@@ -25,14 +25,16 @@ def toBin(message):
 
     try:
         quotient = int(number)
-        if quotient <= 0 or quotient > 1024:
+        if quotient == 0:
+            value = 0
+        elif quotient > 1023:
             raise ValueError('Invalid number')
         else:
             while quotient != 0:
                 remainder = quotient % 2
                 quotient = int((quotient - remainder) / 2)
                 value = str(remainder)+value
-            return "%s in binary is: %s" % (number, value)
+        return "%s in binary is: %s" % (number, value)
         
     except TypeError: #Non-integer sent
         return "Sorry, I can't convert %s to binary!" % number
@@ -55,7 +57,9 @@ def toHex(message):
 
     try:
         quotient = int(number)
-        if quotient <= 0 or quotient > 65535:
+        if quotient == 0:
+            value = 0
+        elif quotient > 65535:
             raise ValueError('Invalid number')
         else:
             while quotient != 0:
@@ -64,7 +68,7 @@ def toHex(message):
                 if remainder >= 10:
                     remainder = chr(remainder + 55)
                 value = str(remainder)+value
-            return "%s in hexadecimal is: %s" % (number, value)
+        return "%s in hexadecimal is: %s" % (number, value)
         
     except TypeError: #Non-integer sent
         return "Sorry, I can't convert %s to hexadecimal!" % number

@@ -2,4 +2,4 @@ Here's how to use `!hex`:
 
 Send `!hex [[X]]` to have me convert your number to hexadecimal.
 > - For example, to convert 5 to hexadecimal, you should send: `!hex [[5]]`.
-> - I can only convert one number at a time and no numbers higher than 65535.
+> - I can only convert one number at a time and only numbers 0-65535.

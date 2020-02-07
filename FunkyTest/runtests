@@ -3,4 +3,4 @@ echo "Running FunkyBot Tests"
 
 echo "==== Running funktions_test ===="
 mkdir -p test_logs/funktions_test
-python3 -m unittest discover funktions_test 2>&1 | tee test_logs/funktions_test/test_log.txt
+python3 -m unittest discover -v funktions_test 2>&1 | tee test_logs/funktions_test/test_log.txt

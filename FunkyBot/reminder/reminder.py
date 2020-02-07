@@ -35,7 +35,7 @@ class Reminder():
     #Shouldn't be called outside of this class or subclasses
     def _formatMessage(self,cmd):
         message = re.sub("(\[\[.*\]\])|(!remind)|(!announce)","",cmd.content)
-        if(message[0] == " " and message != ""):
+        if message != "" and message[0] == " ":
             message = message[1:]
                 
         self.message = "%s %s" % (cmd.author.mention,message)
@@ -62,7 +62,7 @@ class Announcement(Reminder):
 
     def _formatMessage(self,cmd):
         message = re.sub("(\[\[.*\]\])|(!remind)|(!announce)","",cmd.content)
-        if(message[0] == " " and message != ""):
+        if message != "" and message[0] == " ":
             message = message[1:]
              
         self.message = "@everyone" + " " + message

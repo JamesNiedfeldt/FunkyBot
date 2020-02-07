@@ -235,73 +235,73 @@ class TestUseful(unittest.TestCase):
         self.msg.content = "[[1s]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 1)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[30s]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 30)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1m]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 60)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1h]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 3600)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1d]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 86400)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1s|1h]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 3601)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1m|1d]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 86460)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1s|1m|1h]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 3661)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1s|1m|1h|1d]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 3661)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[31d]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 2592000)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[0]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[0s|0d|0h]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, self.msg.author.mention + "  test message")
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
     def test_makeReminder_announcmentNoMessage(self):
@@ -387,73 +387,73 @@ class TestUseful(unittest.TestCase):
         self.msg.content = "[[1s]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 1)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[30s]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 30)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1m]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 60)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1h]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 3600)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1d]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 86400)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1s|1h]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 3601)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1m|1d]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 86460)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1s|1m|1h]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 3661)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[1s|1m|1h|1d]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 3661)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[31d]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 2592000)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[0]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
         self.msg.content = "[[0s|0d|0h]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, "@everyone  test message")
+        self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
     def test_confirmReminder(self):

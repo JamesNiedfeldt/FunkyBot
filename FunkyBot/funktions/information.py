@@ -34,7 +34,7 @@ def sendHelp(message):
         if(command.startswith("!")):
             command = command[1:]
         try:
-            with open(h.filePath(('help_files/%s.txt' % command)), 'r') as file:
+            with open(h.filePath(('help_files/%s.txt' % command.lower())), 'r') as file:
                 toReturn = file.read()
         except FileNotFoundError:
             toReturn = h.badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."

@@ -34,7 +34,8 @@ class Reminder():
 
     #Shouldn't be called outside of this class or subclasses
     def _formatMessage(self,cmd):
-        message = re.sub("(\[\[.*\]\])|(!remind)|(!announce)","",cmd.content)
+        message = re.sub("(\[\[.*\]\])|(!REMIND)|(!ANNOUNCE)", "",
+                         cmd.content, flags=re.IGNORECASE)
         if message != "" and message[0] == " ":
             message = message[1:]
                 
@@ -60,7 +61,8 @@ class Announcement(Reminder):
         super().beginThread()
 
     def _formatMessage(self,cmd):
-        message = re.sub("(\[\[.*\]\])|(!remind)|(!announce)","",cmd.content)
+        message = re.sub("(\[\[.*\]\])|(!REMIND)|(!ANNOUNCE)", "",
+                         cmd.content, flags=re.IGNORECASE)
         if message != "" and message[0] == " ":
             message = message[1:]
              

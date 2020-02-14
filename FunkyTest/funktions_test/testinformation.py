@@ -51,6 +51,8 @@ class TestInformation(unittest.TestCase):
             self.assertIsNotNone(i.sendHelp(msg))
             msg.content = "[[!%s]]" % c
             self.assertIsNotNone(i.sendHelp(msg))
+            msg.content = ("[[!%s]]" % c).upper()
+            self.assertIsNotNone(i.sendHelp(msg))
 
         msg.content = "[[fake_command]]"
         expected = h.badArgs("help") + "\n\nIf you need a list of commands, send `!commands`."

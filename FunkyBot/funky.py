@@ -27,44 +27,44 @@ async def on_message(message):
         pass
 
     #Answer a yes-or-no question
-    elif message.content.startswith('!ask'):
+    elif message.content.upper().startswith('!ASK'):
         await message.channel.send(fun.eightBall())
 
     #Convert a number to binary
-    elif message.content.startswith('!binary'):
+    elif message.content.upper().startswith('!BINARY'):
         await message.channel.send(useful.toBin(message))
 
     #List available commands
-    elif message.content.startswith('!commands'):
+    elif message.content.upper().startswith('!COMMANDS'):
         await message.channel.send(information.commandList())
         
     #Choose randomly from choices
-    elif message.content.startswith('!choose'):
+    elif message.content.upper().startswith('!CHOOSE'):
         await message.channel.send(fun.choose(message))
 
     #Say hello
-    elif message.content.startswith('!hello'):
+    elif message.content.upper().startswith('!HELLO'):
         await message.channel.send(information.sayHello(author, begin))
 
     #Send detailed instructions for commands
-    elif message.content.startswith('!help'):
+    elif message.content.upper().startswith('!HELP'):
         await message.channel.send(information.sendHelp(message))
 
     #Convert a number to hexadecimal
-    elif message.content.startswith('!hex'):
+    elif message.content.upper().startswith('!HEX'):
         await message.channel.send(useful.toHex(message))
 
     #Tell a joke
-    elif message.content.startswith('!joke'):
+    elif message.content.upper().startswith('!JOKE'):
         await message.channel.send(fun.findOneLiner())
 
     #Search for a Magic card
-    elif message.content.startswith('!magic'):
+    elif message.content.upper().startswith('!MAGIC'):
         for c in useful.fetchCard(message):
             await message.channel.send(c)
 
     #Send a random reaction image
-    elif message.content.startswith('!react'):
+    elif message.content.upper().startswith('!REACT'):
         try:
             await message.delete()
             helpers.logMessage(message)
@@ -76,22 +76,22 @@ async def on_message(message):
             await message.channel.send("I didn't find any images!")
 
     #Rate something
-    elif message.content.startswith('!rate'):
+    elif message.content.upper().startswith('!RATE'):
         await message.channel.send(fun.rateSomething(message))
                                        
     #Roll a die
-    elif message.content.startswith('!roll'):
+    elif message.content.upper().startswith('!ROLL'):
         await message.channel.send(useful.rollDice(message))                               
 
     #Send a shiba inu picture
-    elif message.content.startswith('!shibe'):
+    elif message.content.upper().startswith('!SHIBE'):
         try:
             await message.channel.send(file=discord.File(fun.shibaPic()))
         except RuntimeError: #No valid images
             await message.channel.send("I didn't find any images!")
 
     #Setup a reminder
-    elif message.content.startswith('!remind'):
+    elif message.content.upper().startswith('!REMIND'):
         reminder = useful.makeReminder(message)
 
         await message.channel.send(useful.confirmReminder(message, reminder))
@@ -99,14 +99,14 @@ async def on_message(message):
         def pred(msg):
             return (msg.author == message.author and
                     msg.channel == message.channel and
-                    (msg.content.startswith('!yes') or msg.content.startswith('!no')))
+                    (msg.content.upper().startswith('!YES') or msg.content.upper().startswith('!NO')))
 
         if reminder != None:
             try:
-                reply = await client.wait_for('message', check=pred, timeout=10)
-                if reply.content.startswith('!yes'):
+                reply = await client.wait_for('message', check=pred, timeout=30)
+                if reply.content.upper().startswith('!YES'):
                     await message.channel.send(useful.startReminder(reminder))
-                elif reply.content.startswith('!no'):
+                elif reply.content.upper().startswith('!NO'):
                     await message.channel.send("Ok, I will discard that reminder.")
                     
             except asyncio.TimeoutError:      
@@ -114,22 +114,22 @@ async def on_message(message):
                                           % message.author.mention)
                 
     #Setup reminder for everyone
-    elif message.content.startswith('!announce'):
+    elif message.content.upper().startswith('!ANNOUNCE'):
         if(message.author.guild_permissions.administrator):
-            reminder = useful.makeReminder(message)
+            reminder = useful.makeReminder(message, announcement=True)
 
             await message.channel.send(useful.confirmReminder(message, reminder))
 
             def pred(msg):
                 return (msg.author == message.author and
                         msg.channel == message.channel and
-                        (msg.content.startswith('!yes') or msg.content.startswith('!no')))
+                        (msg.content.upper().startswith('!YES') or msg.content.upper().startswith('!NO')))
 
             try:
-                reply = await client.wait_for('message', check=pred, timeout=10)
-                if reply.content.startswith('!yes'):
+                reply = await client.wait_for('message', check=pred, timeout=30)
+                if reply.content.upper().startswith('!YES'):
                     await message.channel.send(useful.startReminder(reminder))
-                elif reply.content.startswith('!no'):
+                elif reply.content.upper().startswith('!NO'):
                     await message.channel.send("Ok, I will discard that reminder.")
                     
             except asyncio.TimeoutError:

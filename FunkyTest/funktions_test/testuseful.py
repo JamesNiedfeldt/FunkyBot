@@ -124,33 +124,38 @@ class TestUseful(unittest.TestCase):
         self.msg.content = "[[fake_card]]"
         results = u.fetchCard(self.msg)
         self.assertEqual(len(results), 1)
-        self.assertEqual(results[0], "Sorry, I couldn't find \"fake_card\"!")
+        self.assertIsNone(results[0][0])
+        self.assertEqual(results[0][1], "Sorry, I couldn't find \"fake_card\"!")
 
         time.sleep(.1)
         self.msg.content = "[[random]]"
         results = u.fetchCard(self.msg)
         self.assertEqual(len(results), 1)
-        self.assertNotEqual(results[0], "Sorry, I couldn't find \"fake_card\"!")
+        self.assertIsNotNone(results[0][0])
+        self.assertNotEqual(results[0][1], "Sorry, I couldn't find \"fake_card\"!")
 
         time.sleep(.1)
         self.msg.content = "[[plains]]"
         results = u.fetchCard(self.msg)
         self.assertEqual(len(results), 1)
-        self.assertNotIn("Sorry, I couldn't find", results[0])
+        self.assertIsNotNone(results[0][0])
+        self.assertNotIn("Sorry, I couldn't find", results[0][1])
         
         time.sleep(.1)
         self.msg.content = "[[plains|island]]"
         results = u.fetchCard(self.msg)
         self.assertEqual(len(results), 2)
         for string in results:
-            self.assertNotIn("Sorry, I couldn't find", string)
+            self.assertIsNotNone(string[0])
+            self.assertNotIn("Sorry, I couldn't find", string[1])
 
         time.sleep(.1)
         self.msg.content = "[[plains|island|swamp]]"
         results = u.fetchCard(self.msg)
         self.assertEqual(len(results), 3)
         for string in results:
-            self.assertNotIn("Sorry, I couldn't find", string)
+            self.assertIsNotNone(string[0])
+            self.assertNotIn("Sorry, I couldn't find", string[1])
 
     def test_makeReminder_noMessage(self):
         self.msg.content = "[[]]"

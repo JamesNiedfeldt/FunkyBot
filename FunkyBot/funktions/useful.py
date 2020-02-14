@@ -97,7 +97,7 @@ def fetchCard(message):
 
         try:
             #Random card requested
-            if(i.upper() == "RANDOM"):
+            if i.upper() == "RANDOM":
                 response = requests.get(url = random)
                 results = response.json()
                 
@@ -106,37 +106,48 @@ def fetchCard(message):
                 response = requests.get(url = name, params = {'fuzzy':c})
                 results = response.json()
 
-                if(results['object'] == "error"):
+                if results['object'] == "error":
                     #If name doesn't work, try a search
                     response = requests.get(url = search, params = {'q':c})
                     results = response.json()
 
             #Found a list
-            if(results['object'] == "list"):
+            if results['object'] == "list":
                 card = results['data'][0]
-                if(card['layout'] == "transform"): #Double-faced card
-                    transform = ""
+                if card['layout'] == "transform": #Double-faced card
+                    transform = []
                     for f in card['card_faces']:
-                        transform = transform + "\n" + f['image_uris']['normal']
-                    toReturn.append(transform)
+                        toReturn.append([results['scryfall_uri'],
+                                     f['name'],
+                                     f['image_uris']['normal'],
+                                     f['oracle_text']])
                 else: #Normal card
-                    toReturn.append(card['image_uris']['normal'])
+                    toReturn.append([results['scryfall_uri'],
+                                     results['name'],
+                                     results['image_uris']['normal'],
+                                     results['oracle_text']])
 
             #Single card
-            elif(results['object'] == "card"): 
-                if(results['layout'] == "transform"): #Double-faced card
+            elif results['object'] == "card": 
+                if results['layout'] == "transform": #Double-faced card
                     transform = ""
                     for f in results['card_faces']:
-                        transform = transform + "\n" + f['image_uris']['normal']
-                    toReturn.append(transform)
+                        toReturn.append([results['scryfall_uri'],
+                                     f['name'],
+                                     f['image_uris']['normal'],
+                                     f['oracle_text']])
                 else: #Normal card
-                    toReturn.append(results['image_uris']['normal'])
+                    toReturn.append([results['scryfall_uri'],
+                                     results['name'],
+                                     results['image_uris']['normal'],
+                                     results['oracle_text']])
                     
             else: #No results or got something weird
-                toReturn.append("Sorry, I couldn't find \"%s\"!" % i)
+                toReturn.append([None, "Sorry, I couldn't find \"%s\"!" % i])
 
         except KeyError as e: #Couldn't find JSON key
-            toReturn = "Something went wrong!"
+            toReturn.clear()
+            toReturn.append([None, "Something went wrong!"])
      
     return list(toReturn)
 

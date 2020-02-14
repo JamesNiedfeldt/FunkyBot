@@ -61,7 +61,10 @@ async def on_message(message):
     #Search for a Magic card
     elif message.content.upper().startswith('!MAGIC'):
         for c in useful.fetchCard(message):
-            await message.channel.send(c)
+            if c[0] == None:
+                await message.channel.send(c[1])
+            else:
+                await message.channel.send(c[0], embed=discord.Embed(title=c[1], description=c[3]).set_image(url=c[2]))
 
     #Send a random reaction image
     elif message.content.upper().startswith('!REACT'):

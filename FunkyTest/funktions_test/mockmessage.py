@@ -5,6 +5,6 @@ class MockMessage():
         self.content = ""
         self.author = type("author", (), {"display_name" : "", "name": "",
                                           "mention" : ""})
-        self.server = ""
+        self.guild = ""
         self.channel = type("channel", (), {"name" : "", "id": -1})
-        self.timestamp = ""
+        self.created_at = ""

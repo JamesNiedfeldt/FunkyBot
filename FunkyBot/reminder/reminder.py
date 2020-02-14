@@ -45,8 +45,7 @@ class Reminder():
         while(self.live):
             if(time.time() >= self.begin + self.duration):
                 self.live = False
-                await client.send_message(client.get_channel(str(self.destination)),
-                                          self.message)
+                await client.get_channel(self.destination).send(self.message)
                 database.deleteFromDb(self)
                 
             else:

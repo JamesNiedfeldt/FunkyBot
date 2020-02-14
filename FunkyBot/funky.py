@@ -28,118 +28,120 @@ async def on_message(message):
 
     #Answer a yes-or-no question
     elif message.content.startswith('!ask'):
-        await client.send_message(message.channel, fun.eightBall())
+        await message.channel.send(fun.eightBall())
 
     #Convert a number to binary
     elif message.content.startswith('!binary'):
-        await client.send_message(message.channel, useful.toBin(message))
+        await message.channel.send(useful.toBin(message))
 
     #List available commands
     elif message.content.startswith('!commands'):
-        await client.send_message(message.channel, information.commandList())
-
+        await message.channel.send(information.commandList())
+        
     #Choose randomly from choices
     elif message.content.startswith('!choose'):
-        await client.send_message(message.channel, fun.choose(message))
+        await message.channel.send(fun.choose(message))
 
     #Say hello
     elif message.content.startswith('!hello'):
-        await client.send_message(message.channel, information.sayHello(author,begin))
+        await message.channel.send(information.sayHello(author, begin))
 
     #Send detailed instructions for commands
     elif message.content.startswith('!help'):
-        await client.send_message(message.channel, information.sendHelp(message))
+        await message.channel.send(information.sendHelp(message))
 
     #Convert a number to hexadecimal
     elif message.content.startswith('!hex'):
-        await client.send_message(message.channel, useful.toHex(message))
+        await message.channel.send(useful.toHex(message))
 
     #Tell a joke
     elif message.content.startswith('!joke'):
-        await client.send_message(message.channel, fun.findOneLiner())
+        await message.channel.send(fun.findOneLiner())
 
     #Search for a Magic card
     elif message.content.startswith('!magic'):
         for c in useful.fetchCard(message):
-            await client.send_message(message.channel, c)
+            await message.channel.send(c)
 
     #Send a random reaction image
     elif message.content.startswith('!react'):
         try:
-            await client.delete_message(message)
+            await message.delete()
             helpers.logMessage(message)
         except discord.errors.Forbidden: #Can't delete
             pass
         try:
-            await client.send_file(message.channel, fun.reactionPic())
+            await message.channel.send(file=discord.File(fun.reactionPic()))
         except RuntimeError: #If there are no valid images
-            await client.send_message(message.channel, "I didn't find any images!")
+            await message.channel.send("I didn't find any images!")
 
     #Rate something
     elif message.content.startswith('!rate'):
-        await client.send_message(message.channel, fun.rateSomething(message))
-
+        await message.channel.send(fun.rateSomething(message))
+                                       
     #Roll a die
     elif message.content.startswith('!roll'):
-        await client.send_message(message.channel, useful.rollDice(message))
+        await message.channel.send(useful.rollDice(message))                               
 
     #Send a shiba inu picture
     elif message.content.startswith('!shibe'):
         try:
-            await client.send_file(message.channel, fun.shibaPic())
+            await message.channel.send(file=discord.File(fun.shibaPic()))
         except RuntimeError: #No valid images
-            await client.send_message(message.channel, "I didn't find any images!")
+            await message.channel.send("I didn't find any images!")
 
     #Setup a reminder
     elif message.content.startswith('!remind'):
         reminder = useful.makeReminder(message)
-        
-        await client.send_message(message.channel, useful.confirmReminder(message,reminder))
 
-        def check(msg):
-            return msg.content.startswith('!yes') or msg.content.startswith('!no')
+        await message.channel.send(useful.confirmReminder(message, reminder))
 
-        if(reminder != None):
-            reply = await client.wait_for_message(author=message. author,channel=message.channel,
-                                                  timeout=60, check=check)
-            
-            if(reply == None):
-                await client.send_message(message.channel, "%s, you took too long to respond so I discarded your reminder."
+        def pred(msg):
+            return (msg.author == message.author and
+                    msg.channel == message.channel and
+                    (msg.content.startswith('!yes') or msg.content.startswith('!no')))
+
+        if reminder != None:
+            try:
+                reply = await client.wait_for('message', check=pred, timeout=10)
+                if reply.content.startswith('!yes'):
+                    await message.channel.send(useful.startReminder(reminder))
+                elif reply.content.startswith('!no'):
+                    await message.channel.send("Ok, I will discard that reminder.")
+                    
+            except asyncio.TimeoutError:      
+                await message.channel.send("%s, you took too long to respond so I discarded your reminder."
                                           % message.author.mention)
-            elif(reply.content.startswith('!yes')):
-                await client.send_message(message.channel, useful.startReminder(reminder))
-            elif(reply.content.startswith('!no')):
-                await client.send_message(message.channel, "Ok, I will discard that reminder.")
-
-
+                
     #Setup reminder for everyone
     elif message.content.startswith('!announce'):
-        if(message.author.server_permissions.administrator):
-            reminder = useful.makeReminder(message,announcement=True)
-        
-            await client.send_message(message.channel, useful.confirmReminder(message,reminder))
+        if(message.author.guild_permissions.administrator):
+            reminder = useful.makeReminder(message)
 
-            def check(msg):
-                return msg.content.startswith('!yes') or msg.content.startswith('!no')
+            await message.channel.send(useful.confirmReminder(message, reminder))
 
-            if(reminder != None):
-                reply = await client.wait_for_message(author=message. author,channel=message.channel,
-                                                      timeout=60, check=check)
-                
-                if(reply == None):
-                    await client.send_message(message.channel, "%s, you took too long to respond so I discarded your reminder."
+            def pred(msg):
+                return (msg.author == message.author and
+                        msg.channel == message.channel and
+                        (msg.content.startswith('!yes') or msg.content.startswith('!no')))
+
+            try:
+                reply = await client.wait_for('message', check=pred, timeout=10)
+                if reply.content.startswith('!yes'):
+                    await message.channel.send(useful.startReminder(reminder))
+                elif reply.content.startswith('!no'):
+                    await message.channel.send("Ok, I will discard that reminder.")
+                    
+            except asyncio.TimeoutError:
+                await message.channel.send("%s, you took too long to respond so I discarded your reminder."
                                               % message.author.mention)
-                elif(reply.content.startswith('!yes')):
-                    await client.send_message(message.channel, useful.startReminder(reminder))
-                elif(reply.content.startswith('!no')):
-                    await client.send_message(message.channel, "Ok, I will discard that reminder.")
+                
         else:
-            await client.send_message(message.channel, "Sorry, only administrators can use that command!")
+            await message.channel.send("Sorry, only administrators can use that command!")
         
 #==== Log on ====
 with open(helpers.filePath("token.txt"),'r') as o:
     token = o.readline()
     client.run(token)
-    o.close()
 
 

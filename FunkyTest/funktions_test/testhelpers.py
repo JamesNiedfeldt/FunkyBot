@@ -11,14 +11,14 @@ class TestHelpers(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.msg = m.MockMessage()
-        self.msg.server = "test server"
-        self.msg.timestamp = datetime.datetime(2000,1,1)
+        self.msg.guild = "test server"
+        self.msg.created_at = datetime.datetime(2000,1,1)
         self.msg.channel = "test channel"
         self.msg.author.name = "test author"
         self.msg.content = "test content"
 
         self.logpath = os.path.abspath(
-            os.path.join(os.pardir, "FunkyBot/logs/%s-log.txt" % self.msg.server))
+            os.path.join(os.pardir, "FunkyBot/logs/%s-log.txt" % self.msg.guild))
 
     def test_parse(self):
         string = "[[]]"
@@ -42,7 +42,7 @@ class TestHelpers(unittest.TestCase):
     def test_logMessage(self):
         h.logMessage(self.msg)
         string = "%s - %s - %s: %s\n" % (
-            self.msg.timestamp.strftime("%Y-%b-%d %H:%M"), self.msg.channel,
+            self.msg.created_at.strftime("%Y-%b-%d %H:%M"), self.msg.channel,
             self.msg.author.name, self.msg.content)
         with open(self.logpath) as f:
             self.assertEqual(f.readline(), string)

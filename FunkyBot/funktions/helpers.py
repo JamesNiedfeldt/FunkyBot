@@ -27,8 +27,8 @@ def parse(string):
     
 #==== Log deleted messages ====
 def logMessage(message):
-    with open(filePath('logs/'+str(message.server)+'-log.txt'),'a+', encoding='utf-8') as log:
-        toLog = "%s - %s - %s: %s\n" % (message.timestamp.strftime("%Y-%b-%d %H:%M"),message.channel,message.author.name,message.content)
+    with open(filePath('logs/'+str(message.guild)+'-log.txt'),'a+', encoding='utf-8') as log:
+        toLog = "%s - %s - %s: %s\n" % (message.created_at.strftime("%Y-%b-%d %H:%M"),message.channel,message.author.name,message.content)
         log.write(toLog)
 
 #==== Check directories for valid images ====

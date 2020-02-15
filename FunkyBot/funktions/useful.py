@@ -113,34 +113,15 @@ def fetchCard(message):
 
             #Found a list
             if results['object'] == "list":
-                card = results['data'][0]
-                if card['layout'] == "transform": #Double-faced card
-                    transform = []
-                    for f in card['card_faces']:
-                        toReturn.append([results['scryfall_uri'],
-                                     f['name'],
-                                     f['image_uris']['normal'],
-                                     f['oracle_text']])
-                else: #Normal card
-                    toReturn.append([results['scryfall_uri'],
-                                     results['name'],
-                                     results['image_uris']['normal'],
-                                     results['oracle_text']])
+                results = results['data'][0]
 
-            #Single card
-            elif results['object'] == "card": 
+            if results['object'] == "card": 
                 if results['layout'] == "transform": #Double-faced card
-                    transform = ""
                     for f in results['card_faces']:
-                        toReturn.append([results['scryfall_uri'],
-                                     f['name'],
-                                     f['image_uris']['normal'],
-                                     f['oracle_text']])
+                        toReturn.append([results['scryfall_uri']] +
+                                        h.formatMagic(f, transform=True))
                 else: #Normal card
-                    toReturn.append([results['scryfall_uri'],
-                                     results['name'],
-                                     results['image_uris']['normal'],
-                                     results['oracle_text']])
+                    toReturn.append(h.formatMagic(results))
                     
             else: #No results or got something weird
                 toReturn.append([None, "Sorry, I couldn't find \"%s\"!" % i])
@@ -148,7 +129,7 @@ def fetchCard(message):
         except KeyError as e: #Couldn't find JSON key
             toReturn.clear()
             toReturn.append([None, "Something went wrong!"])
-     
+            
     return list(toReturn)
 
 #==== Create a Reminder ====

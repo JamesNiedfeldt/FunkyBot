@@ -77,3 +77,39 @@ def setUpReminders(client):
 #==== Format string to use block quotes ====
 def blockQuote(string):
     return "> " + string + "\n"
+
+#==== Format Magic card information ====
+def formatMagic(card, transform=False):
+    textBox = (card['type_line'])
+
+    if 'card_faces' in card and card['layout'] != "transform": #Split or other weird card
+        for f in card['card_faces']:
+            textBox = (textBox + "\n\n" + f['name'] + "   " + f['mana_cost'] +
+                       "\n" + f['type_line'] +
+                       "\n" + f['oracle_text'])
+            if 'power' in f and 'toughness' in f:
+                if f['power'] == '*' and f['toughness'] == '*':
+                    textBox = textBox + '\n\\' + f['power'] + '/\\' + f['toughness']
+                else:      
+                    textBox = textBox + '\n' + f['power'] + '/' + f['toughness']
+
+    else:
+        textBox = textBox + "\n\n" + card['oracle_text']
+        if 'power' in card and 'toughness' in card:
+            if card['power'] == '*' and card['toughness'] == '*':
+                textBox = textBox + '\n\\' + card['power'] + '/\\' + card['toughness']
+            else:      
+                textBox = textBox + '\n' + card['power'] + '/' + card['toughness']
+
+    nameAndCost = card['name'] + "   " + card['mana_cost']
+
+    if transform:
+        return ([nameAndCost,
+                 card['image_uris']['normal'],
+                 textBox])
+    
+    else: 
+        return ([card['scryfall_uri'],
+                 nameAndCost,
+                 card['image_uris']['normal'],
+                 textBox])

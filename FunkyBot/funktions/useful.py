@@ -86,10 +86,10 @@ def fetchCard(message):
     #Parse card name
     cards = h.parse(message.content)
     if len(cards) > 3: #Too many cards in search
-        toReturn.append("That's too many cards to search for!")
+        toReturn.append([None, "That's too many cards to search for!"])
         return list(toReturn)
     elif len(cards) == 0: #Nothing to search for
-        toReturn.append(h.badArgs("magic"))
+        toReturn.append([None, h.badArgs("magic")])
         return list(toReturn)
     for i in cards:
         i = i.split('/')[0]

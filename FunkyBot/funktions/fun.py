@@ -11,9 +11,8 @@ import os
 def eightBall():
     with open(h.filePath('lists/answers.txt'), 'r') as file:
         answers = file.readlines()
-        randInt = random.randint(0, (len(answers)) - 1)
 
-    return answers[randInt]
+    return random.choice(answers)
 
 #==== Choose randomly from choices ====
 def choose(message):
@@ -33,9 +32,8 @@ def choose(message):
 def findOneLiner():
     with open(h.filePath('lists/jokes.txt'), 'r') as file:
         jokes = file.readlines()
-    randInt = random.randint(0, (len(jokes)) - 1)
 
-    return jokes[randInt]
+    return random.choice(jokes)
 
 #==== Send random reaction image ====
 def reactionPic():

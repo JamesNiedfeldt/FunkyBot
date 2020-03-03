@@ -112,13 +112,13 @@ class TestUseful(unittest.TestCase):
         self.msg.content = "[[island|swamp|mountain|forest]]"
         results = u.fetchCard(self.msg)
         self.assertEqual(len(results), 1)
-        self.assertEqual(results[0], "That's too many cards to search for!")
+        self.assertEqual(results[0][1], "That's too many cards to search for!")
 
         time.sleep(.1)
         self.msg.content = "[[]]"
         results = u.fetchCard(self.msg)
         self.assertEqual(len(results), 1)
-        self.assertEqual(results[0], h.badArgs("magic"))
+        self.assertEqual(results[0][1], h.badArgs("magic"))
 
         time.sleep(.1)
         self.msg.content = "[[fake_card]]"

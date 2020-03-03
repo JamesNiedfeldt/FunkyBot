@@ -40,12 +40,20 @@ class Database():
                        "VALUES(?,?,?,?)",(values))
         reminder.id = cursor.lastrowid
         self.db.commit()
+        
+        if reminder.live:
+            self.reminders.append(reminder)
 
     def deleteFromDb(self,reminder):
         if(reminder.id != -1):
             cursor = self.db.cursor()
             cursor.execute("DELETE FROM reminders WHERE id=?",(reminder.id,))
             self.db.commit()
+
+        try:
+            self.reminders.remove(reminder)
+        except ValueError:
+            pass
 
     #==== Clear items from database ====
     def __emptyDb(self):

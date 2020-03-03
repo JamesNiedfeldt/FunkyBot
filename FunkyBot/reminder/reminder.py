@@ -9,6 +9,7 @@ import asyncio
 import re
 import discord
 from reminder import database
+from aiohttp import client_exceptions
 
 #==== Globals ====
 client = None
@@ -45,9 +46,13 @@ class Reminder():
     async def __run(self):
         while(self.live):
             if(time.time() >= self.begin + self.duration):
-                self.live = False
-                await client.get_channel(self.destination).send(self.message)
-                database.deleteFromDb(self)
+                try:
+                    await client.get_channel(self.destination).send(self.message)
+                    self.live = False
+                    database.deleteFromDb(self)
+                #If bot is trying to reconnect, delay the message
+                except client_exceptions.ClientConnectorError:
+                    await asyncio.sleep(1)
                 
             else:
                 await asyncio.sleep(1)

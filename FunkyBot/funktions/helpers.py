@@ -3,9 +3,10 @@
 Contains the non-command functions needed to run
 """
 
-import time
+from datetime import datetime
 from reminder import reminder, database
 from funktions import constant as c
+import time
 import os
 import re
 
@@ -113,3 +114,44 @@ def formatMagic(card, transform=False):
                  nameAndCost,
                  card['image_uris']['normal'],
                  textBox])
+
+#==== Convert reminder arguments to duration ====
+def convertDurationTime(timeArgs):
+    duration = 0
+
+    if len(timeArgs) > 3:
+        timeArgs = timeArgs[0:3]
+                
+    for i in timeArgs:
+        if('s' in i):
+            i = "".join(re.split("\D",i))
+            duration = duration + float(i)
+        elif('m' in i):
+            i = "".join(re.split("\D",i))
+            duration = duration + float(i)*60
+        elif('h' in i):
+            i = "".join(re.split("\D",i))
+            duration = duration + float(i)*3600
+        elif('d' in i):
+            i = "".join(re.split("\D",i))
+            duration = duration + float(i)*86400
+
+    #Max of 30 days
+    if(duration > 2592000):
+        duration = 2592000
+    elif(duration == 0):
+        duration = 300
+                
+    return duration
+
+#==== Convert reminder arguments to datetime ====
+def convertDateTime(timeArgs):
+    arg = timeArgs[0]
+    
+    try:
+        date = datetime.strptime(arg, "%m/%d/%Y %H:%M %z")
+        print(date)
+        print(date.timestamp())
+        return date.timestamp()
+    except Exception as e:
+        return None

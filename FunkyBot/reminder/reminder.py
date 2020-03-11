@@ -17,7 +17,7 @@ database = database.db
 
 #==== Reminder class ====
 class Reminder():
-    def __init__(self,duration=0,msg=None):
+    def __init__(self,duration=0,msg=None,dt=False):
         if(msg != None):
             self.message = ""
             self._formatMessage(msg)
@@ -26,12 +26,18 @@ class Reminder():
             self.destination = msg.channel.id
         self.live = False
         self.id = -1
+        self.dt = dt
 
     def beginThread(self):
         if(self.begin == -1):
-            self.begin = time.time()
+            if self.dt:
+                self.begin = 0
+            else:
+                self.begin = time.time()
         self.live = True
         asyncio.ensure_future(self.__run())
+        print("Begin: " + str(self.begin))
+        print("Duration: " + str(self.duration))
 
     #Shouldn't be called outside of this class or subclasses
     def _formatMessage(self,cmd):

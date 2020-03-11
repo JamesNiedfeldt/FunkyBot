@@ -134,42 +134,30 @@ def fetchCard(message):
 
 #==== Create a Reminder ====
 def makeReminder(message,announcement=False):
-    duration = 0
     timeArgs = h.parse(message.content)
 
-    if(len(timeArgs) == 0):
+    if len(timeArgs) == 0:
         return None
 
-    if(len(timeArgs) < 1):
+    if len(timeArgs) < 1:
         duration = 30
     else:
-        if(len(timeArgs) > 3):
-            timeArgs = timeArgs[0:3]
-        for i in set(timeArgs):
-            timeArgs = i
-            if('s' in i):
-                i = "".join(re.split("\D",i))
-                duration = duration + float(i)
-            elif('m' in i):
-                i = "".join(re.split("\D",i))
-                duration = duration + float(i)*60
-            elif('h' in i):
-                i = "".join(re.split("\D",i))
-                duration = duration + float(i)*3600
-            elif('d' in i):
-                i = "".join(re.split("\D",i))
-                duration = duration + float(i)*86400
+        #Argument is a datetime
+        if '/' in timeArgs[0]:
+            duration = h.convertDateTime(timeArgs)
+            date = True
+        #Argument is a duration
+        else: 
+            duration = h.convertDurationTime(timeArgs)
+            date = False
 
-    #Max of 30 days
-    if(duration > 2592000):
-        duration = 2592000
-    elif(duration == 0):
-        duration = 300
+    if duration == None:
+        return None
 
     if(announcement):
-        timer = reminder.Announcement(duration=duration,msg=message)
+        timer = reminder.Announcement(duration=duration,msg=message,dt=date)
     else:
-        timer = reminder.Reminder(duration=duration,msg=message)
+        timer = reminder.Reminder(duration=duration,msg=message,dt=date)
 
     return timer
 

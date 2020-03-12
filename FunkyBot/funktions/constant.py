@@ -3,7 +3,7 @@
 Contains constants
 """
 
-VERSION = "1.5.3"
+VERSION = "1.6.0"
 
 INFO_LIST = "**Information:** `!commands` `!hello` `!help [[X]]`"
 

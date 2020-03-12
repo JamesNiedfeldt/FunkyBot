@@ -159,6 +159,9 @@ def convertDateTime(timeArgs):
     
     try:
         date = datetime.strptime(arg, "%m/%d/%Y %H:%M %z")
-        return date.timestamp()
-    except Exception:
+        if date.timestamp() <= getTime():
+            return None
+        else:
+            return date.timestamp()
+    except ValueError:
         return None

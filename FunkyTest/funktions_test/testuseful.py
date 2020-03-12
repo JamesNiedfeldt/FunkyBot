@@ -223,15 +223,11 @@ class TestUseful(unittest.TestCase):
 
         self.msg.content = " [[0]]"
         reminder = u.makeReminder(self.msg)
-        self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, self.msg.author.mention + " ")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
+        self.assertIsNone(reminder)
 
         self.msg.content = " [[0s|0d|0h]]"
         reminder = u.makeReminder(self.msg)
-        self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, self.msg.author.mention + " ")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
+        self.assertIsNone(reminder)
 
     def test_makeReminder_withMessage(self):
         self.msg.content = "[[]] test message"
@@ -299,15 +295,11 @@ class TestUseful(unittest.TestCase):
 
         self.msg.content = "[[0]] test message"
         reminder = u.makeReminder(self.msg)
-        self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
+        self.assertIsNone(reminder)
 
         self.msg.content = "[[0s|0d|0h]] test message"
         reminder = u.makeReminder(self.msg)
-        self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
+        self.assertIsNone(reminder)
 
     def test_makeReminder_announcmentNoMessage(self):
         self.msg.content = "[[]]"
@@ -375,15 +367,11 @@ class TestUseful(unittest.TestCase):
 
         self.msg.content = "[[0]]"
         reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, "@everyone ")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
+        self.assertIsNone(reminder)
 
         self.msg.content = "[[0s|0d|0h]]"
         reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, "@everyone ")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
+        self.assertIsNone(reminder)
 
     def test_makeReminder_announcementWithMessage(self):
         self.msg.content = "[[]] test message"
@@ -451,15 +439,11 @@ class TestUseful(unittest.TestCase):
 
         self.msg.content = "[[0]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, "@everyone test message")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
+        self.assertIsNone(reminder)
 
         self.msg.content = "[[0s|0d|0h]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertEqual(reminder.duration, 300)
-        self.assertEqual(reminder.message, "@everyone test message")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
+        self.assertIsNone(reminder)
 
     def test_confirmReminder(self):
         self.msg.content = " "

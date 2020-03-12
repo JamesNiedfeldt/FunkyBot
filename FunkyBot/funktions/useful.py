@@ -154,7 +154,7 @@ def makeReminder(message,announcement=False):
     if duration == None:
         return None
 
-    if(announcement):
+    if announcement:
         timer = reminder.Announcement(duration=duration,msg=message,dt=date)
     else:
         timer = reminder.Reminder(duration=duration,msg=message,dt=date)
@@ -163,11 +163,15 @@ def makeReminder(message,announcement=False):
 
 #==== Send confirmation message of reminder ====
 def confirmReminder(message,timer):
-    if(timer == None):
+    if timer == None:
         return h.badArgs('remind')
     else:
+        if timer.dt:
+            formattedTime = h.formatTime(timer.duration - h.getTime())
+        else:
+            formattedTime = h.formatTime(timer.duration)
         return "Ok %s, I will remind you in %s. If that is ok, reply with `!yes`. If not, reply with `!no`." % (
-            message.author.display_name,h.formatTime(timer.duration))
+            message.author.display_name, formattedTime)
 
 #==== Send confirmation message of reminder ====
 def startReminder(timer):

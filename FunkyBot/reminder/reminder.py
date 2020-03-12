@@ -36,8 +36,6 @@ class Reminder():
                 self.begin = time.time()
         self.live = True
         asyncio.ensure_future(self.__run())
-        print("Begin: " + str(self.begin))
-        print("Duration: " + str(self.duration))
 
     #Shouldn't be called outside of this class or subclasses
     def _formatMessage(self,cmd):
@@ -65,8 +63,8 @@ class Reminder():
 
 #==== Announcement class ====
 class Announcement(Reminder):
-    def __init__(self,duration=0,msg=None):
-        super().__init__(duration=duration,msg=msg)
+    def __init__(self,duration=0,msg=None,dt=False):
+        super().__init__(duration=duration,msg=msg,dt=dt)
 
     def beginThread(self):
         super().beginThread()

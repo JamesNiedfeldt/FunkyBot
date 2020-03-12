@@ -123,25 +123,34 @@ def convertDurationTime(timeArgs):
         timeArgs = timeArgs[0:3]
                 
     for i in timeArgs:
-        if('s' in i):
-            i = "".join(re.split("\D",i))
-            duration = duration + float(i)
-        elif('m' in i):
-            i = "".join(re.split("\D",i))
-            duration = duration + float(i)*60
-        elif('h' in i):
-            i = "".join(re.split("\D",i))
-            duration = duration + float(i)*3600
-        elif('d' in i):
-            i = "".join(re.split("\D",i))
-            duration = duration + float(i)*86400
+        key = re.findall("[smhd]", i, flags=re.IGNORECASE)
+        
+        if len(key) is 0:
+            return None
+        else:
+            num = re.split(key[0] ,i)[0]
+            key = key[0].lower()
+
+        try:
+            if num == "":
+                pass
+            elif key == 's':
+                duration = duration + float(num)
+            elif key == 'm':
+                duration = duration + float(num)*60
+            elif key == 'h':
+                duration = duration + float(num)*3600
+            elif key == 'd':
+                duration = duration + float(num)*86400
+        except ValueError:
+            return None
 
     #Max of 30 days
     if(duration > 2592000):
         duration = 2592000
-    elif(duration == 0):
-        duration = 300
-                
+    elif(duration <= 0):
+        return None
+  
     return duration
 
 #==== Convert reminder arguments to datetime ====
@@ -150,8 +159,6 @@ def convertDateTime(timeArgs):
     
     try:
         date = datetime.strptime(arg, "%m/%d/%Y %H:%M %z")
-        print(date)
-        print(date.timestamp())
         return date.timestamp()
-    except Exception as e:
+    except Exception:
         return None

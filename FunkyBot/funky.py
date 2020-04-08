@@ -118,7 +118,7 @@ async def on_message(message):
                 
     #Setup reminder for everyone
     elif message.content.upper().startswith('!ANNOUNCE'):
-        if(message.author.guild_permissions.administrator):
+        if message.author.guild_permissions.administrator:
             reminder = useful.makeReminder(message, announcement=True)
 
             await message.channel.send(useful.confirmReminder(message, reminder))

@@ -18,7 +18,7 @@ database = database.db
 #==== Reminder class ====
 class Reminder():
     def __init__(self,duration=0,msg=None,dt=False):
-        if(msg != None):
+        if msg != None:
             self.message = ""
             self._formatMessage(msg)
             self.duration = duration
@@ -49,8 +49,8 @@ class Reminder():
         
     @asyncio.coroutine
     async def __run(self):
-        while(self.live):
-            if(time.time() >= self.begin + self.duration):
+        while self.live:
+            if time.time() >= self.begin + self.duration:
                 try:
                     await client.get_channel(self.destination).send(self.message)
                     self.live = False

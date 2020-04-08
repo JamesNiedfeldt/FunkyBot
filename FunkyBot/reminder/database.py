@@ -45,7 +45,7 @@ class Database():
             self.reminders.append(reminder)
 
     def deleteFromDb(self,reminder):
-        if(reminder.id != -1):
+        if reminder.id != -1:
             cursor = self.db.cursor()
             cursor.execute("DELETE FROM reminders WHERE id=?",(reminder.id,))
             self.db.commit()
@@ -68,7 +68,7 @@ class Database():
             newReminder = reminder.Reminder()
             
             #Add reminder only if an identical one isn't presently running
-            if(not any(r.id == i[0] for r in self.reminders)):
+            if not any(r.id == i[0] for r in self.reminders):
                 newReminder.id = i[0]
                 newReminder.begin = i[1]
                 newReminder.duration = i[2]

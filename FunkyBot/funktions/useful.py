@@ -178,7 +178,7 @@ def startReminder(timer):
     timer.beginThread()
     reminder.database.insertToDb(timer)
 
-    if(timer.live):
+    if timer.live:
         return "Ok, I set a reminder for you!"
     else:
         return "Sorry, something went wrong!"

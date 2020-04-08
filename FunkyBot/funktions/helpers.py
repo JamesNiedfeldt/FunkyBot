@@ -62,7 +62,7 @@ def formatTime(time,offset=0):
 #==== Return relative path ====
 def filePath(directory):
     absolute = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    path = os.path.join(absolute, directory)
+    path = os.path.join(absolute, "files/" + directory)
     return path
 
 #==== Error in command arguments ====

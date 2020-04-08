@@ -18,7 +18,7 @@ class TestHelpers(unittest.TestCase):
         self.msg.content = "test content"
 
         self.logpath = os.path.abspath(
-            os.path.join(os.pardir, "FunkyBot/logs/%s-log.txt" % self.msg.guild))
+            os.path.join(os.pardir, "FunkyBot/files/logs/%s-log.txt" % self.msg.guild))
 
     def test_parse(self):
         string = "[[]]"
@@ -105,10 +105,10 @@ class TestHelpers(unittest.TestCase):
             os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
         abspath = head[0] + "/FunkyBot"
         
-        path = os.path.join(abspath, "test_directory")
+        path = os.path.join(abspath, "files/test_directory")
         self.assertEqual(h.filePath("test_directory"), path)
 
-        path = os.path.join(abspath, "")
+        path = os.path.join(abspath, "files/")
         self.assertEqual(h.filePath(""), path)
 
     def test_badArgs(self):

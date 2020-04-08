@@ -29,13 +29,14 @@ class Reminder():
         self.dt = dt
 
     def beginThread(self):
-        if(self.begin == -1):
-            if self.dt:
-                self.begin = 0
-            else:
-                self.begin = time.time()
-        self.live = True
-        asyncio.ensure_future(self.__run())
+        if not self.live:
+            if self.begin == -1:
+                if self.dt:
+                    self.begin = 0
+                else:
+                    self.begin = time.time()
+            self.live = True
+            asyncio.ensure_future(self.__run())
 
     #Shouldn't be called outside of this class or subclasses
     def _formatMessage(self,cmd):

@@ -37,8 +37,16 @@ class TestFun(unittest.TestCase):
     def test_findOneLiner(self):
         self.assertIsNotNone(f.findOneLiner())
 
-    def test_reactionPic(self):
-        self.assertIsNotNone(f.reactionPic())
+    def test_randomPic(self):
+        self.assertIsNotNone(f.randomPic("reaction_pics"))
+
+        self.assertIsNotNone(f.randomPic("shiba_pics"))
+
+        try:
+            f.randomPic("test")
+            self.fail("FileNotFoundError was not raised")
+        except FileNotFoundError:
+            pass
 
     def test_rateSomething(self):
         self.msg.content = "[[x]]"
@@ -89,9 +97,6 @@ class TestFun(unittest.TestCase):
 
         self.msg.content = "[[x|y]]"
         self.assertEqual(f.rateSomething(self.msg), "I can only rate one thing!")
-
-    def test_shibaPic(self):
-        self.assertIsNotNone(f.shibaPic())
 
 if __name__ == "__main__":
     unittest.main()

@@ -74,8 +74,8 @@ async def on_message(message):
         except discord.errors.Forbidden: #Can't delete
             pass
         try:
-            await message.channel.send(file=discord.File(fun.reactionPic()))
-        except RuntimeError: #If there are no valid images
+            await message.channel.send(file=discord.File(fun.randomPic("reaction_pics")))
+        except (RuntimeError, FileNotFoundError): #If there are no valid images or bad path
             await message.channel.send("I didn't find any images!")
 
     #Rate something
@@ -89,8 +89,8 @@ async def on_message(message):
     #Send a shiba inu picture
     elif message.content.upper().startswith('!SHIBE'):
         try:
-            await message.channel.send(file=discord.File(fun.shibaPic()))
-        except RuntimeError: #No valid images
+            await message.channel.send(file=discord.File(fun.randomPic("shiba_pics")))
+        except (RuntimeError, FileNotFoundError): #No valid images or bad path
             await message.channel.send("I didn't find any images!")
 
     #Setup a reminder

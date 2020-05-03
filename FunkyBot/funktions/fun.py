@@ -35,20 +35,22 @@ def findOneLiner():
 
     return random.choice(jokes)
 
-#==== Send random reaction image ====
-def reactionPic():
-    pics = os.listdir(h.filePath("reaction_pics/")) #Paths to images
-    selection = "" #Image path to post
-    found = False #Image found or not
-
+#==== Send random reaction or shiba inu image ====
+def randomPic(path):
     try:
+        pics = os.listdir(h.filePath(path + '/')) #Paths to images
+        selection = "" #Image path to post
+        found = False #Image found or not
+
         h.validFolder(pics) #Check if folder is empty
         while not found: #Search for a valid file path
             selection = random.choice(pics)
             if (selection != "Thumbs.db" and
                 selection != ".gitkeep"):
                 found = True
-                return h.filePath("reaction_pics/%s" % selection)
+                return h.filePath(path + '/' + selection)
+    except FileNotFoundError: #Bad path
+        raise
     except RuntimeError: #Folder is empty
         raise
 
@@ -76,20 +78,3 @@ def rateSomething(message):
         return "I give %s a %s out of 10. %s" % (message.author.display_name, score, ratings[score-1])
     else:
         return "I give %s a %s out of 10. %s" % (toRate, score, ratings[score-1])
-
-#==== Send random Shiba Inu picture ====
-def shibaPic():
-    pics = os.listdir(h.filePath("shiba_pics/")) #Paths to images
-    selection = "" #Image path to post
-    found = False #Image found or not
-
-    try:
-        h.validFolder(pics) #Check if folder is empty
-        while not found: #Search for a valid file path
-            selection = random.choice(pics)
-            if (selection != "Thumbs.db" and
-                selection != ".gitkeep"):
-                found = True
-                return h.filePath("shiba_pics/%s" % selection)
-    except RuntimeError: #Folder is empty
-        raise

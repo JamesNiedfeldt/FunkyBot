@@ -15,7 +15,7 @@ def fetchCard(query):
     try:
         #Random card requested
         if query.upper().startswith("RANDOM"):
-            response = requests.get(url = random + parseRandom(query))
+            response = requests.get(url = random, params = {'q':parseRandom(query)})
             results = response.json()
 
         else:
@@ -91,6 +91,9 @@ def makeTextBox(card):
 def parseRandom(query):
     q = ""
     
-    terms = query.split(" ")
+    terms = query.upper().split("RANDOM")
+
+    if terms[1] != "":
+        q = terms[1]
 
     return q

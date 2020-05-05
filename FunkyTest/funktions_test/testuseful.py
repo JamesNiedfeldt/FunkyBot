@@ -132,7 +132,26 @@ class TestUseful(unittest.TestCase):
         results = u.fetchCard(self.msg)
         self.assertEqual(len(results), 1)
         self.assertIsNotNone(results[0][0])
-        self.assertNotEqual(results[0][1], "Sorry, I couldn't find \"fake_card\"!")
+
+        time.sleep(.1)
+        self.msg.content = "[[random fake_card]]"
+        results = u.fetchCard(self.msg)
+        self.assertEqual(len(results), 1)
+        self.assertIsNone(results[0][0])
+        self.assertEqual(results[0][1], "Sorry, I couldn't find \"random fake_card\"!")
+
+        time.sleep(.1)
+        self.msg.content = "[[random c:rg]]"
+        results = u.fetchCard(self.msg)
+        self.assertEqual(len(results), 1)
+        self.assertIsNotNone(results[0][0])
+
+        time.sleep(.1)
+        self.msg.content = "[[random c:rg|random is:commander]]"
+        results = u.fetchCard(self.msg)
+        self.assertEqual(len(results), 2)
+        for string in results:
+            self.assertIsNotNone(string)
 
         time.sleep(.1)
         self.msg.content = "[[plains]]"

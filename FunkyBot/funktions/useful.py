@@ -5,9 +5,9 @@ Contains the useful FunkyBot commands
 
 from funktions import helpers as h
 import random
-import requests
 import re
 from reminder import reminder
+from cardfetcher import cardfetcher as cf
 
 #==== Convert a number to binary ====
 def toBin(message):
@@ -77,10 +77,6 @@ def toHex(message):
 
 #==== Fetch a card ====
 def fetchCard(message):
-    #This whole method can probably be cleaned up
-    name = "https://api.scryfall.com/cards/named"
-    search = "https://api.scryfall.com/cards/search"
-    random = "https://api.scryfall.com/cards/random"
     toReturn = []
     
     #Parse card name
@@ -92,45 +88,16 @@ def fetchCard(message):
         toReturn.append([None, h.badArgs("magic")])
         return list(toReturn)
     for i in cards:
-        i = i.split('/')[0]
-        c = i.encode('utf-8')
+        result = cf.fetchCard(i)
+        
+        if not all(isinstance(r, list) for r in result):
+            toReturn.append(result)
+        else:
+            for l in result:
+                if type(l) == list:
+                    toReturn.append(l)
 
-        try:
-            #Random card requested
-            if i.upper() == "RANDOM":
-                response = requests.get(url = random)
-                results = response.json()
-                
-            else:
-                #Try finding by name first
-                response = requests.get(url = name, params = {'fuzzy':c})
-                results = response.json()
-
-                if results['object'] == "error":
-                    #If name doesn't work, try a search
-                    response = requests.get(url = search, params = {'q':c})
-                    results = response.json()
-
-            #Found a list
-            if results['object'] == "list":
-                results = results['data'][0]
-
-            if results['object'] == "card": 
-                if results['layout'] == "transform": #Double-faced card
-                    for f in results['card_faces']:
-                        toReturn.append([results['scryfall_uri']] +
-                                        h.formatMagic(f, transform=True))
-                else: #Normal card
-                    toReturn.append(h.formatMagic(results))
-                    
-            else: #No results or got something weird
-                toReturn.append([None, "Sorry, I couldn't find \"%s\"!" % i])
-
-        except KeyError as e: #Couldn't find JSON key
-            toReturn.clear()
-            toReturn.append([None, "Something went wrong!"])
-            
-    return list(toReturn)
+    return toReturn
 
 #==== Create a Reminder ====
 def makeReminder(message,announcement=False):

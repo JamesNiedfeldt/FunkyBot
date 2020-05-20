@@ -8,6 +8,7 @@ import random
 import re
 from reminder import reminder
 from cardfetcher import cardfetcher as cf
+from wikifetcher import wikifetcher as wf
 
 #==== Convert a number to binary ====
 def toBin(message):
@@ -173,3 +174,20 @@ def rollDice(message):
         return "I can't roll a die with %s sides!" % number
     except ValueError: #Non-integer sent or invalid number
         return "I can't roll a die with %s sides!" % number
+
+#==== Fetch a Wikipedia article ====
+def fetchWiki(message):
+    #Parse search terms
+    terms = h.parse(message.content)
+    if len(terms) > 1: #Too many cards in search
+        toReturn.append([None, "That's too many articles to search for!"])
+        return list(toReturn)
+    elif len(terms) == 0: #Nothing to search for
+        toReturn.append([None, h.badArgs("wiki")])
+        return list(toReturn)
+
+    for i in set(terms): terms = i #Convert back to a string
+
+    result = wf.fetchArticle(terms)
+
+    return result

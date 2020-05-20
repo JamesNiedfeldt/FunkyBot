@@ -1,0 +1,6 @@
+Here's how to use `!wiki`:
+
+Send `!wiki [[X]]` to have me search for a Wikipedia article.
+> - For example, to search for "shiba inu", you should send: `!wiki [[shiba inu]]`.
+> - I can only search for one article at a time.
+> - I can't screen the content I find, so please don't break server rules by searching for certain articles!

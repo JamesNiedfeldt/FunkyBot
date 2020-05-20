@@ -1,6 +1,7 @@
 Requirements:
 - Python v3.5.3
-- Discord.py v1.0
+- Discord.py v1.3.1
+- Requests v2.21.0
 
 Not included in the repository but needed to run:
 - Reaction pics (add picture files you want to FunkyBot/reaction_pics)

@@ -141,6 +141,14 @@ async def on_message(message):
                 
         else:
             await message.channel.send("Sorry, only administrators can use that command!")
+
+    #Search for a Wikipedia article
+    elif message.content.upper().startswith('!WIKI'):
+        a = useful.fetchWiki(message)
+        if a[0] == None:
+            await message.channel.send(a[1])
+        else:
+            await message.channel.send(a[0], embed=discord.Embed(title=a[1], description=a[2]).set_image(url=a[3]))
         
 #==== Log on ====
 with open(helpers.filePath("token.txt"),'r') as o:

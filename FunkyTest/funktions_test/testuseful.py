@@ -517,5 +517,25 @@ class TestUseful(unittest.TestCase):
         self.msg.content = "[[1000]]"
         self.assertIn("You rolled", u.rollDice(self.msg))
 
+    def test_fetchWiki(self):
+        #Each request must have a delay to comply with Wikipedia's rate limits
+        self.msg.content = "[[]]"
+        results = u.fetchWiki(self.msg)
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[1], h.badArgs("wiki"))
+
+        time.sleep(.05)
+        self.msg.content = "[[test fake article]]"
+        results = u.fetchWiki(self.msg)
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[1], "Sorry, I couldn't find \"test fake article\"!")
+
+        time.sleep(.05)
+        self.msg.content = "[[Wikipedia]]"
+        results = u.fetchWiki(self.msg)
+        self.assertEqual(len(results), 4)
+        self.assertIsNotNone(results[0])
+        self.assertNotIn("Sorry, I couldn't find", results[0][1])
+
 if __name__ == "__main__":
     unittest.main()

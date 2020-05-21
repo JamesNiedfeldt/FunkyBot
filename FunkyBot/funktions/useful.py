@@ -180,11 +180,9 @@ def fetchWiki(message):
     #Parse search terms
     terms = h.parse(message.content)
     if len(terms) > 1: #Too many cards in search
-        toReturn.append([None, "That's too many articles to search for!"])
-        return list(toReturn)
+        return [None, "That's too many articles to search for!"]
     elif len(terms) == 0: #Nothing to search for
-        toReturn.append([None, h.badArgs("wiki")])
-        return list(toReturn)
+        return [None, h.badArgs("wiki")]
 
     for i in set(terms): terms = i #Convert back to a string
 

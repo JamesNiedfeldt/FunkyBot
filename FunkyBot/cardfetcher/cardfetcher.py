@@ -5,6 +5,7 @@ Contains all necessary functions for searching up Magic: the Gathering cards
 
 #==== Imports ====
 import requests
+from funktions import helpers as h
 
 #==== Fetch a card from Scryfall ====
 def fetchCard(query):
@@ -13,19 +14,28 @@ def fetchCard(query):
     random = "https://api.scryfall.com/cards/random"
 
     try:
+        with open(h.filePath("user_agent.txt"), 'r') as f:
+            a = f.readline().rstrip('\n')
+            e = f.readline().rstrip('\n')
+            headers = { 'User-Agent': a,
+                       'From': e }
+    except:
+        return [None, "Something went wrong!"]
+
+    try:
         #Random card requested
         if query.upper().startswith("RANDOM"):
-            response = requests.get(url = random, params = {'q':parseRandom(query)})
+            response = requests.get(url = random, params = {'q':parseRandom(query)}, headers = headers)
             results = response.json()
 
         else:
             #Find by name first
-            response = requests.get(url = name, params = {'fuzzy':query})
+            response = requests.get(url = name, params = {'fuzzy':query}, headers = headers)
             results = response.json()
 
             if results['object'] == "error":
                 #Try a search if not found by name
-                response = requests.get(url = search, params = {'q':query})
+                response = requests.get(url = search, params = {'q':query}, headers = headers)
                 results = response.json()
 
         #If found multiple cards, take the first

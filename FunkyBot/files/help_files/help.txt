@@ -5,3 +5,5 @@ This is the command you're using! Send `!help [[X]]` to have me explain a comman
 > - You can also send just the name of the command without the ! character.
 > - I can only send an explanation of one command at a time.
 > - For commands with options in double brackets, you just need to send the name of the command. Don't send any brackets.
+
+You can also send `!help` with no options to get a list of commands.

@@ -3,9 +3,9 @@
 Contains constants
 """
 
-VERSION = "1.7.0"
+VERSION = "1.7.1"
 
-INFO_LIST = "**Information:** `!commands` `!hello` `!help [[X]]`"
+INFO_LIST = "**Information:** `!hello` `!help [[X]]`"
 
 USEFUL_LIST = "**Useful:** `!announce [[X|...]]` `!binary [[X]]` `!hex [[X]]` `!magic [[X|...|...]]` `!remind [[X|...]]` `!roll [[X]]` `!wiki [[X]]`"
 

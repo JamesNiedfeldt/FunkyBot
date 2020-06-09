@@ -33,10 +33,6 @@ async def on_message(message):
     #Convert a number to binary
     elif message.content.upper().startswith('!BINARY'):
         await message.channel.send(useful.toBin(message))
-
-    #List available commands
-    elif message.content.upper().startswith('!COMMANDS'):
-        await message.channel.send(information.commandList())
         
     #Choose randomly from choices
     elif message.content.upper().startswith('!CHOOSE'):
@@ -46,7 +42,7 @@ async def on_message(message):
     elif message.content.upper().startswith('!HELLO'):
         await message.channel.send(information.sayHello(author, begin))
 
-    #Send detailed instructions for commands
+    #Send list of commands or specific instructions
     elif message.content.upper().startswith('!HELP'):
         await message.channel.send(information.sendHelp(message))
 

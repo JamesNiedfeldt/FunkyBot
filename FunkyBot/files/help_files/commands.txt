@@ -1,3 +1,0 @@
-Here's how to use `!commands`:
-
-Send `!commands` to see a list of available commands for me.

@@ -107,6 +107,7 @@ class TestUseful(unittest.TestCase):
         self.msg.content = "[[10|20]]"
         self.assertEqual(u.toHex(self.msg), "I can only convert one number!")
 
+    @unittest.skip
     def test_fetchCard(self):
         #Each request must have a delay to comply with Scryfall's rate limits
         self.msg.content = "[[island|swamp|mountain|forest]]"
@@ -517,6 +518,7 @@ class TestUseful(unittest.TestCase):
         self.msg.content = "[[1000]]"
         self.assertIn("You rolled", u.rollDice(self.msg))
 
+    @unittest.skip
     def test_fetchWiki(self):
         #Each request must have a delay to comply with Wikipedia's rate limits
         self.msg.content = "[[]]"

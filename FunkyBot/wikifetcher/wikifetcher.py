@@ -28,12 +28,12 @@ def fetchArticle(query):
         if results['type'] == notFound:
             return [None, "Sorry, I couldn't find \"{}\"!".format(query)]
         else:
-            return formatArticle(results) 
+            return __formatArticle(results) 
 
     except KeyError as e:
         return [None, "Something went wrong!"]
 
-def formatArticle(article):
+def __formatArticle(article):
     title = article['title']
     description = article['description']
     extract = article['extract']

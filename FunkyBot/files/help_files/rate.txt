@@ -1,5 +1,5 @@
 Here's how to use `!rate`:
 
 Send `!rate [[X]]` to have me rate something on a scale from 1 to 10.
-> - For example, to rate Discord, you should send: `!rate [[discord]]`.
+> - For example, to rate Discord, you should send: `!rate [[Discord]]`.
 > - I can only rate one thing at a time.

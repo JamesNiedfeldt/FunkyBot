@@ -25,7 +25,7 @@ def fetchCard(query):
     try:
         #Random card requested
         if query.upper().startswith("RANDOM"):
-            response = requests.get(url = random, params = {'q':parseRandom(query)}, headers = headers)
+            response = requests.get(url = random, params = {'q':__parseRandom(query)}, headers = headers)
             results = response.json()
 
         else:
@@ -40,11 +40,11 @@ def fetchCard(query):
 
         #If found multiple cards, take the first
         if results['object'] == "list":
-            return formatCard(results['data'][0])
+            return __formatCard(results['data'][0])
 
         #Single card found
         elif results['object'] == "card":
-            return formatCard(results)
+            return __formatCard(results)
 
         #Nothing found
         else:
@@ -53,7 +53,7 @@ def fetchCard(query):
     except KeyError as e:
         return [None, "Something went wrong!"]
 
-def formatCard(card, givenUri=None):
+def __formatCard(card, givenUri=None):
     name = card['name']
     cost = ""
     textBox = ""
@@ -69,26 +69,26 @@ def formatCard(card, givenUri=None):
         if card['layout'] == "transform":
             cost = card['card_faces'][0]['mana_cost']
             for f in card['card_faces']:
-                toReturn.append(formatCard(f, givenUri=uri))
+                toReturn.append(__formatCard(f, givenUri=uri))
         else:
             textBox = card['type_line']
             for f in card['card_faces']:
                 textBox = (textBox + "\n\n" + 
                            "**" + f['name'] + "  " + f['mana_cost'] + "**" +
-                           "\n" + makeTextBox(f))
+                           "\n" + __makeTextBox(f))
             cost = card['mana_cost']
             imageUri = card['image_uris']['normal']
             toReturn = [uri, name + "  " + cost, textBox, imageUri]
 
     else:
-        textBox = makeTextBox(card)
+        textBox = __makeTextBox(card)
         cost = card['mana_cost']
         imageUri = card['image_uris']['normal']
         toReturn = [uri, name + "  " + cost, textBox, imageUri]
         
     return toReturn
 
-def makeTextBox(card):
+def __makeTextBox(card):
     textBox = card['type_line'] + "\n\n" + card['oracle_text']
     if 'power' in card and 'toughness' in card:
         if card['power'] == '*' and card['toughness'] == '*':
@@ -98,7 +98,7 @@ def makeTextBox(card):
 
     return textBox
 
-def parseRandom(query):
+def __parseRandom(query):
     q = ""
     
     terms = query.upper().split("RANDOM")

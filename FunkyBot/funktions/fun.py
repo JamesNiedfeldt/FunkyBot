@@ -73,8 +73,7 @@ def rateSomething(message):
     if toRate.upper() in {
         "FUNKYBOT","FUNKY","YOU"}:
         return "I give myself an 11/10. Literally the best ever." 
-    elif toRate.upper() in {
-        "ME","MYSELF"}:
-        return "I give %s a %s out of 10. %s" % (message.author.display_name, score, ratings[score-1])
     else:
+        if toRate.upper() in {"ME","MYSELF"}:
+            toRate = message.author.display_name
         return "I give %s a %s out of 10. %s" % (toRate, score, ratings[score-1])

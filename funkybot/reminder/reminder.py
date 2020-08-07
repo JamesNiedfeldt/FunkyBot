@@ -4,11 +4,12 @@ Keeps track of reminder requests from users and sends reminders when ready
 """
 
 #==== Imports ====
-import time
 import asyncio
 import re
 import discord
 from reminder import database
+from timer import timer
+from funktions import helpers as h
 from aiohttp import client_exceptions
 
 #==== Globals ====
@@ -21,21 +22,25 @@ class Reminder():
         if msg != None:
             self.message = ""
             self._formatMessage(msg)
-            self.duration = duration
-            self.begin = -1
             self.destination = msg.channel.id
+
+        self.duration = duration
+        self.dt = dt
+        
+        self.begin = -1
         self.live = False
         self.id = -1
-        self.dt = dt
+        self.timer = timer.Timer()
 
     def beginThread(self):
         if not self.live:
-            if self.begin == -1:
+            self.live = True
+            if self.begin < 0:
                 if self.dt:
                     self.begin = 0
                 else:
-                    self.begin = time.time()
-            self.live = True
+                    self.begin = h.getTime()
+                    
             asyncio.ensure_future(self.__run())
 
     #Shouldn't be called outside of this class or subclasses
@@ -49,18 +54,17 @@ class Reminder():
         
     @asyncio.coroutine
     async def __run(self):
+        await self.timer.timeUntilDate(self.duration + self.begin)
+        
         while self.live:
-            if time.time() >= self.begin + self.duration:
-                try:
-                    await client.get_channel(self.destination).send(self.message)
-                    self.live = False
-                    database.deleteFromDb(self)
-                #If bot is trying to reconnect, delay the message
-                except client_exceptions.ClientConnectorError:
-                    await asyncio.sleep(1)
-                
-            else:
-                await asyncio.sleep(1)
+            try:
+                await client.get_channel(self.destination).send(self.message)
+                self.live = False
+                database.deleteFromDb(self)
+            #If bot is trying to reconnect, delay the message
+            except client_exceptions.ClientConnectorError:
+                await self.timer.timeForDuration(1)
+
 
 #==== Announcement class ====
 class Announcement(Reminder):

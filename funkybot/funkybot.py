@@ -45,6 +45,9 @@ async def on_message(message):
     elif message.content.upper().startswith('!MAGIC'):
         await useful.magic(message)
 
+    elif message.content.upper().startswith('!POLL'):
+        await useful.poll(message,client)
+
     elif message.content.upper().startswith('!REMIND'):
         await useful.remind(message,client)
 

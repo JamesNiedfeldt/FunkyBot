@@ -3,7 +3,7 @@
 Contains the useful FunkyBot commands
 """
 
-from funktions import helpers as h
+from funktions import helpers as h, constant as c
 import random
 import re
 from reminder import reminder
@@ -97,6 +97,55 @@ def fetchCard(message):
             for l in result:
                 if type(l) == list:
                     toReturn.append(l)
+
+    return toReturn
+
+#==== Setup a poll ====
+def makePoll(message):
+    options = h.parse(message.content)
+    optDict = {}
+    description = ""
+    results = []
+
+    if len(options) <= 1:
+        results.append("I need at least two options for the poll!")
+        results.append(None)
+    elif len(options) > 5:
+        results.append("There are too many options!")
+        results.append(None)
+    else:
+        description = (re.sub("(\[\[.*\]\])|(!POLL)", "",
+                          message.content, flags=re.IGNORECASE) + "\n"
+                       + "\n" + c.POLL_MESSAGE % message.author.display_name)
+        for o in range(len(options)):
+            optDict[chr(0x1f1e6 + o)] = options[o]
+            description = description + "\n:regional_indicator_%s: - %s" % (chr(97+o), options[o])
+
+        results.append(description)
+        results.append(optDict)
+
+    return results
+
+#==== Analyze poll results ====
+def finishPoll(poll,options):
+    results = {}
+    toReturn = "Here are the results of the poll:\n"
+
+    for r in poll.reactions:
+        if r.emoji in options:
+            results[r.emoji] = r.count - 1
+
+    totalVotes = sum(results.values())
+
+    for r in results:
+        if totalVotes == 0:
+            toReturn = (toReturn + "\n"
+                        + h.blockQuote(options[r])
+                        + h.blockQuote("%s votes, 0%%" % results[r]))
+        else:
+            toReturn = (toReturn + "\n"
+                        + h.blockQuote(options[r])
+                        + h.blockQuote("%s votes, %s%%" % (results[r], int((results[r]/totalVotes)*100))))
 
     return toReturn
 

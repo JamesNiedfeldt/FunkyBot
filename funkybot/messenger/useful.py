@@ -50,6 +50,30 @@ async def magic(message):
         else:
             await message.channel.send(c[0], embed=discord.Embed(title=c[1], description=c[2]).set_image(url=c[3]))
 
+#==== Setup a poll ====
+async def poll(message,client):
+    pollInfo = useful.makePoll(message)
+    reactions = []
+
+    poll = await message.channel.send(pollInfo[0])
+
+    def pred(msg):
+        return (msg.author == message.author and
+                msg.channel == message.channel and
+                msg.content.upper().startswith('!END'))
+
+    if pollInfo[1] != None:
+        for o in pollInfo[1]:
+            await poll.add_reaction(o)
+
+        try:
+            reply = await client.wait_for('message', check=pred, timeout = 3600)
+        except asyncio.TimeoutError:
+            pass
+
+        poll = await message.channel.fetch_message(poll.id) #Update message information
+        await message.channel.send(useful.finishPoll(poll,pollInfo[1]))
+
 #==== Setup reminder ====
 async def remind(message,client):
     reminder = useful.makeReminder(message)

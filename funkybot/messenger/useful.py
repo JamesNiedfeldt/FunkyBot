@@ -52,27 +52,30 @@ async def magic(message):
 
 #==== Setup a poll ====
 async def poll(message,client):
-    pollInfo = useful.makePoll(message)
+    poll = useful.makePoll(message)
     reactions = []
 
-    poll = await message.channel.send(pollInfo[0])
+    if isinstance(poll, str): #Something went wrong, so an error was returned 
+        await message.channel.send(poll)
+        
+    else:
+        sentMsg = await message.channel.send(poll.body)
 
-    def pred(msg):
-        return (msg.author == message.author and
-                msg.channel == message.channel and
-                msg.content.upper().startswith('!END'))
+        def pred(msg):
+            return (msg.author == message.author and
+                    msg.channel == message.channel and
+                    msg.content.upper().startswith('!END'))
 
-    if pollInfo[1] != None:
-        for o in pollInfo[1]:
-            await poll.add_reaction(o)
+        for o in poll.options:
+            await sentMsg.add_reaction(o)
 
         try:
             reply = await client.wait_for('message', check=pred, timeout = 3600)
         except asyncio.TimeoutError:
             pass
 
-        poll = await message.channel.fetch_message(poll.id) #Update message information
-        await message.channel.send(useful.finishPoll(poll,pollInfo[1]))
+        fetchedMsg = await message.channel.fetch_message(sentMsg.id) #Update message information
+        await message.channel.send(useful.finishPoll(fetchedMsg,poll))
 
 #==== Setup reminder ====
 async def remind(message,client):

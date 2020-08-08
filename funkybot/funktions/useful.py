@@ -7,6 +7,7 @@ from funktions import helpers as h, constant as c
 import random
 import re
 from reminder import reminder
+from poll import poll
 from cardfetcher import cardfetcher as cf
 from wikifetcher import wikifetcher as wf
 
@@ -107,45 +108,41 @@ def makePoll(message):
     description = ""
     results = []
 
-    if len(options) <= 1:
-        results.append("I need at least two options for the poll!")
-        results.append(None)
-    elif len(options) > 5:
-        results.append("There are too many options!")
-        results.append(None)
+    if len(options) <= 1 or len(options) > 5:
+        return h.badArgs('poll')
     else:
-        description = (re.sub("(\[\[.*\]\])|(!POLL)", "",
-                          message.content, flags=re.IGNORECASE) + "\n"
-                       + "\n" + c.POLL_MESSAGE % message.author.display_name)
-        for o in range(len(options)):
-            optDict[chr(0x1f1e6 + o)] = options[o]
-            description = description + "\n:regional_indicator_%s: - %s" % (chr(97+o), options[o])
-
-        results.append(description)
-        results.append(optDict)
-
-    return results
+        question = (re.sub("(\[\[.*\]\])|(!POLL)", "",
+                           message.content, flags=re.IGNORECASE))
+            
+        return poll.Poll(message.author, question, options)
 
 #==== Analyze poll results ====
-def finishPoll(poll,options):
+def finishPoll(message,poll):
     results = {}
-    toReturn = "Here are the results of the poll:\n"
+    if poll.question == "":
+        toReturn = c.POLL_END % "\n\n*No question was given*\n"
+    else:
+        toReturn = c.POLL_END % poll.question
 
-    for r in poll.reactions:
-        if r.emoji in options:
+    for r in message.reactions:
+        if r.emoji in poll.options:
             results[r.emoji] = r.count - 1
 
     totalVotes = sum(results.values())
 
     for r in results:
         if totalVotes == 0:
-            toReturn = (toReturn + "\n"
-                        + h.blockQuote(options[r])
-                        + h.blockQuote("%s votes, 0%%" % results[r]))
+            percent = 0
         else:
-            toReturn = (toReturn + "\n"
-                        + h.blockQuote(options[r])
-                        + h.blockQuote("%s votes, %s%%" % (results[r], int((results[r]/totalVotes)*100))))
+            percent = int((results[r]/totalVotes)*100)
+            
+        bar = chr(0x25A0) * int(percent / 5)
+        spaces = ' ' * (20 - len(bar))
+
+        toReturn = (toReturn + "\n"
+                    + h.blockQuote(poll.options[r])
+                    + h.blockQuote("`[%s%s]` %s votes, %s%%" %
+                                   (bar, spaces, results[r], percent)))
 
     return toReturn
 

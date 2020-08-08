@@ -6,6 +6,6 @@ Send `!poll [[X|Y|...]]` to have me start a poll with the given options.
 > - The poll will automatically run for one hour, but you can end it early by sending `!end` in the same channel.
 > - When the poll is concluded, I will display the results.
 > - You can set a custom poll question by typing anywhere in the message outside the brackets.
-> - I need at least two options, but you can send up to ten.
+> - I need at least two options, but you can send up to five.
 > - You can only run a single poll per channel at a time.
 > - For example, to poll people on what their favorite color is, send `!poll What is your favorite color? [[Red|Yellow|Blue]]`

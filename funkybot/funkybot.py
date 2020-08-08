@@ -2,7 +2,9 @@
 import discord
 import asyncio
 from funktions import helpers, constant
-from messenger import information, useful, fun
+from messenger import (information_messenger as i,
+                       useful_messenger as u,
+                       fun_messenger as f)
 
 #==== Definitions ====
 client = discord.Client()
@@ -27,54 +29,54 @@ async def on_message(message):
 
     #Information commands
     elif message.content.upper().startswith('!HELLO'):
-        await information.hello(message,begin)
+        await i.hello(message,begin)
 
     elif message.content.upper().startswith('!HELP'):
-        await information.help(message)
+        await i.help(message)
 
     #Useful commands
     elif message.content.upper().startswith('!ANNOUNCE'):
-        await useful.announce(message,client)
+        await u.announce(message,client)
 
     elif message.content.upper().startswith('!BINARY'):
-        await useful.binary(message)
+        await u.binary(message)
 
     elif message.content.upper().startswith('!HEX'):
-        await useful.hexadec(message)
+        await u.hexadec(message)
 
     elif message.content.upper().startswith('!MAGIC'):
-        await useful.magic(message)
+        await u.magic(message)
 
     elif message.content.upper().startswith('!POLL'):
-        await useful.poll(message,client)
+        await u.poll(message,client)
 
     elif message.content.upper().startswith('!REMIND'):
-        await useful.remind(message,client)
+        await u.remind(message,client)
 
     elif message.content.upper().startswith('!ROLL'):
-        await useful.roll(message)
+        await u.roll(message)
 
     elif message.content.upper().startswith('!WIKI'):
-        await useful.wiki(message)
+        await u.wiki(message)
 
     #Fun commands
     elif message.content.upper().startswith('!ASK'):
-        await fun.ask(message)
+        await f.ask(message)
 
     elif message.content.upper().startswith('!CHOOSE'):
-        await fun.choose(message)
+        await f.choose(message)
 
     elif message.content.upper().startswith('!JOKE'):
-        await fun.joke(message)
+        await f.joke(message)
 
     elif message.content.upper().startswith('!REACT'):
-        await fun.react(message)
+        await f.react(message)
 
     elif message.content.upper().startswith('!RATE'):
-        await fun.rate(message)
+        await f.rate(message)
 
     elif message.content.upper().startswith('!SHIBE'):
-        await fun.shibe(message)
+        await f.shibe(message)
         
 #==== Log on ====
 with open(helpers.filePath("token.txt"),'r') as o:

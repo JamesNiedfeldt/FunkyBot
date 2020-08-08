@@ -3,11 +3,11 @@
 Contains constants
 """
 
-VERSION = "1.7.2"
+VERSION = "1.8.0"
 
 INFO_LIST = "**Information:** `!hello` `!help [[X]]`"
 
-USEFUL_LIST = "**Useful:** `!announce [[X|...]]` `!binary [[X]]` `!hex [[X]]` `!magic [[X|...|...]]` `!remind [[X|...]]` `!roll [[X]]` `!wiki [[X]]`"
+USEFUL_LIST = "**Useful:** `!announce [[X|...]]` `!binary [[X]]` `!hex [[X]]` `!magic [[X|...|...]]` `!poll [[X|Y|...]]` `!remind [[X|...]]` `!roll [[X]]` `!wiki [[X]]`"
 
 FUN_LIST = "**Fun:** `!ask` `!choose [[X|Y|...]]` `!joke` `!react` `!rate [[X]]` `!shibe`"
 

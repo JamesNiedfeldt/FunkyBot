@@ -1,6 +1,6 @@
 Here's how to use `!remind`:
 
-Send `!remind [[x|x|x]]` to have me send a notification to you after the set time.
+Send `!remind [[X|X|X]]` to have me send a notification to you after the set time.
 > - Time can be set with s(econds), m(inutes), h(ours), and d(ays).
 > - Time cannot exceed 30 days.
 > - Separate each argument in the brackets with the | character.

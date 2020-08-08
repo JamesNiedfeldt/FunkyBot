@@ -1,6 +1,6 @@
 Here's how to use `!announce`:
 
-Send `!announce [[x|x|x]]` to have me send everyone a notification after the set time.
+Send `!announce [[X|X|X]]` to have me send everyone a notification after the set time.
 > - Time can be set with s(econds), m(inutes), h(ours), and d(ays).
 > - Time cannot exceed 30 days.
 > - Separate each argument in the brackets with the | character.

@@ -47,8 +47,7 @@ class Reminder():
     def _formatMessage(self,cmd):
         message = re.sub("(\[\[.*\]\])|(!REMIND)|(!ANNOUNCE)", "",
                          cmd.content, flags=re.IGNORECASE)
-        if message != "" and message[0] == " ":
-            message = message[1:]
+        message = message.lstrip()
                 
         self.message = "%s %s" % (cmd.author.mention,message)
         
@@ -77,7 +76,6 @@ class Announcement(Reminder):
     def _formatMessage(self,cmd):
         message = re.sub("(\[\[.*\]\])|(!REMIND)|(!ANNOUNCE)", "",
                          cmd.content, flags=re.IGNORECASE)
-        if message != "" and message[0] == " ":
-            message = message[1:]
+        message = message.lstrip()
              
         self.message = "@everyone" + " " + message

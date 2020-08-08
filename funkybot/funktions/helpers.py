@@ -6,6 +6,7 @@ Contains the non-command functions needed to run
 from datetime import datetime
 from reminder import reminder, database
 from funktions import constant as c
+from poll import poll
 import time
 import os
 import re
@@ -129,3 +130,15 @@ def convertDateTime(timeArgs):
             return date.timestamp()
     except ValueError:
         return None
+
+#==== Check if a poll is already being run by someone ====
+def isPollRunning(activeId):
+    return activeId in poll.activePolls
+
+#==== Add an ID to active running polls ====
+def addToActivePolls(activeId):
+    poll.activePolls.append(activeId)
+
+#==== Remove an ID from active running polls ====
+def removeFromActivePolls(activeId):
+    poll.activePolls.remove(activeId)

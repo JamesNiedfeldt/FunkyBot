@@ -108,8 +108,12 @@ def makePoll(message):
     description = ""
     results = []
 
-    if len(options) <= 1 or len(options) > 5:
+    if len(options) == 0:
         return h.badArgs('poll')
+    elif len(options) > 5:
+        return "I can only do up to five options for the poll!"
+    elif len(options) < 2:
+        return "I need at least two options for the poll!"
     else:
         question = (re.sub("(\[\[.*\]\])|(!POLL)", "",
                            message.content, flags=re.IGNORECASE))

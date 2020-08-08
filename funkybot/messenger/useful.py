@@ -4,7 +4,7 @@ Sends messages to Discord from useful commands
 """
 
 #==== Imports ====
-from funktions import useful
+from funktions import useful, helpers
 import asyncio
 import discord
 
@@ -52,30 +52,38 @@ async def magic(message):
 
 #==== Setup a poll ====
 async def poll(message,client):
-    poll = useful.makePoll(message)
-    reactions = []
+    activeId = str(message.author.id) + str(message.channel.id)
 
-    if isinstance(poll, str): #Something went wrong, so an error was returned 
-        await message.channel.send(poll)
-        
+    if helpers.isPollRunning(activeId): #Only begin a poll if not already one in channel
+        await message.channel.send("Sorry, you already have a poll running in this channel. If you want to end it, send `!end`.")
+
     else:
-        sentMsg = await message.channel.send(poll.body)
+        poll = useful.makePoll(message)
+        reactions = []
+                                   
+        if isinstance(poll, str): #Something went wrong, so an error was returned 
+            await message.channel.send(poll)
+            
+        else:
+            helpers.addToActivePolls(activeId)
+            sentMsg = await message.channel.send(poll.body)
 
-        def pred(msg):
-            return (msg.author == message.author and
-                    msg.channel == message.channel and
-                    msg.content.upper().startswith('!END'))
+            def pred(msg):
+                return (msg.author == message.author and
+                        msg.channel == message.channel and
+                        msg.content.upper().startswith('!END'))
 
-        for o in poll.options:
-            await sentMsg.add_reaction(o)
+            for o in poll.options:
+                await sentMsg.add_reaction(o)
 
-        try:
-            reply = await client.wait_for('message', check=pred, timeout = 3600)
-        except asyncio.TimeoutError:
-            pass
+            try:
+                reply = await client.wait_for('message', check=pred, timeout = 3600)
+            except asyncio.TimeoutError:
+                pass
 
-        fetchedMsg = await message.channel.fetch_message(sentMsg.id) #Update message information
-        await message.channel.send(useful.finishPoll(fetchedMsg,poll))
+            fetchedMsg = await message.channel.fetch_message(sentMsg.id) #Update message information
+            await message.channel.send(useful.finishPoll(fetchedMsg,poll))
+            helpers.removeFromActivePolls(activeId)
 
 #==== Setup reminder ====
 async def remind(message,client):

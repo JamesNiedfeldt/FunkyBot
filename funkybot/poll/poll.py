@@ -7,7 +7,7 @@ Keeps track of active polls
 from funktions import constant as c
 
 #==== Globals ====
-
+activePolls = [] #Tracks who currently has a poll running in each unique text channel
 
 #==== Poll class ====
 class Poll():

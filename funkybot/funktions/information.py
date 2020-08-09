@@ -15,24 +15,50 @@ def sayHello(sender,uptime):
 #==== Send a help message ====
 def sendHelp(message):
     #Parse command
-    command = h.parse(message.content)
+    arg = h.parse(message.content)
+    cmdList = h.getXmlTree('commands')
+    toReturn = ""
 
-    if len(command) == 0: #Nothing to help with
-        return ("Here are my commands:\n" +
-                h.blockQuote(c.INFO_LIST) +
-                h.blockQuote(c.USEFUL_LIST) +
-                h.blockQuote(c.FUN_LIST) + "\n" +
-                c.HELP_REMINDER)
-    elif len(command) > 1: #Too many commands
-        return "I can only help you with one command at a time!"
+    #No specific request
+    if len(arg) == 0:
+        toReturn = "Here are my commands:\n"
+
+        info = "**Information:**"
+        useful = "**Useful:**"
+        fun = "**Fun:**"
+
+        for cmd in cmdList.findall("./function"):
+            if cmd.get("category") == "information":
+                info = info + " `{}`".format(cmd.find("format").text)
+            elif cmd.get("category") == "useful":
+                useful = useful + " `{}`".format(cmd.find("format").text)
+            elif cmd.get("category") == "fun":
+                fun = fun + " `{}`".format(cmd.find("format").text)
+
+        toReturn = (toReturn + h.blockQuote(info)
+                    + h.blockQuote(useful) + h.blockQuote(fun)
+                    + "\n" + c.HELP_REMINDER)
+
+    #Too many commands
+    elif len(arg) > 1:
+        toReturn = "I can only help you with one command at a time!"
+
+    #Specific request
     else:
-        for i in set(command): command = i #Change back to string
-        if(command.startswith("!")):
-            command = command[1:]
-        try:
-            with open(h.filePath(('help_files/%s.txt' % command.lower())), 'r') as file:
-                return file.read()
-        except FileNotFoundError:
+        for i in set(arg): arg = i.lower() #Change back to string
+        if(arg.startswith("!")):
+            arg = arg[1:]
+
+        cmd = cmdList.find("./function/[command='{}']".format(arg))
+        if cmd == None:
             return ("I don't have the command you're asking for." +
                     "\n\nIf you need a list of commands, send `!help` with no options.")
+        else:
+            toReturn = "Here's how to use `!{}`:\n".format(cmd.find("command").text)
+            for b in cmd.findall("body"):
+                toReturn = toReturn + "\n" + b.find("description").text + "\n"
+                for i in b.findall("hint"):
+                    toReturn = toReturn + h.blockQuote(" - " + i.text)
+
+    return toReturn
 

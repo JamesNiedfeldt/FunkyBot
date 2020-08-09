@@ -1,6 +1,0 @@
-Here's how to use `!roll`:
-
-Send `!roll [[X]]` to have me roll a die.
-> - For example, to roll a 6-sided die, you should send: `!roll [[6]]`.
-> - I can only roll one die at a time.
-> - The die must have at least 2 sides (I guess that's just a coin?) and can have up to 1000 sides.

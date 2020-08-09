@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+    <!-- Informational commands -->
+    <function category="information">
+        <command>hello</command>
+        <format>!hello</format>
+        <body>
+            <description>Send `!hello` to see some information about me.</description>
+            <hint>Using this command, you can get a quick description as well as see my version number and the time I've been working.</hint>
+        </body>
+    </function>
+
+    <function category="information">
+        <command>help</command>
+        <format>!help [[X]]</format>
+        <body>
+            <description>This is the command you're using! Send `!help [[X]]` to have me explain a command in detail.</description>
+            <hint>You can also send just the name of the command without the ! character.</hint>
+            <hint>I can only send an explanation of one command at a time.</hint>
+            <hint> For commands with options in double brackets, you just need to send the name of the command. Don't send any brackets.</hint>
+            <hint>For example, to get an explanation of the `!binary` command, you should send: `!help [[!binary]]`.</hint>
+        </body>
+        <body>
+            <description>You can also send `!help` with no options to get a list of commands.</description>
+        </body>
+    </function>
+
+    <!-- Useful commands -->
+    <function category="useful">
+        <command>announce</command>
+        <format>!announce [[X|...]]</format>
+        <body>
+            <description>Send `!announce [[X|Y|Z]]` to have me send everyone a notification after the set time.</description>
+            <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
+            <hint>Time cannot exceed 30 days.</hint>
+            <hint>Separate each argument in the brackets with the | character.</hint>
+            <hint>I can only take the first three arguments you give me.</hint>
+            <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
+            <hint>For example, to remind everyone to join you in a game in two and a half days, send: `!announce [[2d|12h]] play game`.</hint>
+            <hint>Only server administrators can use this command.</hint>
+        </body>
+        <body>
+            <description>You can also use a special format to set an announcement for a certain date.</description>
+            <hint>You must supply the date, time, and timezone as a UTC offset.</hint>
+            <hint>Date should be format `MM/DD/YYYY`.</hint>
+            <hint>Time should be format `HH:MM` as a 24 hour clock.</hint>
+            <hint>UTC offset should be format `(+/-)HHHH`.</hint>
+            <hint>The date you set cannot be before the current date and time.</hint>
+            <hint>I can only take one argument in this format.</hint>
+            <hint>For example, to set an announcement for your birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!announce [[05/20/2021 14:30 -0600]] birthday party`.</hint>
+        </body>
+    </function>
+
+    <function category="useful">
+        <command>binary</command>
+        <format>!binary [[X]]</format>
+        <body>
+            <description>Send `!binary [[X]]` to have me convert your number to binary.</description>
+            <hint>I can only convert one number at a time and only numbers 0-1023.</hint>
+            <hint>For example, to convert 5 to binary, you should send: `!binary [[5]]`.</hint>
+        </body>
+    </function>
+
+    <function category="useful">
+        <command>hex</command>
+        <format>!hex [[X]]</format>
+        <body>
+            <description>Send `!hex [[X]]` to have me convert your number to hexadecimal.</description>
+            <hint>I can only convert one number at a time and only numbers 0-65535.</hint>
+            <hint>For example, to convert 5 to hexadecimal, you should send: `!hex [[5]]`.</hint>
+        </body>
+    </function>
+
+    <function category="useful">
+        <command>magic</command>
+        <format>!magic [[X|...]]</format>
+        <body>
+            <description>Send `!magic [[X]]` to have me search for a Magic: The Gathering card.</description>
+            <hint>I can search for up to three cards, just make sure they're all in the same double brackets and separate them with the | character.</hint>
+            <hint>For example, to search for Island, you should send: `!magic [[island]]`.</hint>
+            <hint>I can also search for a random card using the word "random". For example: `!magic [[random]]`.</hint>
+            <hint>You can also use Scryfall's syntax to add search terms to random as long as they don't contain the | character. For example, to search for a random red and green commander, you should send: `!magic [[random c=rg is:commander]]`.</hint>
+        </body>
+    </function>
+
+    <function category="useful">
+        <command>poll</command>
+        <format>!poll [[X|Y|...]]</format>
+        <body>
+            <description>Send `!poll [[X|Y]]` to have me start a poll with the given options.</description>
+            <hint>When the poll is running, people can vote on the choices by increasing the corresponding reactions that I add to the poll message. Adding new reactions will not do anything.</hint>
+            <hint>The poll will automatically be open for one hour, but you can end it early by send `!end` in the same channel.</hint>
+            <hint>When the poll is concluded, I will display the results.</hint>
+            <hint>You can set a custom poll question by typing anywhere in the message outside of the brackets.</hint>
+            <hint>I need at least two options, but you can send up to five.</hint>
+            <hint>You can only run a single poll per channel at a time.</hint>
+            <hint>For example, to poll people on what their favorite color is, send: `!poll What is your favorite color? [[Red|Yellow|Blue]]`.</hint>
+        </body>
+    </function>
+
+    <function category="useful">
+        <command>remind</command>
+        <format>!remind [[X|...]]</format>
+        <body>
+            <description>Send `!remind [[X|Y|Z]]` to have me send you a notification after the set time.</description>
+            <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
+            <hint>Time cannot exceed 30 days.</hint>
+            <hint>Separate each argument in the brackets with the | character.</hint>
+            <hint>I can only take the first three arguments you give me.</hint>
+            <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
+            <hint>For example, to remind yourself to go to sleep in two and a half hours, send: `!announce [[2h|30m]] go to sleep`.</hint>
+        </body>
+        <body>
+            <description>You can also use a special format to set a reminder for a certain date.</description>
+            <hint>You must supply the date, time, and timezone as a UTC offset.</hint>
+            <hint>Date should be format `MM/DD/YYYY`.</hint>
+            <hint>Time should be format `HH:MM` as a 24 hour clock.</hint>
+            <hint>UTC offset should be format `(+/-)HHHH`.</hint>
+            <hint>The date you set cannot be before the current date and time.</hint>
+            <hint>I can only take one argument in this format.</hint>
+            <hint>For example, to set a reminder for a friend's birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!remind [[05/20/2021 14:30 -0600]] birthday party`.</hint>
+        </body>
+    </function>
+
+    <function category="useful">
+        <command>roll</command>
+        <format>!roll [[X]]</format>
+        <body>
+            <description>Send `!roll [[X]]` to have me roll a die.</description>
+            <hint>I can only roll one die at a time.</hint>
+            <hint>The die must have at least 2 sides (I guess that's just a coin?) and can have up to 1000 sides.</hint>
+            <hint>For example, to roll a 6-sided die, you should send: `!roll [[6]]`.</hint>
+        </body>
+    </function>
+
+    <function category="useful">
+        <command>wiki</command>
+        <format>!wiki [[X]]</format>
+        <body>
+            <description>Send `!wiki [[X]]` to have me search for a Wikipedia article.</description>
+            <hint>I can only search for one article at a time.</hint>
+            <hint>I can't screen the content I find, so please don't break server rules by searching for certain articles!</hint>
+            <hint>For example, to search for "shiba inu," you should send: `!wiki [[Shiba Inu]]`.</hint>
+        </body>
+    </function>
+
+    <!-- Fun commands -->
+    <function category="fun">
+        <command>ask</command>
+        <format>!ask</format>
+        <body>
+            <description>Send `!ask` to get a yes or no answer to something.</description>
+        </body>
+    </function>
+
+    <function category="fun">
+        <command>choose</command>
+        <format>!choose [[X|Y|...]]</format>
+        <body>
+            <description>Send `!choose [[X|Y]]` to have me choose from your options.</description>
+            <hint>I need at least two choices to choose from, but you can send up to ten.</hint>
+            <hint>Make sure you separate each choice using the | character.</hint>
+            <hint>For example, to choose from cats or dogs, you should send: `!choose [[cats|dogs]]`.</hint>
+        </body>
+    </function>
+
+    <function category="fun">
+        <command>joke</command>
+        <format>!joke</format>
+        <body>
+            <description>Send `!joke` to have me send a one-liner joke. Laughs are not guaranteed.</description>
+        </body>
+    </function>
+
+    <function category="fun">
+        <command>react</command>
+        <format>!react</format>
+        <body>
+            <description>Send `!react` to have me send a random reaction image.</description>
+            <hint>If I am allowed to delete messages, the message you send will be deleted and its contents logged on my server.</hint>
+        </body>
+    </function>
+
+    <function category="fun">
+        <command>rate</command>
+        <format>!rate</format>
+        <body>
+            <description>Send `!rate [[X]]` to have me rate something on a scale from 1 to 10.</description>
+            <hint>I can only rate one thing at a time.</hint>
+            <hint>For example, to rate Discord, you should send: `!rate [[Discord]]`.</hint>
+        </body>
+    </function>
+
+    <function category="fun">
+        <command>shibe</command>
+        <format>!shibe</format>
+        <body>
+            <description>Send `!shibe` to have me send a random picture of a shiba inu.</description>
+        </body>
+    </function>
+
+    <!-- Contextual commands -->
+    <!-- These only have function in specific contexts. They will not show up in the command list. -->
+    <function category="contextual">
+        <command>yes</command>
+        <format>!yes</format>
+        <body>
+            <description>Confirms pending reminders or announcements made by the user.</description>
+        </body>
+    </function>
+
+    <function category="contextual">
+        <command>no</command>
+        <format>!no</format>
+        <body>
+            <description>Denies pending reminders or announcements made by the user.</description>
+        </body>
+    </function>
+
+    <function category="contextual">
+        <command>end</command>
+        <format>!end</format>
+        <body>
+            <description>Ends the user's current poll in the channel prematurely.</description>
+        </body>
+    </function>
+</root>

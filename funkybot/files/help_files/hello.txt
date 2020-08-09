@@ -1,4 +1,0 @@
-Here's how to use `!hello`:
-
-Send `!hello` to see some information about me.
-> - Using this command, you can get a quick description as well as see my version number and the time I've been working.

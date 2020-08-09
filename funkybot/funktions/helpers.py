@@ -10,6 +10,7 @@ from poll import poll
 import time
 import os
 import re
+import xml.etree.ElementTree as et
 
 #==== Parse a string ====
 def parse(string):
@@ -142,3 +143,8 @@ def addToActivePolls(activeId):
 #==== Remove an ID from active running polls ====
 def removeFromActivePolls(activeId):
     poll.activePolls.remove(activeId)
+
+#==== Grab a root XML tree from a file ====
+def getXmlTree(fileName):
+    tree = et.parse(filePath('{}.xml'.format(fileName)))
+    return tree.getroot()

@@ -1,3 +1,0 @@
-Here's how to use `!ask`:
-
-Send `!ask` to get a yes or no answer to something.

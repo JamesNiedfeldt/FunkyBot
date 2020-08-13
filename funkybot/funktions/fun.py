@@ -9,10 +9,9 @@ import os
 
 #==== Answer a yes/no question ====
 def eightBall():
-    with open(h.filePath('lists/answers.txt'), 'r') as file:
-        answers = file.readlines()
+    answers = h.getXmlTree("lists").findall("./list/[@type='answers']/answer")
 
-    return random.choice(answers)
+    return random.choice(answers).text
 
 #==== Choose randomly from choices ====
 def choose(message):
@@ -30,10 +29,9 @@ def choose(message):
 
 #==== Tell a joke ====
 def findOneLiner():
-    with open(h.filePath('lists/jokes.txt'), 'r') as file:
-        jokes = file.readlines()
+    answers = h.getXmlTree("lists").findall("./list/[@type='jokes']/joke")
 
-    return random.choice(jokes)
+    return random.choice(answers).text
 
 #==== Send random reaction or shiba inu image ====
 def randomPic(path):
@@ -56,9 +54,8 @@ def randomPic(path):
 
 #==== Rate something ====
 def rateSomething(message):
-    with open(h.filePath('lists/ratings.txt'),'r') as file:
-        ratings = file.readlines()
-    score = random.randint(1, 10)
+    ratings = h.getXmlTree("lists").findall("./list/[@type='ratings']/rating")
+    rank = random.choice(ratings)
     
     #Parse string
     toRate = h.parse(message.content)
@@ -76,4 +73,5 @@ def rateSomething(message):
     else:
         if toRate.upper() in {"ME","MYSELF"}:
             toRate = message.author.display_name
-        return "I give %s a %s out of 10. %s" % (toRate, score, ratings[score-1])
+        return ("I give %s a %s out of 10. %s" %
+                (toRate, rank.find("rank").text, rank.find("descriptor").text))

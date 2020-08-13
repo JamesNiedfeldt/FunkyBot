@@ -10,21 +10,8 @@ from messenger import (information_messenger as i,
 client = discord.Client()
 token = None
 apiHeaders = None
-with open(helpers.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
-    #Updating the blacklist requires restarting FunkyBot
-    blacklist = o.readlines()
-begin = helpers.getTime() #Time when Funky begins running
-
-#==== Get user information ====
-def getUserInfo():
-    #This whole method feels wrong
-    global token
-    global apiHeaders
-    
-    root = helpers.getXmlTree("userinfo")
-    token = root.find("token").text
-    apiHeaders = {'User-Agent': root.find("user-agent").text,
-                  'From': root.find("email").text }
+begin = helpers.getTime()
+denylist = []
 
 #==== Alert that Funky is ready ====
 @client.event
@@ -37,7 +24,7 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user: #Do not refer to self
         pass
-    elif message.author.id in blacklist: #User not allowed to use Funky
+    elif str(message.author.id) in denylist: #User not allowed to use Funky
         pass
 
     #Information commands
@@ -92,6 +79,15 @@ async def on_message(message):
         await f.shibe(message)
         
 #==== Begin FunkyBot ====
-getUserInfo()
+root = helpers.getXmlTree("userinfo")
+token = root.find("token").text
+apiHeaders = {'User-Agent': root.find("user-agent").text,
+              'From': root.find("email").text }
+
+root = helpers.getXmlTree("denylist")
+for u in root.findall("user"):
+    denylist.append(u.text)
+
+root = None #No more use for this
 
 client.run(token)

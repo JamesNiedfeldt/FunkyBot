@@ -15,6 +15,13 @@ async def ask(message):
 async def choose(message):
     await message.channel.send(fun.choose(message))
 
+#==== Send random cute animal image ====
+async def cute(message):
+    try:
+        await message.channel.send(file=discord.File(fun.randomPic("cute_pics")))
+    except (RuntimeError, FileNotFoundError): #No valid images or bad path
+        await message.channel.send("I couldn't find any images!")
+
 #==== Send a random joke ====
 async def joke(message):
     await message.channel.send(fun.findOneLiner())
@@ -34,10 +41,3 @@ async def react(message):
 #==== Rate something ====
 async def rate(message):
     await message.channel.send(fun.rateSomething(message))
-
-#==== Send random shiba inu image ====
-async def shibe(message):
-    try:
-        await message.channel.send(file=discord.File(fun.randomPic("shiba_pics")))
-    except (RuntimeError, FileNotFoundError): #No valid images or bad path
-        await message.channel.send("I couldn't find any images!")

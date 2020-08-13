@@ -66,6 +66,9 @@ async def on_message(message):
     elif message.content.upper().startswith('!CHOOSE'):
         await f.choose(message)
 
+    elif message.content.upper().startswith('!CUTE'):
+        await f.cute(message)
+
     elif message.content.upper().startswith('!JOKE'):
         await f.joke(message)
 
@@ -74,9 +77,6 @@ async def on_message(message):
 
     elif message.content.upper().startswith('!RATE'):
         await f.rate(message)
-
-    elif message.content.upper().startswith('!SHIBE'):
-        await f.shibe(message)
         
 #==== Begin FunkyBot ====
 root = helpers.getXmlTree("userinfo")

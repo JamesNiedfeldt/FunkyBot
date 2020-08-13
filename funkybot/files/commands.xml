@@ -166,6 +166,14 @@
     </function>
 
     <function category="fun">
+        <command>cute</command>
+        <format>!cute</format>
+        <body>
+            <description>Send `!cute` to have me send a random cute animal picture.</description>
+        </body>
+    </function>
+
+    <function category="fun">
         <command>joke</command>
         <format>!joke</format>
         <body>
@@ -189,14 +197,6 @@
             <description>Send `!rate [[X]]` to have me rate something on a scale from 1 to 10.</description>
             <hint>I can only rate one thing at a time.</hint>
             <hint>For example, to rate Discord, you should send: `!rate [[Discord]]`.</hint>
-        </body>
-    </function>
-
-    <function category="fun">
-        <command>shibe</command>
-        <format>!shibe</format>
-        <body>
-            <description>Send `!shibe` to have me send a random picture of a shiba inu.</description>
         </body>
     </function>
 

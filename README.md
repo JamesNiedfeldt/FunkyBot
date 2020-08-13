@@ -13,18 +13,13 @@ Additionally it requires the following modules, listed in `requirements.txt`. Th
 
 Finally, certain files must exist within the project directory for FunkyBot to properly run, but are not and should not be included in the project repository. These include:
 - `funkybot/files/userinfo.xml`
-  - This must contain the following: your app's login token, found on its app page in the Discord Developer Portal, enclosed in a `token` tag; your name enclosed in a `user-agent` tag; and your email enclosed in an `email` tag. The name and email are used for HTTP request headers in order to identify the user of the bot. Your `userinfo.xml` file should look like this:
-  ```
-  <?xml version="1.0" encoding="UTF-8"?>
-
-  <root>
-	  <token>token</token>
-	  <user-agent>Firstname Lastname</user-agent>
-	  <email>email@sample.com</email>
-  </root>
-  ```
-- Reaction images/shiba images
-  - The two image folders (`funkybot/files/reaction_pics` and `funkybot/files/shiba_pics`) should contain images for their respective commands to randomly choose from. If either folder contain no images, the commands will work but return a message stating there was nothing to find.
+  - This must contain the following: your app's login token, found on its app page in the Discord Developer Portal, enclosed in a `token` tag; your name enclosed in a `user-agent` tag; and your email enclosed in an `email` tag. The name and email are used for HTTP request headers in order to identify the user of the bot. 
+  - `funkybot/files/userinfo.xml.sample` contains an example of this file.
+- `funkybot/files/denylist.xml`
+  - This file must contain any Discord user IDs of users you don't want to use the bot enclosed in a `user` tag. There do not need to be any IDs, but the file must still contain the root XML tags found in the sameple file.
+  - `funkybot/files/denylist.xml.sample` contains an example of this file.
+- Reaction images/cute images
+  - The two image folders (`funkybot/files/reaction_pics` and `funkybot/files/cute_pics`) should contain images for their respective commands to randomly choose from. If either folder contain no images, the commands will work but return a message stating there was nothing to find.
 
 ---
 ### Running FunkyBot

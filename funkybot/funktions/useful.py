@@ -78,7 +78,7 @@ def toHex(message):
         return "Sorry, I can't convert %s to hexadecimal!" % number
 
 #==== Fetch a card ====
-def fetchCard(message):
+def fetchCard(message,apiHeaders):
     toReturn = []
     
     #Parse card name
@@ -90,7 +90,7 @@ def fetchCard(message):
         toReturn.append([None, h.badArgs("magic")])
         return list(toReturn)
     for i in cards:
-        result = cf.fetchCard(i)
+        result = cf.fetchCard(i,apiHeaders)
         
         if not all(isinstance(r, list) for r in result):
             toReturn.append(result)
@@ -226,7 +226,7 @@ def rollDice(message):
         return "I can't roll a die with %s sides!" % number
 
 #==== Fetch a Wikipedia article ====
-def fetchWiki(message):
+def fetchWiki(message,apiHeaders):
     #Parse search terms
     terms = h.parse(message.content)
     if len(terms) > 1: #Too many cards in search
@@ -236,6 +236,6 @@ def fetchWiki(message):
 
     for i in set(terms): terms = i #Convert back to a string
 
-    result = wf.fetchArticle(terms)
+    result = wf.fetchArticle(terms,apiHeaders)
 
     return result

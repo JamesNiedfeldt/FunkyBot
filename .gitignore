@@ -1,8 +1,7 @@
 funkybot/files/logs/**
 funkybot/files/reaction_pics/**
 funkybot/files/shiba_pics/**
-funkybot/files/token.txt
-funkybot/files/user_agent.txt
+funkybot/files/userinfo.xml
 **/__pycache__
 funkybot/reminders.db
 tests/test_logs/*

@@ -8,18 +8,9 @@ import requests
 from funktions import helpers as h
 
 #==== Fetch an article from Wikipedia ====
-def fetchArticle(query):
+def fetchArticle(query,headers):
     uri = "https://en.wikipedia.org/api/rest_v1/page/summary/"
     notFound = "https://mediawiki.org/wiki/HyperSwitch/errors/not_found"
-    
-    try:
-        with open(h.filePath("user_agent.txt"), 'r') as f:
-            a = f.readline().rstrip('\n')
-            e = f.readline().rstrip('\n')
-            headers = { 'User-Agent': a,
-                       'From': e }
-    except:
-        return [None, "Something went wrong!"]
 
     try:
         response = requests.get(url=uri + query.replace(' ', '_'), headers=headers)

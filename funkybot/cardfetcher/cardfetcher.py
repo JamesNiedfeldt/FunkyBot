@@ -8,20 +8,11 @@ import requests
 from funktions import helpers as h
 
 #==== Fetch a card from Scryfall ====
-def fetchCard(query):
+def fetchCard(query,headers):
     name = "https://api.scryfall.com/cards/named"
     search = "https://api.scryfall.com/cards/search"
     random = "https://api.scryfall.com/cards/random"
-
-    try:
-        with open(h.filePath("user_agent.txt"), 'r') as f:
-            a = f.readline().rstrip('\n')
-            e = f.readline().rstrip('\n')
-            headers = { 'User-Agent': a,
-                       'From': e }
-    except:
-        return [None, "Something went wrong!"]
-
+    
     try:
         #Random card requested
         if query.upper().startswith("RANDOM"):

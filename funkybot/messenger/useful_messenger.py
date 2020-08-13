@@ -43,8 +43,8 @@ async def hexadec(message):
     await message.channel.send(useful.toHex(message))
 
 #==== Search for Magic cards ====
-async def magic(message):
-    for c in useful.fetchCard(message):
+async def magic(message,apiHeaders):
+    for c in useful.fetchCard(message,apiHeaders):
         if c[0] == None:
             await message.channel.send(c[1])
         else:
@@ -113,8 +113,8 @@ async def roll(message):
     await message.channel.send(useful.rollDice(message))
 
 #==== Search for a Wikipedia article ====
-async def wiki(message):
-    a = useful.fetchWiki(message)
+async def wiki(message,apiHeaders):
+    a = useful.fetchWiki(message,apiHeaders)
     if a[0] == None:
         await message.channel.send(a[1])
     else:

@@ -8,10 +8,23 @@ from messenger import (information_messenger as i,
 
 #==== Definitions ====
 client = discord.Client()
+token = None
+apiHeaders = None
 with open(helpers.filePath("lists/blacklist.txt"), 'r') as o: #Load blacklist
     #Updating the blacklist requires restarting FunkyBot
     blacklist = o.readlines()
 begin = helpers.getTime() #Time when Funky begins running
+
+#==== Get user information ====
+def getUserInfo():
+    #This whole method feels wrong
+    global token
+    global apiHeaders
+    
+    root = helpers.getXmlTree("userinfo")
+    token = root.find("token").text
+    apiHeaders = {'User-Agent': root.find("user-agent").text,
+                  'From': root.find("email").text }
 
 #==== Alert that Funky is ready ====
 @client.event
@@ -45,7 +58,7 @@ async def on_message(message):
         await u.hexadec(message)
 
     elif message.content.upper().startswith('!MAGIC'):
-        await u.magic(message)
+        await u.magic(message,apiHeaders)
 
     elif message.content.upper().startswith('!POLL'):
         await u.poll(message,client)
@@ -57,7 +70,7 @@ async def on_message(message):
         await u.roll(message)
 
     elif message.content.upper().startswith('!WIKI'):
-        await u.wiki(message)
+        await u.wiki(message,apiHeaders)
 
     #Fun commands
     elif message.content.upper().startswith('!ASK'):
@@ -78,9 +91,7 @@ async def on_message(message):
     elif message.content.upper().startswith('!SHIBE'):
         await f.shibe(message)
         
-#==== Log on ====
-with open(helpers.filePath("token.txt"),'r') as o:
-    token = o.readline()
-    client.run(token)
+#==== Begin FunkyBot ====
+getUserInfo()
 
-
+client.run(token)

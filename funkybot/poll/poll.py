@@ -12,7 +12,7 @@ activePolls = [] #Tracks who currently has a poll running in each unique text ch
 #==== Poll class ====
 class Poll():
     def __init__(self,author,question,options):
-        self.author = author
+        self.author = author.display_name
         self.question = question
         self.options = self.__formatOptions(options)
         if self.options != None:
@@ -28,9 +28,10 @@ class Poll():
 
     def __formatBody(self):
         self.question = self.question.lstrip()
-        if self.question != "":
-            self.question = "\n\n" + self.question + "\n"
-        body = c.POLL_START % self.author.display_name + self.question
+        if self.question == "":
+            self.question = "*No question was given*"
+        self.question = self.question + "\n"
+        body = (c.POLL_START + c.LINE_BREAK) % self.author + self.question
 
         for o in self.options:
             body = body + "\n" + "{} - {}".format(o, self.options[o])

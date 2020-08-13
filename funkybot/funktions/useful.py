@@ -123,10 +123,7 @@ def makePoll(message):
 #==== Analyze poll results ====
 def finishPoll(message,poll):
     results = {}
-    if poll.question == "":
-        toReturn = c.POLL_END % "\n\n*No question was given*\n"
-    else:
-        toReturn = c.POLL_END % poll.question
+    toReturn = c.POLL_END % (poll.author, c.LINE_BREAK + poll.question)
 
     for r in message.reactions:
         if r.emoji in poll.options:

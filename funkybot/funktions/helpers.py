@@ -37,9 +37,9 @@ def logMessage(message):
 #==== Check directories for valid images ====
 def validFolder(files):
     if len(files) > 1:
-        return
+        return True
     else:
-        raise RuntimeError
+        return False
 
 #==== Calculate uptime ====
 def getTime():

@@ -69,14 +69,14 @@
         <format>!binary [[X]]</format>
         <body>
             <description>Send `!binary [[X]]` to have me convert your number to binary.</description>
-            <hint>I can only convert one number at a time and only numbers 0-1023.</hint>
+            <hint>I can only convert one number at a time and only numbers 0-65535.</hint>
             <hint>For example, to convert 5 to binary, you should send: `!binary [[5]]`.</hint>
         </body>
         <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
         <error type="too_few">I need a number to convert.</error>
         <error type="too_many">I can only convert one number at a time.</error>
         <error type="bad_value">I can only convert integers to binary.</error>
-        <error type="bad_number">I can only convert numbers 0-1023 to binary.</error>
+        <error type="bad_number">I can only convert numbers 0-65535 to binary.</error>
     </function>
 
     <function category="useful">

@@ -40,7 +40,8 @@ def randomPic(path):
         selection = "" #Image path to post
         found = False #Image found or not
 
-        h.validFolder(pics) #Check if folder is empty
+        if not h.validFolder(pics): #Check if folder is empty
+            raise RuntimeError
         while not found: #Search for a valid file path
             selection = random.choice(pics)
             if (selection != "Thumbs.db" and
@@ -70,7 +71,7 @@ def rateSomething(message):
     for i in set(toRate): toRate = i #Change back to string
 
     if toRate.upper() in {
-        "FUNKYBOT","FUNKY","YOU"}:
+        "FUNKYBOT","FUNKY","YOU","YOURSELF"}:
         return "I give myself an 11/10. Literally the best ever." 
     else:
         if toRate.upper() in {"ME","MYSELF"}:

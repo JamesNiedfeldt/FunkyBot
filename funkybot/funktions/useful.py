@@ -31,7 +31,7 @@ def toBin(message):
         quotient = int(number)
         if quotient == 0:
             value = 0
-        elif quotient > 1023 or quotient < 0:
+        elif quotient > 65535 or quotient < 0:
             raise RuntimeError('Invalid number')
         else:
             while quotient != 0:

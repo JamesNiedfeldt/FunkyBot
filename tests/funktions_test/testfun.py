@@ -1,8 +1,7 @@
 import unittest
 import discord
 from funktions_test import mockmessage as m
-from funktions import fun as f
-from funktions import helpers as h
+from funktions import fun as f, helpers as h, constant as c
 
 class TestFun(unittest.TestCase):
     @classmethod
@@ -17,22 +16,22 @@ class TestFun(unittest.TestCase):
         self.assertIn(f.choose(self.msg), ["I choose x!","I choose y!"])
 
         self.msg.content = "[[x]]"
-        self.assertEqual(f.choose(self.msg), "I need more than one thing to choose from!")
+        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_TOO_FEW))
 
         self.msg.content = "[[a|b|c|d|e|f|g|h|i|j|k]]"
-        self.assertEqual(f.choose(self.msg), "There are too many things to choose from!")
+        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_TOO_MANY))
 
         self.msg.content = "[[x|y]"
-        self.assertEqual(f.choose(self.msg), h.badArgs("choose"))
+        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_BRACKETS))
 
         self.msg.content = "[x|y]]"
-        self.assertEqual(f.choose(self.msg), h.badArgs("choose"))
+        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_BRACKETS))
 
         self.msg.content = "[[]]"
-        self.assertEqual(f.choose(self.msg), h.badArgs("choose"))
+        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_TOO_FEW))
 
         self.msg.content = ""
-        self.assertEqual(f.choose(self.msg), h.badArgs("choose"))
+        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_BRACKETS))
 
     def test_findOneLiner(self):
         self.assertIsNotNone(f.findOneLiner())
@@ -40,7 +39,7 @@ class TestFun(unittest.TestCase):
     def test_randomPic(self):
         self.assertIsNotNone(f.randomPic("reaction_pics"))
 
-        self.assertIsNotNone(f.randomPic("shiba_pics"))
+        self.assertIsNotNone(f.randomPic("cute_pics"))
 
         try:
             f.randomPic("test")
@@ -84,19 +83,19 @@ class TestFun(unittest.TestCase):
         self.assertIn("I give test", f.rateSomething(self.msg))
 
         self.msg.content = "[[x]"
-        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate"))
+        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate", c.ERR_BRACKETS))
 
         self.msg.content = "[x]]"
-        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate"))
+        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate", c.ERR_BRACKETS))
 
         self.msg.content = "[[]]"
-        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate"))
+        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate", c.ERR_TOO_FEW))
 
         self.msg.content = ""
-        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate"))
+        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate", c.ERR_BRACKETS))
 
         self.msg.content = "[[x|y]]"
-        self.assertEqual(f.rateSomething(self.msg), "I can only rate one thing!")
+        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate", c.ERR_TOO_MANY))
 
 if __name__ == "__main__":
     unittest.main()

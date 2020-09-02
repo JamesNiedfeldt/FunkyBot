@@ -52,7 +52,7 @@
             <hint>UTC offset should be format `(+/-)HHHH`.</hint>
             <hint>The date you set cannot be before the current date and time.</hint>
             <hint>I will ignore any more than one argument of this format.</hint>
-            <hint>I can only use either time or a date argument. If you send both, I will only set an announcement based on the date argument.</hint>
+            <hint>I can only use either time or a date argument. If you send any time arguments after a date, I will ignore them.</hint>
             <hint>For example, to set an announcement for your birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!announce [[05/20/2021 14:30 -0600]] birthday party`.</hint>
         </body>
         <error type="brackets">Make sure the time or date you want me to use to set your announcement is surrounded by double brackets.</error>
@@ -147,7 +147,7 @@
             <hint>UTC offset should be format `(+/-)HHHH`.</hint>
             <hint>The date you set cannot be before the current date and time.</hint>
             <hint>I will ignore any more than one argument of this format.</hint>
-            <hint>I can only use either time or a date argument. If you send both, I will only set a reminder based on the date argument.</hint>
+            <hint>I can only use either time or a date argument. If you send any time arguments after a date, I will ignore them.</hint>
             <hint>For example, to set a reminder for a friend's birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!remind [[05/20/2021 14:30 -0600]] birthday party`.</hint>
         </body>
         <error type="brackets">Make sure the time or date you want me to use to set your reminder is surrounded by double brackets.</error>

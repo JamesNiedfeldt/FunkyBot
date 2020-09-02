@@ -1,8 +1,7 @@
 import unittest
 import time
 from funktions_test import mockmessage as m
-from funktions import helpers as h
-from funktions import useful as u
+from funktions import helpers as h, useful as u, constant as c
 from reminder import reminder as r
 
 class TestUseful(unittest.TestCase):
@@ -11,6 +10,11 @@ class TestUseful(unittest.TestCase):
         self.msg = m.MockMessage()
         self.msg.author.mention = "test_mention"
         self.msg.channel.id = 100
+
+        root = h.getXmlTree("userinfo")
+        token = root.find("token").text
+        self.apiheaders = {'User-Agent': root.find("user-agent").text,
+              'From': root.find("email").text }
 
     def test_toBin(self):
         self.msg.content = "[[0]]"
@@ -34,23 +38,23 @@ class TestUseful(unittest.TestCase):
         self.msg.content = "[[1023]]"
         self.assertEqual(u.toBin(self.msg), "1023 in binary is: 1111111111")
 
-        self.msg.content = "[[1024]]"
-        self.assertEqual(u.toBin(self.msg), "Sorry, I can't convert 1024 to binary!")
+        self.msg.content = "[[65536]]"
+        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", "bad_number"))
 
         self.msg.content = "[[-1]]"
-        self.assertEqual(u.toBin(self.msg), "Sorry, I can't convert -1 to binary!")
+        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", "bad_number"))
 
         self.msg.content = "[[1.25]]"
-        self.assertEqual(u.toBin(self.msg), "Sorry, I can't convert 1.25 to binary!")
+        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", "bad_value"))
 
         self.msg.content = "[[words]]"
-        self.assertEqual(u.toBin(self.msg), "Sorry, I can't convert words to binary!")
+        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", "bad_value"))
 
         self.msg.content = "[[]]"
-        self.assertEqual(u.toBin(self.msg), h.badArgs("binary"))
+        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", c.ERR_TOO_FEW))
 
         self.msg.content = "[[10|20]]"
-        self.assertEqual(u.toBin(self.msg), "I can only convert one number!")
+        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", c.ERR_TOO_MANY))
 
     def test_toHex(self):
         self.msg.content = "[[0]]"
@@ -90,80 +94,80 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(u.toHex(self.msg), "65535 in hexadecimal is: FFFF")
 
         self.msg.content = "[[65536]]"
-        self.assertEqual(u.toHex(self.msg), "Sorry, I can't convert 65536 to hexadecimal!")
+        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", "bad_number"))
 
         self.msg.content = "[[-1]]"
-        self.assertEqual(u.toHex(self.msg), "Sorry, I can't convert -1 to hexadecimal!")
+        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", "bad_number"))
 
         self.msg.content = "[[1.25]]"
-        self.assertEqual(u.toHex(self.msg), "Sorry, I can't convert 1.25 to hexadecimal!")
+        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", "bad_value"))
 
         self.msg.content = "[[words]]"
-        self.assertEqual(u.toHex(self.msg), "Sorry, I can't convert words to hexadecimal!")
+        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", "bad_value"))
 
         self.msg.content = "[[]]"
-        self.assertEqual(u.toHex(self.msg), h.badArgs("hex"))
+        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", c.ERR_TOO_FEW))
 
         self.msg.content = "[[10|20]]"
-        self.assertEqual(u.toHex(self.msg), "I can only convert one number!")
+        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", c.ERR_TOO_MANY))
 
     @unittest.skip
     def test_fetchCard(self):
         #Each request must have a delay to comply with Scryfall's rate limits
         self.msg.content = "[[island|swamp|mountain|forest]]"
-        results = u.fetchCard(self.msg)
+        results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
-        self.assertEqual(results[0][1], "That's too many cards to search for!")
+        self.assertEqual(results[0][1], h.badArgs("magic", c.ERR_TOO_MANY))
 
         time.sleep(.1)
         self.msg.content = "[[]]"
-        results = u.fetchCard(self.msg)
+        results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
-        self.assertEqual(results[0][1], h.badArgs("magic"))
+        self.assertEqual(results[0][1], h.badArgs("magic", c.ERR_TOO_FEW))
 
         time.sleep(.1)
         self.msg.content = "[[fake_card]]"
-        results = u.fetchCard(self.msg)
+        results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
         self.assertIsNone(results[0][0])
         self.assertEqual(results[0][1], "Sorry, I couldn't find \"fake_card\"!")
 
         time.sleep(.1)
         self.msg.content = "[[random]]"
-        results = u.fetchCard(self.msg)
+        results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
         self.assertIsNotNone(results[0][0])
 
         time.sleep(.1)
         self.msg.content = "[[random fake_card]]"
-        results = u.fetchCard(self.msg)
+        results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
         self.assertIsNone(results[0][0])
         self.assertEqual(results[0][1], "Sorry, I couldn't find \"random fake_card\"!")
 
         time.sleep(.1)
         self.msg.content = "[[random c:rg]]"
-        results = u.fetchCard(self.msg)
+        results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
         self.assertIsNotNone(results[0][0])
 
         time.sleep(.1)
         self.msg.content = "[[random c:rg|random is:commander]]"
-        results = u.fetchCard(self.msg)
+        results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 2)
         for string in results:
             self.assertIsNotNone(string)
 
         time.sleep(.1)
         self.msg.content = "[[plains]]"
-        results = u.fetchCard(self.msg)
+        results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
         self.assertIsNotNone(results[0][0])
         self.assertNotIn("Sorry, I couldn't find", results[0][1])
         
         time.sleep(.1)
         self.msg.content = "[[plains|island]]"
-        results = u.fetchCard(self.msg)
+        results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 2)
         for string in results:
             self.assertIsNotNone(string[0])
@@ -171,16 +175,13 @@ class TestUseful(unittest.TestCase):
 
         time.sleep(.1)
         self.msg.content = "[[plains|island|swamp]]"
-        results = u.fetchCard(self.msg)
+        results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 3)
         for string in results:
             self.assertIsNotNone(string[0])
             self.assertNotIn("Sorry, I couldn't find", string[1])
 
     def test_makeReminder_noMessage(self):
-        self.msg.content = "[[]]"
-        self.assertIsNone(u.makeReminder(self.msg))
-
         self.msg.content = " [[1s]]"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 1)
@@ -235,24 +236,55 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, self.msg.author.mention + " ")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = " [[31d]]"
+        self.msg.content = "[[01/01/2025 00:00 -0000]]"
         reminder = u.makeReminder(self.msg)
-        self.assertEqual(reminder.duration, 2592000)
+        self.assertEqual(reminder.duration, 1735689600)
         self.assertEqual(reminder.message, self.msg.author.mention + " ")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = " [[0]]"
+        self.msg.content = "[[01/01/2025 00:00 -0000|20m]]"
         reminder = u.makeReminder(self.msg)
-        self.assertIsNone(reminder)
+        self.assertEqual(reminder.duration, 1735689600)
+        self.assertEqual(reminder.message, self.msg.author.mention + " ")
+        self.assertEqual(reminder.destination, self.msg.channel.id)
+
+        self.msg.content = "[[]]"
+        expected = h.badArgs("remind", c.ERR_TOO_FEW)
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = " [[31d]]"
+        expected = h.badArgs("remind", "too_long")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = " [[0]]"
+        expected = h.badArgs("remind", "bad_duration")
+        self.assertEqual(u.makeReminder(self.msg), expected)
 
         self.msg.content = " [[0s|0d|0h]]"
-        reminder = u.makeReminder(self.msg)
-        self.assertIsNone(reminder)
+        expected = h.badArgs("remind", "no_duration")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = " [[-1d]]"
+        expected = h.badArgs("remind", "no_duration")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = " [[-1d]]"
+        expected = h.badArgs("remind", "no_duration")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = "[[01/01/25 00:00 -0000]]"
+        expected = h.badArgs("remind", "bad_date")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = "[[01/01/1990 00:00 -0000]]"
+        expected = h.badArgs("remind", "negative_date")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = "[[20m|01/01/2025 00:00 -0000]]"
+        expected = h.badArgs("remind", "bad_duration")
+        self.assertEqual(u.makeReminder(self.msg), expected)
 
     def test_makeReminder_withMessage(self):
-        self.msg.content = "[[]] test message"
-        self.assertIsNone(u.makeReminder(self.msg))
-
         self.msg.content = "[[1s]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 1)
@@ -307,24 +339,47 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[31d]] test message"
+        self.msg.content = "[[01/01/2025 00:00 -0000]] test message"
         reminder = u.makeReminder(self.msg)
-        self.assertEqual(reminder.duration, 2592000)
+        self.assertEqual(reminder.duration, 1735689600)
         self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[0]] test message"
+        self.msg.content = "[[01/01/2025 00:00 -0000|20m]] test message"
         reminder = u.makeReminder(self.msg)
-        self.assertIsNone(reminder)
+        self.assertEqual(reminder.duration, 1735689600)
+        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
+        self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[0s|0d|0h]] test message"
-        reminder = u.makeReminder(self.msg)
-        self.assertIsNone(reminder)
+        self.msg.content = "[[]] test message"
+        expected = h.badArgs("remind", c.ERR_TOO_FEW)
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = " [[31d]] test message"
+        expected = h.badArgs("remind", "too_long")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = " [[0]] test message"
+        expected = h.badArgs("remind", "bad_duration")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = " [[0s|0d|0h]] test message"
+        expected = h.badArgs("remind", "no_duration")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = " [[-1d]] test message"
+        expected = h.badArgs("remind", "no_duration")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = "[[01/01/1990 00:00 -0000]] test message"
+        expected = h.badArgs("remind", "negative_date")
+        self.assertEqual(u.makeReminder(self.msg), expected)
+
+        self.msg.content = "[[20m|01/01/2025 00:00 -0000]] test message"
+        expected = h.badArgs("remind", "bad_duration")
+        self.assertEqual(u.makeReminder(self.msg), expected)
 
     def test_makeReminder_announcmentNoMessage(self):
-        self.msg.content = "[[]]"
-        self.assertIsNone(u.makeReminder(self.msg, announcement=True))
-
         self.msg.content = "[[1s]]"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 1)
@@ -379,24 +434,47 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, "@everyone ")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[31d]]"
+        self.msg.content = "[[01/01/2025 00:00 -0000]]"
         reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertEqual(reminder.duration, 2592000)
+        self.assertEqual(reminder.duration, 1735689600)
         self.assertEqual(reminder.message, "@everyone ")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[0]]"
+        self.msg.content = "[[01/01/2025 00:00 -0000|20m]]"
         reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertIsNone(reminder)
+        self.assertEqual(reminder.duration, 1735689600)
+        self.assertEqual(reminder.message, "@everyone ")
+        self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[0s|0d|0h]]"
-        reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertIsNone(reminder)
+        self.msg.content = "[[]]"
+        expected = h.badArgs("announce", c.ERR_TOO_FEW)
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = " [[31d]]"
+        expected = h.badArgs("announce", "too_long")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = " [[0]]"
+        expected = h.badArgs("announce", "bad_duration")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = " [[0s|0d|0h]]"
+        expected = h.badArgs("announce", "no_duration")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = " [[-1d]]"
+        expected = h.badArgs("announce", "no_duration")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = "[[01/01/1990 00:00 -0000]]"
+        expected = h.badArgs("announce", "negative_date")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = "[[20m|01/01/2025 00:00 -0000]]"
+        expected = h.badArgs("announce", "bad_duration")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
 
     def test_makeReminder_announcementWithMessage(self):
-        self.msg.content = "[[]] test message"
-        self.assertIsNone(u.makeReminder(self.msg, announcement=True))
-
         self.msg.content = "[[1s]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 1)
@@ -451,19 +529,45 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[31d]] test message"
+        self.msg.content = "[[01/01/2025 00:00 -0000]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertEqual(reminder.duration, 2592000)
+        self.assertEqual(reminder.duration, 1735689600)
         self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[0]] test message"
+        self.msg.content = "[[01/01/2025 00:00 -0000|20m]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertIsNone(reminder)
+        self.assertEqual(reminder.duration, 1735689600)
+        self.assertEqual(reminder.message, "@everyone test message")
+        self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[0s|0d|0h]] test message"
-        reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertIsNone(reminder)
+        self.msg.content = "[[]] test message"
+        expected = h.badArgs("announce", c.ERR_TOO_FEW)
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = " [[31d]] test message"
+        expected = h.badArgs("announce", "too_long")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = " [[0]] test message"
+        expected = h.badArgs("announce", "bad_duration")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = " [[0s|0d|0h]] test message"
+        expected = h.badArgs("announce", "no_duration")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = " [[-1d]] test message"
+        expected = h.badArgs("announce", "no_duration")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = "[[01/01/1990 00:00 -0000]] test message"
+        expected = h.badArgs("announce", "negative_date")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+
+        self.msg.content = "[[20m|01/01/2025 00:00 -0000]] test message"
+        expected = h.badArgs("announce", "bad_duration")
+        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
 
     def test_confirmReminder(self):
         self.msg.content = " "
@@ -478,7 +582,7 @@ class TestUseful(unittest.TestCase):
             self.msg.author.display_name, h.formatTime(reminder.duration))
         self.assertEqual(u.confirmReminder(self.msg, reminder), expected)
 
-        self.assertEqual(u.confirmReminder(self.msg, None), h.badArgs("remind"))
+        self.assertEqual(u.confirmReminder(self.msg, ""), "")
 
     def test_startReminder(self):
         #TODO
@@ -486,25 +590,25 @@ class TestUseful(unittest.TestCase):
 
     def test_rollDice(self):
         self.msg.content = "[[]]"
-        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll"))
+        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", c.ERR_TOO_FEW))
 
         self.msg.content = "[[6|8]]"
-        self.assertEqual(u.rollDice(self.msg), "I can only roll one die!")
+        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", c.ERR_TOO_MANY))
 
         self.msg.content = "[[0]]"
-        self.assertEqual(u.rollDice(self.msg), "I can't roll a die with 0 sides!")
+        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", "bad_number"))
 
         self.msg.content = "[[-1]]"
-        self.assertEqual(u.rollDice(self.msg), "I can't roll a die with -1 sides!")
+        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", "bad_number"))
 
         self.msg.content = "[[1001]]"
-        self.assertEqual(u.rollDice(self.msg), "I can't roll a die with 1001 sides!")
+        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", "bad_number"))
 
         self.msg.content = "[[words]]"
-        self.assertEqual(u.rollDice(self.msg), "I can't roll a die with words sides!")
+        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", "bad_value"))
 
         self.msg.content = "[[1.5]]"
-        self.assertEqual(u.rollDice(self.msg), "I can't roll a die with 1.5 sides!")
+        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", "bad_value"))
 
         self.msg.content = "[[5]]"
         self.assertIn("You rolled", u.rollDice(self.msg))
@@ -522,19 +626,19 @@ class TestUseful(unittest.TestCase):
     def test_fetchWiki(self):
         #Each request must have a delay to comply with Wikipedia's rate limits
         self.msg.content = "[[]]"
-        results = u.fetchWiki(self.msg)
+        results = u.fetchWiki(self.msg, self.apiheaders)
         self.assertEqual(len(results), 2)
-        self.assertEqual(results[1], h.badArgs("wiki"))
+        self.assertEqual(results[1], h.badArgs("wiki", c.ERR_TOO_FEW))
 
         time.sleep(.05)
         self.msg.content = "[[test fake article]]"
-        results = u.fetchWiki(self.msg)
+        results = u.fetchWiki(self.msg, self.apiheaders)
         self.assertEqual(len(results), 2)
         self.assertEqual(results[1], "Sorry, I couldn't find \"test fake article\"!")
 
         time.sleep(.05)
         self.msg.content = "[[Wikipedia]]"
-        results = u.fetchWiki(self.msg)
+        results = u.fetchWiki(self.msg, self.apiheaders)
         self.assertEqual(len(results), 4)
         self.assertIsNotNone(results[0])
         self.assertNotIn("Sorry, I couldn't find", results[0][1])

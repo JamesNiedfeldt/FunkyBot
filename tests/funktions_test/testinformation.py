@@ -30,12 +30,12 @@ class TestInformation(unittest.TestCase):
     
     def test_sendHelp(self):
         commands = ["hello", "help", "announce", "binary",
-                    "hex", "magic", "remind", "roll", "ask", "choose",
-                    "joke", "react", "rate", "shibe"]
+                    "hex", "magic", "poll", "remind", "roll", "ask", "choose",
+                    "joke", "react", "rate", "cute"]
         empty = ("Here are my commands:\n" +
-                 h.blockQuote(c.INFO_LIST) +
-                 h.blockQuote(c.USEFUL_LIST) +
-                 h.blockQuote(c.FUN_LIST) + "\n" +
+                 h.blockQuote("**Information:** `!hello` `!help [[X]]`") +
+                 h.blockQuote("**Useful:** `!announce [[X|...]]` `!binary [[X]]` `!hex [[X]]` `!magic [[X|...]]` `!poll [[X|Y|...]]` `!remind [[X|...]]` `!roll [[X]]` `!wiki [[X]]`") +
+                 h.blockQuote("**Fun:** `!ask` `!choose [[X|Y|...]]` `!cute` `!joke` `!react` `!rate`") + "\n" +
                  c.HELP_REMINDER)
         
         msg = m.MockMessage()
@@ -44,10 +44,11 @@ class TestInformation(unittest.TestCase):
         self.assertEqual(i.sendHelp(msg), empty)
 
         msg.content = "[[]]"
-        self.assertEqual(i.sendHelp(msg), empty)
+        expected = h.badArgs("help", c.ERR_TOO_FEW)
+        self.assertEqual(i.sendHelp(msg), expected)
 
         msg.content = "[[x|y]]"
-        expected = "I can only help you with one command at a time!"
+        expected = h.badArgs("help", c.ERR_TOO_MANY)
         self.assertEqual(i.sendHelp(msg), expected)
 
         for o in commands:
@@ -59,8 +60,7 @@ class TestInformation(unittest.TestCase):
             self.assertIsNotNone(i.sendHelp(msg))
 
         msg.content = "[[fake_command]]"
-        expected = ("I don't have the command you're asking for." +
-                    "\n\nIf you need a list of commands, send `!help` with no options.")
+        expected = h.badArgs("help", "bad_command")
         self.assertEqual(i.sendHelp(msg), expected)
 
 if __name__ == "__main__":

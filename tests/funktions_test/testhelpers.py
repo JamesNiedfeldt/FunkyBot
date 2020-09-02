@@ -30,8 +30,14 @@ class TestHelpers(unittest.TestCase):
         string = "[[|x]]"
         self.assertEqual(h.parse(string), [])
 
+        string = "[]]"
+        self.assertIsNone(h.parse(string))
+
+        string = "[]"
+        self.assertIsNone(h.parse(string))
+
         string = ""
-        self.assertEqual(h.parse(string), [])
+        self.assertIsNone(h.parse(string))
 
         string = "[[x]]"
         self.assertEqual(h.parse(string), ['x'])
@@ -49,18 +55,13 @@ class TestHelpers(unittest.TestCase):
 
     def test_validFolder(self):
         files = [1, 2]
-        try:
-            h.validFolder(files)
-        except RuntimeError:
-            self.fail()
+        self.assertTrue(h.validFolder(files))
 
         files = [1]
-        with self.assertRaises(RuntimeError):
-            h.validFolder(files)
+        self.assertFalse(h.validFolder(files))
 
         files = []
-        with self.assertRaises(RuntimeError):
-            h.validFolder(files)
+        self.assertFalse(h.validFolder(files))
 
     def test_getTime(self):
         #Nothing to test
@@ -112,15 +113,34 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual(h.filePath(""), path)
 
     def test_badArgs(self):
-        msg = "I couldn't understand your command! If you need help, send `!help [[!test]]`."
-        self.assertEqual(h.badArgs("test"), msg)
+        msg = "I couldn't understand your command!\n\nIf you need more help with this command, send `!help [[!help]]`."
+        self.assertEqual(h.badArgs("help"), msg)
+        
+        msg = ("I couldn't understand your command!\n\n"
+               + "Make sure the command you want help with is surrounded by double brackets. "
+               + "If you want a list of all commands, don't send any brackets. "
+               + "If you need more help with this command, send `!help [[!help]]`.")
+        self.assertEqual(h.badArgs("help", "brackets"), msg)
 
-        msg = "I couldn't understand your command! If you need help, send `!help [[!]]`."
+        msg = ("I couldn't understand your command!\n\n"
+               + "I need a command to search for. "
+               + "If you want a list of all commands, don't send any brackets. "
+               + "If you need more help with this command, send `!help [[!help]]`.")
+        self.assertEqual(h.badArgs("help", "too_few"), msg)
+
+        msg = ("I couldn't understand your command!\n\n"
+               + "I can only search for one command at a time. "
+               + "If you need more help with this command, send `!help [[!help]]`.")
+        self.assertEqual(h.badArgs("help", "too_many"), msg)
+
+        msg = ("I couldn't understand your command!\n\n"
+               + "I don't have the command you're searching for. "
+               + "If you want a list of all commands, send `!help` with no arguments. "
+               + "If you need more help with this command, send `!help [[!help]]`.")
+        self.assertEqual(h.badArgs("help", "bad_command"), msg)
+
+        msg = "I couldn't understand your command!\n\nIf you need more help with this command, send `!help [[!]]`."
         self.assertEqual(h.badArgs(""), msg)
-
-    def test_setUpReminders(self):
-        #Nothing to test
-        pass
 
     def test_blockQuote(self):
         msg = "> test\n"
@@ -128,6 +148,71 @@ class TestHelpers(unittest.TestCase):
 
         msg = "> \n"
         self.assertEqual(h.blockQuote(""), msg)
+
+    def test_setUpReminders(self):
+        #Nothing to test
+        pass
+
+    def test_convertDurationTime(self):
+        args = ['1s']
+        self.assertEqual(h.convertDurationTime(args), 1)
+
+        args = ['1m']
+        self.assertEqual(h.convertDurationTime(args), 60)
+
+        args = ['1h']
+        self.assertEqual(h.convertDurationTime(args), 3600)
+
+        args = ['1d']
+        self.assertEqual(h.convertDurationTime(args), 86400)
+
+        args = ['5m']
+        self.assertEqual(h.convertDurationTime(args), 300)
+
+        args = ['1m', '30s']
+        self.assertEqual(h.convertDurationTime(args), 90)
+
+        args = ['5s', '2m', '1h']
+        self.assertEqual(h.convertDurationTime(args), 3725)
+
+        args = ['5s', '2m', '1h', '6d']
+        self.assertEqual(h.convertDurationTime(args), 3725)
+
+        args = ['5q']
+        self.assertIsNone(h.convertDurationTime(args))
+
+        args = ['1m', '5q']
+        self.assertIsNone(h.convertDurationTime(args))
+
+        args = []
+        self.assertEqual(h.convertDurationTime(args), 0)
+
+    def test_convertDateTime(self):
+        args = ['01/01/2025 00:00 -0000']
+        self.assertEqual(h.convertDateTime(args), 1735689600)
+
+        args = ['01/01/2025 00:00 -0000', '']
+        self.assertEqual(h.convertDateTime(args), 1735689600)
+
+        args = ['01/01/1990 00:00 -0000']
+        self.assertEqual(h.convertDateTime(args), -1)
+
+        args = ['', '01/01/2025 00:00 -0000']
+        self.assertIsNone(h.convertDateTime(args))
+
+        args = ['01/01/25 00:00 -0000']
+        self.assertIsNone(h.convertDateTime(args))
+
+    def test_isPollRunning(self):
+        #Nothing to test
+        pass
+
+    def test_removeFromActivePolls(self):
+        #Nothing to test
+        pass
+
+    def test_getXmlTree(self):
+        self.assertIsNotNone(h.getXmlTree("commands"))
     
     def tearDown(self):
         if(os.path.isfile(self.logpath)):

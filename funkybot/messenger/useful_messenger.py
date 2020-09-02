@@ -15,21 +15,22 @@ async def announce(message,client):
 
         await message.channel.send(useful.confirmReminder(message, reminder))
 
-        def pred(msg):
-            return (msg.author == message.author and
-                    msg.channel == message.channel and
-                    (msg.content.upper().startswith('!YES') or msg.content.upper().startswith('!NO')))
+        if not isinstance(reminder, str): #Reminder is not an error string
+            def pred(msg):
+                return (msg.author == message.author and
+                        msg.channel == message.channel and
+                        (msg.content.upper().startswith('!YES') or msg.content.upper().startswith('!NO')))
 
-        try:
-            reply = await client.wait_for('message', check=pred, timeout=30)
-            if reply.content.upper().startswith('!YES'):
-                await message.channel.send(useful.startReminder(reminder))
-            elif reply.content.upper().startswith('!NO'):
-                await message.channel.send("Ok, I will discard that reminder.")
-                
-        except asyncio.TimeoutError:
-            await message.channel.send("%s, you took too long to respond so I discarded your reminder."
-                                          % message.author.mention)
+            try:
+                reply = await client.wait_for('message', check=pred, timeout=30)
+                if reply.content.upper().startswith('!YES'):
+                    await message.channel.send(useful.startReminder(reminder))
+                elif reply.content.upper().startswith('!NO'):
+                    await message.channel.send("Ok, I will discard that reminder.")
+                    
+            except asyncio.TimeoutError:
+                await message.channel.send("%s, you took too long to respond so I discarded your reminder."
+                                              % message.author.mention)
             
     else:
         await message.channel.send("Sorry, only administrators can use that command!")
@@ -91,12 +92,12 @@ async def remind(message,client):
 
     await message.channel.send(useful.confirmReminder(message, reminder))
 
-    def pred(msg):
-        return (msg.author == message.author and
-                msg.channel == message.channel and
-                (msg.content.upper().startswith('!YES') or msg.content.upper().startswith('!NO')))
+    if not isinstance(reminder, str): #Reminder is not an error string
+        def pred(msg):
+            return (msg.author == message.author and
+                    msg.channel == message.channel and
+                    (msg.content.upper().startswith('!YES') or msg.content.upper().startswith('!NO')))
 
-    if reminder != None:
         try:
             reply = await client.wait_for('message', check=pred, timeout=30)
             if reply.content.upper().startswith('!YES'):

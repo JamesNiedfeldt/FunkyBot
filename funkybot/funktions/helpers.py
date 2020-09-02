@@ -15,10 +15,9 @@ import xml.etree.ElementTree as et
 #==== Parse a string ====
 def parse(string):
     contents = re.findall("\[\[([^\[\]]*)\]\]", string) #Find contents of '[[]]'
-    
+
     if len(contents) == 0: #Nothing was found
-        contents.clear()
-        return contents
+        return None
     
     contents = re.split("\|", contents[0])  #Split multiple deliminated with '|'
     
@@ -26,6 +25,7 @@ def parse(string):
         if i == "": #Is there a blank entry?
            contents.clear()
            pass
+        
     return contents
     
 #==== Log deleted messages ====
@@ -68,8 +68,17 @@ def filePath(directory):
     return path
 
 #==== Error in command arguments ====
-def badArgs(command):
-    message = (c.BAD_ARGS % command)
+def badArgs(command,err=None):
+    cmd = getXmlTree("commands").find("./function/[command='{}']".format(command))
+    message = c.BAD_ARGS_1
+
+    if err != None:
+        hint = cmd.find("./error/[@type='{}']".format(err))
+        if hint != None:
+            message = message + hint.text + " "
+
+    message = message + c.BAD_ARGS_2 % command
+
     return message
 
 #==== Setup and pull from reminder database at startup ====
@@ -111,12 +120,6 @@ def convertDurationTime(timeArgs):
         except ValueError:
             return None
 
-    #Max of 30 days
-    if(duration > 2592000):
-        duration = 2592000
-    elif(duration <= 0):
-        return None
-  
     return duration
 
 #==== Convert reminder arguments to datetime ====
@@ -126,7 +129,7 @@ def convertDateTime(timeArgs):
     try:
         date = datetime.strptime(arg, "%m/%d/%Y %H:%M %z")
         if date.timestamp() <= getTime():
-            return None
+            return -1
         else:
             return date.timestamp()
     except ValueError:

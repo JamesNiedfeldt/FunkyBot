@@ -13,9 +13,17 @@ POLL_END = "%s's poll is over! Here are the results: %s"
 
 HELLO = "Hello %s, my name is FunkyBot! I am a simple bot made for fun as my creator's personal project. Here's some information about me:"
 
-BAD_ARGS = "I couldn't understand your command! If you need help, send `!help [[!%s]]`."
+BAD_ARGS_1 = "I couldn't understand your command!\n\n"
+
+BAD_ARGS_2 = "If you need more help with this command, send `!help [[!%s]]`."
 
 LINE_BREAK = "\n--------------------\n"
+
+ERR_BRACKETS = "brackets"
+
+ERR_TOO_FEW = "too_few"
+
+ERR_TOO_MANY = "too_many"
 
 BOOT_UP = """===============
 %s %s

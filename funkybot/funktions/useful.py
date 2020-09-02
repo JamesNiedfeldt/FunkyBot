@@ -17,11 +17,13 @@ def toBin(message):
     value = "" #Value to print
     #Parse number, convert it to usable string
     number = h.parse(message.content)
-    
-    if len(number) == 0: #Nothing to convert
-        return h.badArgs("binary")
+
+    if number == None: #Arguments formatted wrong
+        return h.badArgs("binary", c.ERR_BRACKETS)
+    elif len(number) == 0: #Nothing to convert
+        return h.badArgs("binary", c.ERR_TOO_FEW)
     elif len(number) > 1: #Too many numbers
-        return "I can only convert one number!"
+        return h.badArgs("binary", c.ERR_TOO_MANY)
     
     for i in set(number): number = i #Change number back to int
 
@@ -30,7 +32,7 @@ def toBin(message):
         if quotient == 0:
             value = 0
         elif quotient > 1023 or quotient < 0:
-            raise ValueError('Invalid number')
+            raise RuntimeError('Invalid number')
         else:
             while quotient != 0:
                 remainder = quotient % 2
@@ -38,10 +40,10 @@ def toBin(message):
                 value = str(remainder)+value
         return "%s in binary is: %s" % (number, value)
         
-    except TypeError: #Non-integer sent
-        return "Sorry, I can't convert %s to binary!" % number
-    except ValueError: #Non-integer sent or invalid number
-        return "Sorry, I can't convert %s to binary!" % number
+    except ValueError: #Non-integer sent
+        return h.badArgs("binary", "bad_value")
+    except RuntimeError: #Non-integer sent or invalid number
+        return h.badArgs("binary", "bad_number")
 
 #==== Convert a number to hexadecimal ====
 def toHex(message):
@@ -50,10 +52,12 @@ def toHex(message):
     #Parse number, convert it to usable string
     number = h.parse(message.content)
 
-    if len(number) == 0: #Nothing to convert
-        return h.badArgs("hex")
+    if number == None: #Arguments formatted wrong
+        return h.badArgs("hex", c.ERR_BRACKETS)
+    elif len(number) == 0: #Nothing to convert
+        return h.badArgs("hex", c.ERR_TOO_FEW)
     elif len(number) > 1: #Too many numbers
-        return "I can only convert one number!"
+        return h.badArgs("hex", c.ERR_TOO_MANY)
 
     for i in set(number): number = i #Change number back to int
 
@@ -62,7 +66,7 @@ def toHex(message):
         if quotient == 0:
             value = 0
         elif quotient > 65535 or quotient < 0:
-            raise ValueError('Invalid number')
+            raise RuntimeError('Invalid number')
         else:
             while quotient != 0:
                 remainder = quotient % 16
@@ -72,10 +76,10 @@ def toHex(message):
                 value = str(remainder)+value
         return "%s in hexadecimal is: %s" % (number, value)
         
-    except TypeError: #Non-integer sent
-        return "Sorry, I can't convert %s to hexadecimal!" % number
-    except ValueError: #Non-integer sent or invalid number
-        return "Sorry, I can't convert %s to hexadecimal!" % number
+    except ValueError: #Non-integer sent
+        return h.badArgs("hex", "bad_value")
+    except RuntimeError: #Non-integer sent or invalid number
+        return h.badArgs("hex", "bad_number")
 
 #==== Fetch a card ====
 def fetchCard(message,apiHeaders):
@@ -83,12 +87,17 @@ def fetchCard(message,apiHeaders):
     
     #Parse card name
     cards = h.parse(message.content)
-    if len(cards) > 3: #Too many cards in search
-        toReturn.append([None, "That's too many cards to search for!"])
+    
+    if cards == None: #Arguments not formatted properly
+        toReturn.append([None, h.badArgs("magic", c.ERR_BRACKETS)])
+        return list(toReturn)
+    elif len(cards) > 3: #Too many cards in search
+        toReturn.append([None, h.badArgs("magic", c.ERR_TOO_MANY)])
         return list(toReturn)
     elif len(cards) == 0: #Nothing to search for
-        toReturn.append([None, h.badArgs("magic")])
+        toReturn.append([None, h.badArgs("magic", c.ERR_TOO_FEW)])
         return list(toReturn)
+    
     for i in cards:
         result = cf.fetchCard(i,apiHeaders)
         
@@ -108,12 +117,13 @@ def makePoll(message):
     description = ""
     results = []
 
-    if len(options) == 0:
-        return h.badArgs('poll')
+    if options == None: #Arguments not formatted properly
+        return h.badArgs("poll", c.ERR_BRACKETS)
+    elif len(options) <= 1:
+        return h.badArgs("poll", c.ERR_TOO_FEW)
     elif len(options) > 5:
-        return "I can only do up to five options for the poll!"
-    elif len(options) < 2:
-        return "I need at least two options for the poll!"
+        return h.badArgs("poll", c.ERR_TOO_MANY)
+    
     else:
         question = (re.sub("(\[\[.*\]\])|(!POLL)", "",
                            message.content, flags=re.IGNORECASE))
@@ -150,12 +160,16 @@ def finishPoll(message,poll):
 #==== Create a Reminder ====
 def makeReminder(message,announcement=False):
     timeArgs = h.parse(message.content)
+    if announcement:
+        cmd = "announce"
+    else:
+        cmd = "remind"
 
-    if len(timeArgs) == 0:
-        return None
+    if timeArgs == None: #Arguments formatted incorrectly
+        return h.badArgs(cmd, c.ERR_BRACKETS)
+    elif len(timeArgs) < 1:
+        return h.badArgs(cmd, c.ERR_TOO_FEW)
 
-    if len(timeArgs) < 1:
-        duration = 30
     else:
         #Argument is a datetime
         if '/' in timeArgs[0]:
@@ -166,8 +180,16 @@ def makeReminder(message,announcement=False):
             duration = h.convertDurationTime(timeArgs)
             date = False
 
-    if duration == None:
-        return None
+    if date and duration == None: #Datetime was not parsed correctly
+        return h.badArgs(cmd, "bad_date")
+    elif date and duration <= 0: #Datetime is negative
+        return h.badArgs(cmd, "negative_date")
+    elif not date and duration == None: #Duration was formatted incorrectly
+        return h.badArgs(cmd, "bad_duration")
+    elif not date and duration > 2592000: #Duration over 30 days
+        return h.badArgs(cmd, "too_long")
+    elif not date and duration <= 0: #Duration empty or negative
+        return h.badArgs(cmd, "no_duration")
 
     if announcement:
         timer = reminder.Announcement(duration=duration,msg=message,dt=date)
@@ -178,8 +200,8 @@ def makeReminder(message,announcement=False):
 
 #==== Send confirmation message of reminder ====
 def confirmReminder(message,timer):
-    if timer == None:
-        return h.badArgs('remind')
+    if isinstance(timer, str): #Something went wrong, so an error was sent in
+        return timer
     else:
         if timer.dt:
             formattedTime = h.formatTime(timer.duration - h.getTime())
@@ -203,33 +225,38 @@ def rollDice(message):
     #Parse number, convert it to usable string
     number = h.parse(message.content)
 
-    if len(number) == 0: #No number to roll
-        return h.badArgs("roll")
+    if number == None: #Arguments formatted incorrectly
+        return h.badArgs("roll", c.ERR_BRACKETS)
+    elif len(number) == 0: #No number to roll
+        return h.badArgs("roll", c.ERR_TOO_FEW)
     elif len(number) > 1: #Too many dies to roll
-        return "I can only roll one die!"
+        return h.badArgs("roll", c.ERR_TOO_MANY)
     
     for i in set(number): number = i #Convert back to a number
     
     try:
         number = int(number)
         if number <= 0 or number > 1000:
-            raise ValueError('Invalid number')
+            raise RuntimeError('Invalid number')
         else:
             return "You rolled %s!" % random.randint(1,number)
         
-    except TypeError: #Non-integer sent
-        return "I can't roll a die with %s sides!" % number
-    except ValueError: #Non-integer sent or invalid number
-        return "I can't roll a die with %s sides!" % number
+    except ValueError: #Non-integer sent
+        return h.badArgs("roll", "bad_value")
+    except RuntimeError: #Non-integer sent or invalid number
+        return h.badArgs("roll", "bad_number")
 
 #==== Fetch a Wikipedia article ====
 def fetchWiki(message,apiHeaders):
     #Parse search terms
     terms = h.parse(message.content)
-    if len(terms) > 1: #Too many cards in search
-        return [None, "That's too many articles to search for!"]
+
+    if terms == None: #Arguments not formatted properly
+        return [None, h.badArgs("wiki", c.ERR_BRACKETS)]
+    elif len(terms) > 1: #Too many cards in search
+        return [None, h.badArgs("wiki", c.ERR_TOO_MANY)]
     elif len(terms) == 0: #Nothing to search for
-        return [None, h.badArgs("wiki")]
+        return [None, h.badArgs("wiki", c.ERR_TOO_FEW)]
 
     for i in set(terms): terms = i #Convert back to a string
 

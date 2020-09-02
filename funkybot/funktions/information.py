@@ -5,6 +5,7 @@ Contains the informational FunkyBot commands
 
 from funktions import helpers as h
 from funktions import constant as c
+import re
 
 #==== Introduce FunkyBot ====
 def sayHello(sender,uptime):
@@ -19,29 +20,33 @@ def sendHelp(message):
     cmdList = h.getXmlTree('commands')
     toReturn = ""
 
-    #No specific request
-    if len(arg) == 0:
-        toReturn = "Here are my commands:\n"
+    if arg == None:
+        if re.search("\[|\]", message.content) == None: #List of commands
+            toReturn = "Here are my commands:\n"
 
-        info = "**Information:**"
-        useful = "**Useful:**"
-        fun = "**Fun:**"
+            info = "**Information:**"
+            useful = "**Useful:**"
+            fun = "**Fun:**"
 
-        for cmd in cmdList.findall("./function"):
-            if cmd.get("category") == "information":
-                info = info + " `{}`".format(cmd.find("format").text)
-            elif cmd.get("category") == "useful":
-                useful = useful + " `{}`".format(cmd.find("format").text)
-            elif cmd.get("category") == "fun":
-                fun = fun + " `{}`".format(cmd.find("format").text)
+            for cmd in cmdList.findall("./function"):
+                if cmd.get("category") == "information":
+                    info = info + " `{}`".format(cmd.find("format").text)
+                elif cmd.get("category") == "useful":
+                    useful = useful + " `{}`".format(cmd.find("format").text)
+                elif cmd.get("category") == "fun":
+                    fun = fun + " `{}`".format(cmd.find("format").text)
 
-        toReturn = (toReturn + h.blockQuote(info)
-                    + h.blockQuote(useful) + h.blockQuote(fun)
-                    + "\n" + c.HELP_REMINDER)
-
-    #Too many commands
-    elif len(arg) > 1:
-        toReturn = "I can only help you with one command at a time!"
+            toReturn = (toReturn + h.blockQuote(info)
+                        + h.blockQuote(useful) + h.blockQuote(fun)
+                        + "\n" + c.HELP_REMINDER)
+            
+        else: #Arguments not formatted properly for specific request
+            toReturn = h.badArgs("help", c.ERR_BRACKETS)
+           
+    elif len(arg) == 0: #Nothing to find
+        toReturn = h.badArgs("help", c.ERR_TOO_FEW)
+    elif len(arg) > 1: #Too many commands
+        toReturn = h.badArgs("help", c.ERR_TOO_MANY)
 
     #Specific request
     else:
@@ -51,8 +56,7 @@ def sendHelp(message):
 
         cmd = cmdList.find("./function/[command='{}']".format(arg))
         if cmd == None:
-            return ("I don't have the command you're asking for." +
-                    "\n\nIf you need a list of commands, send `!help` with no options.")
+            toReturn = h.badArgs("help", "bad_command")
         else:
             toReturn = "Here's how to use `!{}`:\n".format(cmd.find("command").text)
             for b in cmd.findall("body"):

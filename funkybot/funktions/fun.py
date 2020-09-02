@@ -3,7 +3,7 @@
 Contains the fun FunkyBot commands
 """
 
-from funktions import helpers as h
+from funktions import helpers as h, constant as c
 import random
 import os
 
@@ -18,12 +18,12 @@ def choose(message):
     #Parse choices
     choices = h.parse(message.content)
 
-    if len(choices) == 0: #No choices
-        return h.badArgs("choose")
-    elif len(choices) == 1: #Not enough choices
-        return "I need more than one thing to choose from!"
+    if choices == None: #Arguments formatted wrong
+        return h.badArgs("choose", c.ERR_BRACKETS)
+    elif len(choices) <= 1: #Too few choices
+        return h.badArgs("choose", c.ERR_TOO_FEW)
     elif len(choices) > 10: #Too many choices
-        return "There are too many things to choose from!"
+        return h.badArgs("choose", c.ERR_TOO_MANY)
 
     return "I choose %s!" % random.choice(choices)
 
@@ -60,10 +60,12 @@ def rateSomething(message):
     #Parse string
     toRate = h.parse(message.content)
 
-    if len(toRate) == 0: #Nothing to rate
-        return h.badArgs("rate")
+    if toRate == None: #Arguments formatted wrong
+        return h.badArgs("rate", c.ERR_BRACKETS)
+    elif len(toRate) == 0: #Nothing to rate
+        return h.badArgs("rate", c.ERR_TOO_FEW)
     elif len(toRate) > 1: #Too many things to rate
-        return "I can only rate one thing!"
+        return h.badArgs("rate", c.ERR_TOO_MANY)
 
     for i in set(toRate): toRate = i #Change back to string
 

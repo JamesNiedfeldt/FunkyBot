@@ -18,12 +18,16 @@
             <description>This is the command you're using! Send `!help [[X]]` to have me explain a command in detail.</description>
             <hint>You can also send just the name of the command without the ! character.</hint>
             <hint>I can only send an explanation of one command at a time.</hint>
-            <hint> For commands with options in double brackets, you just need to send the name of the command. Don't send any brackets.</hint>
+            <hint> For commands with arguments in double brackets, you just need to send the name of the command. Don't send any brackets.</hint>
             <hint>For example, to get an explanation of the `!binary` command, you should send: `!help [[!binary]]`.</hint>
         </body>
         <body>
-            <description>You can also send `!help` with no options to get a list of commands.</description>
+            <description>You can also send `!help` with no arguments to get a list of commands.</description>
         </body>
+        <error type="brackets">Make sure the command you want help with is surrounded by double brackets. If you want a list of all commands, don't send any brackets.</error>
+        <error type="too_few">I need a command to search for. If you want a list of all commands, don't send any brackets.</error>
+        <error type="too_many">I can only search for one command at a time.</error>
+        <error type="bad_command">I don't have the command you're searching for. If you want a list of all commands, send `!help` with no arguments.</error>
     </function>
 
     <!-- Useful commands -->
@@ -35,7 +39,7 @@
             <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
             <hint>Time cannot exceed 30 days.</hint>
             <hint>Separate each argument in the brackets with the | character.</hint>
-            <hint>I can only take the first three arguments you give me.</hint>
+            <hint>I will ignore any more than three arguments of this format.</hint>
             <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
             <hint>For example, to remind everyone to join you in a game in two and a half days, send: `!announce [[2d|12h]] play game`.</hint>
             <hint>Only server administrators can use this command.</hint>
@@ -47,9 +51,17 @@
             <hint>Time should be format `HH:MM` as a 24 hour clock.</hint>
             <hint>UTC offset should be format `(+/-)HHHH`.</hint>
             <hint>The date you set cannot be before the current date and time.</hint>
-            <hint>I can only take one argument in this format.</hint>
+            <hint>I will ignore any more than one argument of this format.</hint>
+            <hint>I can only use either time or a date argument. If you send both, I will only set an announcement based on the date argument.</hint>
             <hint>For example, to set an announcement for your birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!announce [[05/20/2021 14:30 -0600]] birthday party`.</hint>
         </body>
+        <error type="brackets">Make sure the time or date you want me to use to set your announcement is surrounded by double brackets.</error>
+        <error type="too_few">I need at least one time or date argument to set your announcement.</error>
+        <error type="bad_duration">Make sure your time arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
+        <error type="too_long">Time arguments cannot exceed 30 days.</error>
+	<error type="no_duration">The time arguments must last at least one second.</error>
+        <error type="bad_date">Make sure your date argument is in the proper format: `MM/DD/YYYY HH:MM (+/-)HHHH`.</error>
+        <error type="negative_date">Date arguments must be set for a date in the future.</error>
     </function>
 
     <function category="useful">
@@ -60,6 +72,11 @@
             <hint>I can only convert one number at a time and only numbers 0-1023.</hint>
             <hint>For example, to convert 5 to binary, you should send: `!binary [[5]]`.</hint>
         </body>
+        <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
+        <error type="too_few">I need a number to convert.</error>
+        <error type="too_many">I can only convert one number at a time.</error>
+        <error type="bad_value">I can only convert integers to binary.</error>
+        <error type="bad_number">I can only convert numbers 0-1023 to binary.</error>
     </function>
 
     <function category="useful">
@@ -70,6 +87,11 @@
             <hint>I can only convert one number at a time and only numbers 0-65535.</hint>
             <hint>For example, to convert 5 to hexadecimal, you should send: `!hex [[5]]`.</hint>
         </body>
+        <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
+        <error type="too_few">I need a number to convert.</error>
+        <error type="too_many">I can only convert one number at a time.</error>
+        <error type="bad_value">I can only convert integers to hexadecimal.</error>
+        <error type="bad_number">I can only convert numbers 0-65535 to hexadecimal.</error>
     </function>
 
     <function category="useful">
@@ -82,6 +104,9 @@
             <hint>I can also search for a random card using the word "random". For example: `!magic [[random]]`.</hint>
             <hint>You can also use Scryfall's syntax to add search terms to random as long as they don't contain the | character. For example, to search for a random red and green commander, you should send: `!magic [[random c=rg is:commander]]`.</hint>
         </body>
+        <error type="brackets">Make sure the cards you want me to search for are surrounded by double brackets.</error>
+        <error type="too_few">I need at least one card to search for.</error>
+        <error type="too_many">I can only search for at most three cards at a time.</error>
     </function>
 
     <function category="useful">
@@ -97,6 +122,9 @@
             <hint>You can only run a single poll per channel at a time.</hint>
             <hint>For example, to poll people on what their favorite color is, send: `!poll What is your favorite color? [[Red|Yellow|Blue]]`.</hint>
         </body>
+        <error type="brackets">Make sure the options you want on the poll are surrounded by double brackets.</error>
+        <error type="too_few">I need at least two poll options for people to vote on.</error>
+        <error type="too_many">I can only set up to five options for people to vote on.</error>
     </function>
 
     <function category="useful">
@@ -107,7 +135,7 @@
             <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
             <hint>Time cannot exceed 30 days.</hint>
             <hint>Separate each argument in the brackets with the | character.</hint>
-            <hint>I can only take the first three arguments you give me.</hint>
+            <hint>I will ignore any more than three arguments of this format.</hint>
             <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
             <hint>For example, to remind yourself to go to sleep in two and a half hours, send: `!announce [[2h|30m]] go to sleep`.</hint>
         </body>
@@ -118,9 +146,17 @@
             <hint>Time should be format `HH:MM` as a 24 hour clock.</hint>
             <hint>UTC offset should be format `(+/-)HHHH`.</hint>
             <hint>The date you set cannot be before the current date and time.</hint>
-            <hint>I can only take one argument in this format.</hint>
+            <hint>I will ignore any more than one argument of this format.</hint>
+            <hint>I can only use either time or a date argument. If you send both, I will only set a reminder based on the date argument.</hint>
             <hint>For example, to set a reminder for a friend's birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!remind [[05/20/2021 14:30 -0600]] birthday party`.</hint>
         </body>
+        <error type="brackets">Make sure the time or date you want me to use to set your reminder is surrounded by double brackets.</error>
+        <error type="too_few">I need at least one time or date argument to set your reminder.</error>
+        <error type="bad_duration">Make sure your time arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
+        <error type="too_long">Time arguments cannot exceed 30 days.</error>
+	<error type="no_duration">The time arguments must last at least one second.</error>
+        <error type="bad_date">Make sure your date argument is in the proper format: `MM/DD/YYYY HH:MM (+/-)HHHH`.</error>
+        <error type="negative_date">Date arguments must be set for a date in the future.</error>
     </function>
 
     <function category="useful">
@@ -132,6 +168,11 @@
             <hint>The die must have at least 2 sides (I guess that's just a coin?) and can have up to 1000 sides.</hint>
             <hint>For example, to roll a 6-sided die, you should send: `!roll [[6]]`.</hint>
         </body>
+        <error type="brackets">Make sure the number of sides of your die is surrounded by double brackets.</error>
+        <error type="too_few">I need a number of sides to roll a die.</error>
+        <error type="too_many">I can only roll one die at a time.</error>
+        <error type="bad_value">I can only roll a die with an integer number of sides.</error>
+        <error type="bad_number">I can only roll a die with 0-1000 sides.</error>
     </function>
 
     <function category="useful">
@@ -143,6 +184,9 @@
             <hint>I can't screen the content I find, so please don't break server rules by searching for certain articles!</hint>
             <hint>For example, to search for "shiba inu," you should send: `!wiki [[Shiba Inu]]`.</hint>
         </body>
+        <error type="brackets">Make sure the article you want me to search for is surrounded by double brackets.</error>
+        <error type="too_few">I need an article to search for.</error>
+        <error type="too_many">I can only search for one article at a time.</error>
     </function>
 
     <!-- Fun commands -->
@@ -163,6 +207,9 @@
             <hint>Make sure you separate each choice using the | character.</hint>
             <hint>For example, to choose from cats or dogs, you should send: `!choose [[cats|dogs]]`.</hint>
         </body>
+        <error type="brackets">Make sure the options you want me to choose from are surrounded by double brackets.</error>
+        <error type="too_few">I need at least two things to choose from.</error>
+        <error type="too_many">I can only choose from at most 10 things at a time.</error>
     </function>
 
     <function category="fun">
@@ -198,6 +245,9 @@
             <hint>I can only rate one thing at a time.</hint>
             <hint>For example, to rate Discord, you should send: `!rate [[Discord]]`.</hint>
         </body>
+        <error type="brackets">Make sure the thing you want me to rate is surrounded by double brackets.</error>
+        <error type="too_few">I need something to rate.</error>
+        <error type="too_many">I can only rate one thing at a time.</error>
     </function>
 
     <!-- Contextual commands -->

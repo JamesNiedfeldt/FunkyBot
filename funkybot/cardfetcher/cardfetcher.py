@@ -57,7 +57,7 @@ def __formatCard(card, givenUri=None):
         uri = givenUri
     
     if 'card_faces' in card:
-        if card['layout'] == "transform":
+        if card['layout'] == "transform" or card['layout'] == "modal_dfc":
             cost = card['card_faces'][0]['mana_cost']
             for f in card['card_faces']:
                 toReturn.append(__formatCard(f, givenUri=uri))

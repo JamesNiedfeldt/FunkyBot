@@ -45,12 +45,17 @@ async def hexadec(message):
 
 #==== Search for Magic cards ====
 async def magic(message,apiHeaders):
-    for c in useful.fetchCard(message,apiHeaders):
-        if c[0] == None:
-            await message.channel.send(c[1])
-        else:
-            await message.channel.send(c[0], embed=discord.Embed(title=c[1], description=c[2]).set_image(url=c[3]))
+    cards = useful.fetchCard(message,apiHeaders)
 
+    if isinstance(cards, str): #Error found
+        await message.channel.send(cards)
+    else:
+        for c in useful.fetchCard(message,apiHeaders):
+            if c.empty():
+                await message.channel.send(c.text)
+            else:
+                await message.channel.send(c.url, embed=discord.Embed(title=c.title, description=c.text).set_image(url=c.image))
+            
 #==== Setup a poll ====
 async def poll(message,client):
     activeId = str(message.author.id) + str(message.channel.id)
@@ -116,7 +121,8 @@ async def roll(message):
 #==== Search for a Wikipedia article ====
 async def wiki(message,apiHeaders):
     a = useful.fetchWiki(message,apiHeaders)
-    if a[0] == None:
-        await message.channel.send(a[1])
+
+    if a.empty():
+        await message.channel.send(a.text)
     else:
-        await message.channel.send(a[0], embed=discord.Embed(title=a[1], description=a[2]).set_image(url=a[3]))
+        await message.channel.send(a.url, embed=discord.Embed(title=a.title, description=a.text).set_image(url=a.image))

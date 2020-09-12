@@ -89,24 +89,19 @@ def fetchCard(message,apiHeaders):
     cards = h.parse(message.content)
     
     if cards == None: #Arguments not formatted properly
-        toReturn.append([None, h.badArgs("magic", c.ERR_BRACKETS)])
-        return list(toReturn)
+        return h.badArgs("magic", c.ERR_BRACKETS)
     elif len(cards) > 3: #Too many cards in search
-        toReturn.append([None, h.badArgs("magic", c.ERR_TOO_MANY)])
-        return list(toReturn)
+        return h.badArgs("magic", c.ERR_TOO_MANY)
     elif len(cards) == 0: #Nothing to search for
-        toReturn.append([None, h.badArgs("magic", c.ERR_TOO_FEW)])
-        return list(toReturn)
+        return h.badArgs("magic", c.ERR_TOO_FEW)
     
     for i in cards:
         result = cf.fetchCard(i,apiHeaders)
         
-        if not all(isinstance(r, list) for r in result):
-            toReturn.append(result)
+        if isinstance(result, list):
+            toReturn = toReturn + result
         else:
-            for l in result:
-                if type(l) == list:
-                    toReturn.append(l)
+            toReturn.append(result)
 
     return toReturn
 
@@ -252,14 +247,12 @@ def fetchWiki(message,apiHeaders):
     terms = h.parse(message.content)
 
     if terms == None: #Arguments not formatted properly
-        return [None, h.badArgs("wiki", c.ERR_BRACKETS)]
+        return h.badArgs("wiki", c.ERR_BRACKETS)
     elif len(terms) > 1: #Too many cards in search
-        return [None, h.badArgs("wiki", c.ERR_TOO_MANY)]
+        return h.badArgs("wiki", c.ERR_TOO_MANY)
     elif len(terms) == 0: #Nothing to search for
-        return [None, h.badArgs("wiki", c.ERR_TOO_FEW)]
+        return h.badArgs("wiki", c.ERR_TOO_FEW)
 
     for i in set(terms): terms = i #Convert back to a string
 
-    result = wf.fetchArticle(terms,apiHeaders)
-
-    return result
+    return wf.fetchArticle(terms,apiHeaders)

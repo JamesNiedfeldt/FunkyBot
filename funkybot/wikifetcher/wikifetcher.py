@@ -5,6 +5,7 @@ Contains all necessary functions for searching up Wikipedia articles
 
 #==== Imports ====
 import requests
+from embeddable import embeddable as embed
 from funktions import helpers as h
 
 #==== Fetch an article from Wikipedia ====
@@ -17,12 +18,12 @@ def fetchArticle(query,headers):
         results = response.json()
 
         if results['type'] == notFound:
-            return [None, "Sorry, I couldn't find \"{}\"!".format(query)]
+            return embed.empty("Sorry, I couldn't find \"{}\"!".format(query))
         else:
             return __formatArticle(results) 
 
     except KeyError as e:
-        return [None, "Something went wrong!"]
+        return embed.empty("Something went wrong!")
 
 def __formatArticle(article):
     title = article['title']
@@ -37,4 +38,4 @@ def __formatArticle(article):
 
     textBox = description + "\n-----\n" + extract
 
-    return [url, title, textBox, imageUri]
+    return embed.Embeddable(url, title, textBox, imageUri)

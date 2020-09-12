@@ -116,70 +116,66 @@ class TestUseful(unittest.TestCase):
         #Each request must have a delay to comply with Scryfall's rate limits
         self.msg.content = "[[island|swamp|mountain|forest]]"
         results = u.fetchCard(self.msg, self.apiheaders)
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0][1], h.badArgs("magic", c.ERR_TOO_MANY))
+        self.assertEqual(results, h.badArgs("magic", c.ERR_TOO_MANY))
 
         time.sleep(.1)
         self.msg.content = "[[]]"
         results = u.fetchCard(self.msg, self.apiheaders)
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0][1], h.badArgs("magic", c.ERR_TOO_FEW))
+        self.assertEqual(results, h.badArgs("magic", c.ERR_TOO_FEW))
 
         time.sleep(.1)
         self.msg.content = "[[fake_card]]"
         results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
-        self.assertIsNone(results[0][0])
-        self.assertEqual(results[0][1], "Sorry, I couldn't find \"fake_card\"!")
+        self.assertEqual(results[0].text, "Sorry, I couldn't find \"fake_card\"!")
 
         time.sleep(.1)
         self.msg.content = "[[random]]"
         results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
-        self.assertIsNotNone(results[0][0])
+        self.assertIsNotNone(results[0].text)
 
         time.sleep(.1)
         self.msg.content = "[[random fake_card]]"
         results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
-        self.assertIsNone(results[0][0])
-        self.assertEqual(results[0][1], "Sorry, I couldn't find \"random fake_card\"!")
+        self.assertEqual(results[0].text, "Sorry, I couldn't find \"random fake_card\"!")
 
         time.sleep(.1)
         self.msg.content = "[[random c:rg]]"
         results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
-        self.assertIsNotNone(results[0][0])
+        self.assertIsNotNone(results[0].text)
 
         time.sleep(.1)
         self.msg.content = "[[random c:rg|random is:commander]]"
         results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 2)
-        for string in results:
-            self.assertIsNotNone(string)
+        for card in results:
+            self.assertIsNotNone(card)
 
         time.sleep(.1)
         self.msg.content = "[[plains]]"
         results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 1)
-        self.assertIsNotNone(results[0][0])
-        self.assertNotIn("Sorry, I couldn't find", results[0][1])
+        self.assertIsNotNone(results[0])
+        self.assertNotIn("Sorry, I couldn't find", results[0].text)
         
         time.sleep(.1)
         self.msg.content = "[[plains|island]]"
         results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 2)
-        for string in results:
-            self.assertIsNotNone(string[0])
-            self.assertNotIn("Sorry, I couldn't find", string[1])
+        for card in results:
+            self.assertIsNotNone(card.text)
+            self.assertNotIn("Sorry, I couldn't find", card.text)
 
         time.sleep(.1)
         self.msg.content = "[[plains|island|swamp]]"
         results = u.fetchCard(self.msg, self.apiheaders)
         self.assertEqual(len(results), 3)
-        for string in results:
-            self.assertIsNotNone(string[0])
-            self.assertNotIn("Sorry, I couldn't find", string[1])
+        for card in results:
+            self.assertIsNotNone(card)
+            self.assertNotIn("Sorry, I couldn't find", card.text)
 
     def test_makeReminder_noMessage(self):
         self.msg.content = " [[1s]]"
@@ -627,21 +623,18 @@ class TestUseful(unittest.TestCase):
         #Each request must have a delay to comply with Wikipedia's rate limits
         self.msg.content = "[[]]"
         results = u.fetchWiki(self.msg, self.apiheaders)
-        self.assertEqual(len(results), 2)
-        self.assertEqual(results[1], h.badArgs("wiki", c.ERR_TOO_FEW))
+        self.assertEqual(results, h.badArgs("wiki", c.ERR_TOO_FEW))
 
         time.sleep(.05)
         self.msg.content = "[[test fake article]]"
         results = u.fetchWiki(self.msg, self.apiheaders)
-        self.assertEqual(len(results), 2)
-        self.assertEqual(results[1], "Sorry, I couldn't find \"test fake article\"!")
+        self.assertEqual(results.text, "Sorry, I couldn't find \"test fake article\"!")
 
         time.sleep(.05)
         self.msg.content = "[[Wikipedia]]"
         results = u.fetchWiki(self.msg, self.apiheaders)
-        self.assertEqual(len(results), 4)
-        self.assertIsNotNone(results[0])
-        self.assertNotIn("Sorry, I couldn't find", results[0][1])
+        self.assertIsNotNone(results.url)
+        self.assertNotIn("Sorry, I couldn't find", results.text)
 
 if __name__ == "__main__":
     unittest.main()

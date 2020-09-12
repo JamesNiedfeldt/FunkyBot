@@ -5,6 +5,7 @@ Contains all necessary functions for searching up Magic: the Gathering cards
 
 #==== Imports ====
 import requests
+from embeddable import embeddable as emb
 from funktions import helpers as h
 
 #==== Fetch a card from Scryfall ====
@@ -39,10 +40,10 @@ def fetchCard(query,headers):
 
         #Nothing found
         else:
-            return [None, "Sorry, I couldn't find \"{}\"!".format(query)]
+            return emb.empty("Sorry, I couldn't find \"{}\"!".format(query))
 
     except KeyError as e:
-        return [None, "Something went wrong!"]
+        return emb.empty("Something went wrong!")
 
 def __formatCard(card, givenUri=None):
     name = card['name']
@@ -69,13 +70,13 @@ def __formatCard(card, givenUri=None):
                            "\n" + __makeTextBox(f))
             cost = card['mana_cost']
             imageUri = card['image_uris']['normal']
-            toReturn = [uri, name + "  " + cost, textBox, imageUri]
+            toReturn = emb.Embeddable(uri, name + " " + cost, textBox, imageUri)
 
     else:
         textBox = __makeTextBox(card)
         cost = card['mana_cost']
         imageUri = card['image_uris']['normal']
-        toReturn = [uri, name + "  " + cost, textBox, imageUri]
+        toReturn = emb.Embeddable(uri, name + " " + cost, textBox, imageUri)
         
     return toReturn
 

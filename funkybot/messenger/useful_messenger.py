@@ -5,17 +5,18 @@ Sends messages to Discord from useful commands
 
 #==== Imports ====
 from funktions import useful, helpers
+from errors import errors
 import asyncio
 import discord
 
 #==== Setup a reminder for everyone ====
 async def announce(message,client):
     if message.author.guild_permissions.administrator:
-        reminder = useful.makeReminder(message, announcement=True)
+        try:
+            reminder = useful.makeReminder(message, announcement=True)
 
-        await message.channel.send(useful.confirmReminder(message, reminder))
+            await message.channel.send(useful.confirmReminder(message, reminder))
 
-        if not isinstance(reminder, str): #Reminder is not an error string
             def pred(msg):
                 return (msg.author == message.author and
                         msg.channel == message.channel and
@@ -31,30 +32,36 @@ async def announce(message,client):
             except asyncio.TimeoutError:
                 await message.channel.send("%s, you took too long to respond so I discarded your reminder."
                                               % message.author.mention)
+        except errors.Error as e:
+            await message.channel.send(helpers.badArgs(e))
             
     else:
         await message.channel.send("Sorry, only administrators can use that command!")
 
 #==== Convert number to binary ====
 async def binary(message):
-    await message.channel.send(useful.toBin(message))
+    try:
+        await message.channel.send(useful.toBin(message))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))
 
 #==== Convert number to hexadecimal ====
 async def hexadec(message):
-    await message.channel.send(useful.toHex(message))
+    try:
+        await message.channel.send(useful.toHex(message))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))
 
 #==== Search for Magic cards ====
 async def magic(message,apiHeaders):
-    cards = useful.fetchCard(message,apiHeaders)
-
-    if isinstance(cards, str): #Error found
-        await message.channel.send(cards)
-    else:
+    try:
         for c in useful.fetchCard(message,apiHeaders):
             if c.empty():
                 await message.channel.send(c.text)
             else:
                 await message.channel.send(c.url, embed=discord.Embed(title=c.title, description=c.text).set_image(url=c.image))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))
             
 #==== Setup a poll ====
 async def poll(message,client):
@@ -63,14 +70,10 @@ async def poll(message,client):
     if helpers.isPollRunning(activeId): #Only begin a poll if not already one in channel
         await message.channel.send("Sorry, you already have a poll running in this channel. If you want to end it, send `!end`.")
 
-    else:
-        poll = useful.makePoll(message)
-        reactions = []
-                                   
-        if isinstance(poll, str): #Something went wrong, so an error was returned 
-            await message.channel.send(poll)
-            
-        else:
+    else:                          
+        try:
+            poll = useful.makePoll(message)
+            reactions = []
             helpers.addToActivePolls(activeId)
             sentMsg = await message.channel.send(poll.body)
 
@@ -90,14 +93,17 @@ async def poll(message,client):
             fetchedMsg = await message.channel.fetch_message(sentMsg.id) #Update message information
             await message.channel.send(useful.finishPoll(fetchedMsg,poll))
             helpers.removeFromActivePolls(activeId)
+            
+        except errors.Error as e:
+            await message.channel.send(helpers.badArgs(e))
 
 #==== Setup reminder ====
 async def remind(message,client):
-    reminder = useful.makeReminder(message)
+    try:
+        reminder = useful.makeReminder(message)
 
-    await message.channel.send(useful.confirmReminder(message, reminder))
+        await message.channel.send(useful.confirmReminder(message, reminder))
 
-    if not isinstance(reminder, str): #Reminder is not an error string
         def pred(msg):
             return (msg.author == message.author and
                     msg.channel == message.channel and
@@ -114,15 +120,23 @@ async def remind(message,client):
             await message.channel.send("%s, you took too long to respond so I discarded your reminder."
                                       % message.author.mention)
 
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))
+
 #==== Roll a die ====
 async def roll(message):
-    await message.channel.send(useful.rollDice(message))
+    try:
+        await message.channel.send(useful.rollDice(message))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))
 
 #==== Search for a Wikipedia article ====
 async def wiki(message,apiHeaders):
-    a = useful.fetchWiki(message,apiHeaders)
-
-    if a.empty():
-        await message.channel.send(a.text)
-    else:
-        await message.channel.send(a.url, embed=discord.Embed(title=a.title, description=a.text).set_image(url=a.image))
+    try:
+        a = useful.fetchWiki(message,apiHeaders)
+        if a.empty():
+            await message.channel.send(a.text)
+        else:
+            await message.channel.send(a.url, embed=discord.Embed(title=a.title, description=a.text).set_image(url=a.image))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))

@@ -10,20 +10,18 @@ from reminder import reminder
 from poll import poll
 from cardfetcher import cardfetcher as cf
 from wikifetcher import wikifetcher as wf
+from errors import errors
 
 #==== Convert a number to binary ====
 def toBin(message):
     remainder = -1 #Remainder used for conversion
     value = "" #Value to print
+    
     #Parse number, convert it to usable string
-    number = h.parse(message.content)
-
-    if number == None: #Arguments formatted wrong
-        return h.badArgs("binary", c.ERR_BRACKETS)
-    elif len(number) == 0: #Nothing to convert
-        return h.badArgs("binary", c.ERR_TOO_FEW)
-    elif len(number) > 1: #Too many numbers
-        return h.badArgs("binary", c.ERR_TOO_MANY)
+    try:
+        number = h.parse(message.content, "binary", 1, 1)
+    except errors.Error as e:
+        raise e
     
     for i in set(number): number = i #Change number back to int
 
@@ -41,23 +39,20 @@ def toBin(message):
         return "%s in binary is: %s" % (number, value)
         
     except ValueError: #Non-integer sent
-        return h.badArgs("binary", "bad_value")
+        raise errors.BadValueException("binary")
     except RuntimeError: #Non-integer sent or invalid number
-        return h.badArgs("binary", "bad_number")
+        raise errors.BadNumberException("binary")
 
 #==== Convert a number to hexadecimal ====
 def toHex(message):
     remainder = -1 #Remainder used for conversion
     value = "" #Value to print
+    
     #Parse number, convert it to usable string
-    number = h.parse(message.content)
-
-    if number == None: #Arguments formatted wrong
-        return h.badArgs("hex", c.ERR_BRACKETS)
-    elif len(number) == 0: #Nothing to convert
-        return h.badArgs("hex", c.ERR_TOO_FEW)
-    elif len(number) > 1: #Too many numbers
-        return h.badArgs("hex", c.ERR_TOO_MANY)
+    try:
+        number = h.parse(message.content, "hex", 1, 1)
+    except errors.Error as e:
+        raise e
 
     for i in set(number): number = i #Change number back to int
 
@@ -77,23 +72,19 @@ def toHex(message):
         return "%s in hexadecimal is: %s" % (number, value)
         
     except ValueError: #Non-integer sent
-        return h.badArgs("hex", "bad_value")
+        raise errors.BadValueException("hex")
     except RuntimeError: #Non-integer sent or invalid number
-        return h.badArgs("hex", "bad_number")
+        raise errors.BadNumberException("hex")
 
 #==== Fetch a card ====
 def fetchCard(message,apiHeaders):
     toReturn = []
     
     #Parse card name
-    cards = h.parse(message.content)
-    
-    if cards == None: #Arguments not formatted properly
-        return h.badArgs("magic", c.ERR_BRACKETS)
-    elif len(cards) > 3: #Too many cards in search
-        return h.badArgs("magic", c.ERR_TOO_MANY)
-    elif len(cards) == 0: #Nothing to search for
-        return h.badArgs("magic", c.ERR_TOO_FEW)
+    try:
+        cards = h.parse(message.content, "magic", 1, 3)
+    except errors.Error as e:
+        raise e
     
     for i in cards:
         result = cf.fetchCard(i,apiHeaders)
@@ -107,23 +98,19 @@ def fetchCard(message,apiHeaders):
 
 #==== Setup a poll ====
 def makePoll(message):
-    options = h.parse(message.content)
     optDict = {}
     description = ""
     results = []
 
-    if options == None: #Arguments not formatted properly
-        return h.badArgs("poll", c.ERR_BRACKETS)
-    elif len(options) <= 1:
-        return h.badArgs("poll", c.ERR_TOO_FEW)
-    elif len(options) > 5:
-        return h.badArgs("poll", c.ERR_TOO_MANY)
+    try:
+        options = h.parse(message.content, "poll", 2, 5)
+    except errors.Error as e:
+        raise e
     
-    else:
-        question = (re.sub("(\[\[.*\]\])|(!POLL)", "",
-                           message.content, flags=re.IGNORECASE))
+    question = (re.sub("(\[\[.*\]\])|(!POLL)", "",
+                       message.content, flags=re.IGNORECASE))
             
-        return poll.Poll(message.author, question, options)
+    return poll.Poll(message.author, question, options)
 
 #==== Analyze poll results ====
 def finishPoll(message,poll):
@@ -154,37 +141,35 @@ def finishPoll(message,poll):
 
 #==== Create a Reminder ====
 def makeReminder(message,announcement=False):
-    timeArgs = h.parse(message.content)
     if announcement:
         cmd = "announce"
     else:
         cmd = "remind"
+        
+    try:
+        timeArgs = h.parse(message.content, cmd, 1, 3)
+    except errors.Error as e:
+        raise e
 
-    if timeArgs == None: #Arguments formatted incorrectly
-        return h.badArgs(cmd, c.ERR_BRACKETS)
-    elif len(timeArgs) < 1:
-        return h.badArgs(cmd, c.ERR_TOO_FEW)
-
-    else:
-        #Argument is a datetime
-        if '/' in timeArgs[0]:
-            duration = h.convertDateTime(timeArgs)
-            date = True
-        #Argument is a duration
-        else: 
-            duration = h.convertDurationTime(timeArgs)
-            date = False
+    #Argument is a datetime
+    if '/' in timeArgs[0]:
+        duration = h.convertDateTime(timeArgs)
+        date = True
+    #Argument is a duration
+    else: 
+        duration = h.convertDurationTime(timeArgs)
+        date = False
 
     if date and duration == None: #Datetime was not parsed correctly
-        return h.badArgs(cmd, "bad_date")
+        raise errors.CustomCommandException(cmd, "bad_date")
     elif date and duration <= 0: #Datetime is negative
-        return h.badArgs(cmd, "negative_date")
+        raise errors.CustomCommandException(cmd, "negative_date")
     elif not date and duration == None: #Duration was formatted incorrectly
-        return h.badArgs(cmd, "bad_duration")
+        raise errors.CustomCommandException(cmd, "bad_duration")
     elif not date and duration > 2592000: #Duration over 30 days
-        return h.badArgs(cmd, "too_long")
+        raise errors.CustomCommandException(cmd, "too_long")
     elif not date and duration <= 0: #Duration empty or negative
-        return h.badArgs(cmd, "no_duration")
+        raise errors.CustomCommandException(cmd, "no_duration")
 
     if announcement:
         timer = reminder.Announcement(duration=duration,msg=message,dt=date)
@@ -217,15 +202,10 @@ def startReminder(timer):
 
 #==== Roll a die ====
 def rollDice(message):
-    #Parse number, convert it to usable string
-    number = h.parse(message.content)
-
-    if number == None: #Arguments formatted incorrectly
-        return h.badArgs("roll", c.ERR_BRACKETS)
-    elif len(number) == 0: #No number to roll
-        return h.badArgs("roll", c.ERR_TOO_FEW)
-    elif len(number) > 1: #Too many dies to roll
-        return h.badArgs("roll", c.ERR_TOO_MANY)
+    try:
+        number = h.parse(message.content, "roll", 1, 1)
+    except errors.Error as e:
+        raise e
     
     for i in set(number): number = i #Convert back to a number
     
@@ -237,21 +217,16 @@ def rollDice(message):
             return "You rolled %s!" % random.randint(1,number)
         
     except ValueError: #Non-integer sent
-        return h.badArgs("roll", "bad_value")
+        raise errors.BadValueException("roll")
     except RuntimeError: #Non-integer sent or invalid number
-        return h.badArgs("roll", "bad_number")
+        raise errors.BadNumberException("roll")
 
 #==== Fetch a Wikipedia article ====
 def fetchWiki(message,apiHeaders):
-    #Parse search terms
-    terms = h.parse(message.content)
-
-    if terms == None: #Arguments not formatted properly
-        return h.badArgs("wiki", c.ERR_BRACKETS)
-    elif len(terms) > 1: #Too many cards in search
-        return h.badArgs("wiki", c.ERR_TOO_MANY)
-    elif len(terms) == 0: #Nothing to search for
-        return h.badArgs("wiki", c.ERR_TOO_FEW)
+    try:
+        terms = h.parse(message.content, "wiki", 1, 1)
+    except errors.Error as e:
+        raise e
 
     for i in set(terms): terms = i #Convert back to a string
 

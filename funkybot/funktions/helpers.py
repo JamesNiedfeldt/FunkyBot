@@ -6,6 +6,7 @@ Contains the non-command functions needed to run
 from datetime import datetime
 from reminder import reminder, database
 from funktions import constant as c
+from errors import errors
 from poll import poll
 import time
 import os
@@ -13,18 +14,22 @@ import re
 import xml.etree.ElementTree as et
 
 #==== Parse a string ====
-def parse(string):
+def parse(string, command, minArg, maxArg):
     contents = re.findall("\[\[([^\[\]]*)\]\]", string) #Find contents of '[[]]'
 
     if len(contents) == 0: #Nothing was found
-        return None
+        raise errors.BadArgumentException(command)
     
     contents = re.split("\|", contents[0])  #Split multiple deliminated with '|'
     
     for i in list(contents):
         if i == "": #Is there a blank entry?
-           contents.clear()
-           pass
+           raise errors.EmptyArgumentException(command)
+
+    if len(contents) < minArg:
+        raise errors.TooFewArgumentsException(command)
+    elif len(contents) > maxArg:
+        raise errors.TooManyArgumentsException(command)
         
     return contents
     
@@ -68,16 +73,16 @@ def filePath(directory):
     return path
 
 #==== Error in command arguments ====
-def badArgs(command,err=None):
-    cmd = getXmlTree("commands").find("./function/[command='{}']".format(command))
+def badArgs(exc):
+    cmd = getXmlTree("commands").find("./function/[command='{}']".format(exc.command))
     message = c.BAD_ARGS_1
 
-    if err != None:
-        hint = cmd.find("./error/[@type='{}']".format(err))
+    if exc.errorCode != None:
+        hint = cmd.find("./error/[@type='{}']".format(exc.errorCode))
         if hint != None:
             message = message + hint.text + " "
 
-    message = message + c.BAD_ARGS_2 % command
+    message = message + c.BAD_ARGS_2 % exc.command
 
     return message
 
@@ -93,10 +98,7 @@ def blockQuote(string):
 #==== Convert reminder arguments to duration ====
 def convertDurationTime(timeArgs):
     duration = 0
-
-    if len(timeArgs) > 3:
-        timeArgs = timeArgs[0:3]
-                
+         
     for i in timeArgs:
         key = re.findall("[smhd]", i, flags=re.IGNORECASE)
         

@@ -39,7 +39,7 @@
             <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
             <hint>Time cannot exceed 30 days.</hint>
             <hint>Separate each argument in the brackets with the | character.</hint>
-            <hint>I will ignore any more than three arguments of this format.</hint>
+            <hint>I need at least one argument but I can take up to three.</hint>
             <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
             <hint>For example, to remind everyone to join you in a game in two and a half days, send: `!announce [[2d|12h]] play game`.</hint>
             <hint>Only server administrators can use this command.</hint>
@@ -56,6 +56,8 @@
             <hint>For example, to set an announcement for your birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!announce [[05/20/2021 14:30 -0600]] birthday party`.</hint>
         </body>
         <error type="brackets">Make sure the time or date you want me to use to set your announcement is surrounded by double brackets.</error>
+        <error type="empty">At least one of the arguments you gave me was empty.</error>
+        <error type="too_many">I can only take three arguments.</error>
         <error type="too_few">I need at least one time or date argument to set your announcement.</error>
         <error type="bad_duration">Make sure your time arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
         <error type="too_long">Time arguments cannot exceed 30 days.</error>
@@ -73,6 +75,7 @@
             <hint>For example, to convert 5 to binary, you should send: `!binary [[5]]`.</hint>
         </body>
         <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
+        <error type="empty">You must put something in the double brackets.</error>
         <error type="too_few">I need a number to convert.</error>
         <error type="too_many">I can only convert one number at a time.</error>
         <error type="bad_value">I can only convert integers to binary.</error>
@@ -88,6 +91,7 @@
             <hint>For example, to convert 5 to hexadecimal, you should send: `!hex [[5]]`.</hint>
         </body>
         <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
+        <error type="empty">You must put something in the double brackets.</error>
         <error type="too_few">I need a number to convert.</error>
         <error type="too_many">I can only convert one number at a time.</error>
         <error type="bad_value">I can only convert integers to hexadecimal.</error>
@@ -105,6 +109,7 @@
             <hint>You can also use Scryfall's syntax to add search terms to random as long as they don't contain the | character. For example, to search for a random red and green commander, you should send: `!magic [[random c=rg is:commander]]`.</hint>
         </body>
         <error type="brackets">Make sure the cards you want me to search for are surrounded by double brackets.</error>
+        <error type="empty">You must put something in the double brackets and after each `|` character.</error>
         <error type="too_few">I need at least one card to search for.</error>
         <error type="too_many">I can only search for at most three cards at a time.</error>
     </function>
@@ -123,6 +128,7 @@
             <hint>For example, to poll people on what their favorite color is, send: `!poll What is your favorite color? [[Red|Yellow|Blue]]`.</hint>
         </body>
         <error type="brackets">Make sure the options you want on the poll are surrounded by double brackets.</error>
+        <error type="empty">You must put something in the double brackets and after each `|` character.</error>
         <error type="too_few">I need at least two poll options for people to vote on.</error>
         <error type="too_many">I can only set up to five options for people to vote on.</error>
     </function>
@@ -135,7 +141,7 @@
             <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
             <hint>Time cannot exceed 30 days.</hint>
             <hint>Separate each argument in the brackets with the | character.</hint>
-            <hint>I will ignore any more than three arguments of this format.</hint>
+            <hint>I need at least one argument but I can take up to three.</hint>
             <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
             <hint>For example, to remind yourself to go to sleep in two and a half hours, send: `!announce [[2h|30m]] go to sleep`.</hint>
         </body>
@@ -151,9 +157,11 @@
             <hint>For example, to set a reminder for a friend's birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!remind [[05/20/2021 14:30 -0600]] birthday party`.</hint>
         </body>
         <error type="brackets">Make sure the time or date you want me to use to set your reminder is surrounded by double brackets.</error>
+        <error type="too_many">I can only take three arguments.</error>
         <error type="too_few">I need at least one time or date argument to set your reminder.</error>
         <error type="bad_duration">Make sure your time arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
         <error type="too_long">Time arguments cannot exceed 30 days.</error>
+        <error type="empty">You must put something in the double brackets and after each `|` character.</error>
 	<error type="no_duration">The time arguments must last at least one second.</error>
         <error type="bad_date">Make sure your date argument is in the proper format: `MM/DD/YYYY HH:MM (+/-)HHHH`.</error>
         <error type="negative_date">Date arguments must be set for a date in the future.</error>
@@ -171,6 +179,7 @@
         <error type="brackets">Make sure the number of sides of your die is surrounded by double brackets.</error>
         <error type="too_few">I need a number of sides to roll a die.</error>
         <error type="too_many">I can only roll one die at a time.</error>
+        <error type="empty">You must put something in the double brackets.</error>
         <error type="bad_value">I can only roll a die with an integer number of sides.</error>
         <error type="bad_number">I can only roll a die with 0-1000 sides.</error>
     </function>
@@ -185,6 +194,7 @@
             <hint>For example, to search for "shiba inu," you should send: `!wiki [[Shiba Inu]]`.</hint>
         </body>
         <error type="brackets">Make sure the article you want me to search for is surrounded by double brackets.</error>
+        <error type="empty">You must put something in the double brackets.</error>
         <error type="too_few">I need an article to search for.</error>
         <error type="too_many">I can only search for one article at a time.</error>
     </function>

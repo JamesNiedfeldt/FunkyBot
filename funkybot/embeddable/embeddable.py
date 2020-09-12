@@ -3,9 +3,7 @@
 Encapsulates all necessary information for Discord embeds
 """
 
-#==== Imports ====
-
-#==== Timer class ====
+#==== Embeddable class ====
 class Embeddable():
     def __init__(self, url, title, text, image):
         self.url = url

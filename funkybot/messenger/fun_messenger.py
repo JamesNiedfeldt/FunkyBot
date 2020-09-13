@@ -5,6 +5,7 @@ Sends messages to Discord from fun commands
 
 #==== Imports ====
 from funktions import fun, helpers
+from errors import errors
 import discord
 
 #==== Answer a yes or no question ====
@@ -13,7 +14,10 @@ async def ask(message):
 
 #==== Choose between options ====
 async def choose(message):
-    await message.channel.send(fun.choose(message))
+    try:
+        await message.channel.send(fun.choose(message))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))
 
 #==== Send random cute animal image ====
 async def cute(message):
@@ -40,4 +44,7 @@ async def react(message):
 
 #==== Rate something ====
 async def rate(message):
-    await message.channel.send(fun.rateSomething(message))
+    try:
+        await message.channel.send(fun.rateSomething(message))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))

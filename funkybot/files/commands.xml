@@ -25,7 +25,7 @@
             <description>You can also send `!help` with no arguments to get a list of commands.</description>
         </body>
         <error type="brackets">Make sure the command you want help with is surrounded by double brackets. If you want a list of all commands, don't send any brackets.</error>
-        <error type="too_few">I need a command to search for. If you want a list of all commands, don't send any brackets.</error>
+        <error type="empty">I need a command to search for. If you want a list of all commands, don't send any brackets.</error>
         <error type="too_many">I can only search for one command at a time.</error>
         <error type="bad_command">I don't have the command you're searching for. If you want a list of all commands, send `!help` with no arguments.</error>
     </function>
@@ -75,8 +75,7 @@
             <hint>For example, to convert 5 to binary, you should send: `!binary [[5]]`.</hint>
         </body>
         <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
-        <error type="empty">You must put something in the double brackets.</error>
-        <error type="too_few">I need a number to convert.</error>
+        <error type="empty">I need a number to convert.</error>
         <error type="too_many">I can only convert one number at a time.</error>
         <error type="bad_value">I can only convert integers to binary.</error>
         <error type="bad_number">I can only convert numbers 0-65535 to binary.</error>
@@ -91,8 +90,7 @@
             <hint>For example, to convert 5 to hexadecimal, you should send: `!hex [[5]]`.</hint>
         </body>
         <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
-        <error type="empty">You must put something in the double brackets.</error>
-        <error type="too_few">I need a number to convert.</error>
+        <error type="empty">I need a number to convert.</error>
         <error type="too_many">I can only convert one number at a time.</error>
         <error type="bad_value">I can only convert integers to hexadecimal.</error>
         <error type="bad_number">I can only convert numbers 0-65535 to hexadecimal.</error>
@@ -177,9 +175,8 @@
             <hint>For example, to roll a 6-sided die, you should send: `!roll [[6]]`.</hint>
         </body>
         <error type="brackets">Make sure the number of sides of your die is surrounded by double brackets.</error>
-        <error type="too_few">I need a number of sides to roll a die.</error>
+        <error type="empty">I need a number of sides to roll a die.</error>
         <error type="too_many">I can only roll one die at a time.</error>
-        <error type="empty">You must put something in the double brackets.</error>
         <error type="bad_value">I can only roll a die with an integer number of sides.</error>
         <error type="bad_number">I can only roll a die with 0-1000 sides.</error>
     </function>
@@ -194,8 +191,7 @@
             <hint>For example, to search for "shiba inu," you should send: `!wiki [[Shiba Inu]]`.</hint>
         </body>
         <error type="brackets">Make sure the article you want me to search for is surrounded by double brackets.</error>
-        <error type="empty">You must put something in the double brackets.</error>
-        <error type="too_few">I need an article to search for.</error>
+        <error type="empty">I need an article to search for.</error>
         <error type="too_many">I can only search for one article at a time.</error>
     </function>
 
@@ -218,6 +214,7 @@
             <hint>For example, to choose from cats or dogs, you should send: `!choose [[cats|dogs]]`.</hint>
         </body>
         <error type="brackets">Make sure the options you want me to choose from are surrounded by double brackets.</error>
+        <error type="empty">At least one of the arguments you gave me was empty.</error>
         <error type="too_few">I need at least two things to choose from.</error>
         <error type="too_many">I can only choose from at most 10 things at a time.</error>
     </function>
@@ -256,7 +253,7 @@
             <hint>For example, to rate Discord, you should send: `!rate [[Discord]]`.</hint>
         </body>
         <error type="brackets">Make sure the thing you want me to rate is surrounded by double brackets.</error>
-        <error type="too_few">I need something to rate.</error>
+        <error type="empty">I need something to rate.</error>
         <error type="too_many">I can only rate one thing at a time.</error>
     </function>
 

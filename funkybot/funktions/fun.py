@@ -4,6 +4,7 @@ Contains the fun FunkyBot commands
 """
 
 from funktions import helpers as h, constant as c
+from errors import errors
 import random
 import os
 
@@ -16,14 +17,10 @@ def eightBall():
 #==== Choose randomly from choices ====
 def choose(message):
     #Parse choices
-    choices = h.parse(message.content)
-
-    if choices == None: #Arguments formatted wrong
-        return h.badArgs("choose", c.ERR_BRACKETS)
-    elif len(choices) <= 1: #Too few choices
-        return h.badArgs("choose", c.ERR_TOO_FEW)
-    elif len(choices) > 10: #Too many choices
-        return h.badArgs("choose", c.ERR_TOO_MANY)
+    try:
+        choices = h.parse(message.content, "choose", 2, 10)
+    except errors.Error as e:
+        raise e
 
     return "I choose %s!" % random.choice(choices)
 
@@ -59,14 +56,10 @@ def rateSomething(message):
     rank = random.choice(ratings)
     
     #Parse string
-    toRate = h.parse(message.content)
-
-    if toRate == None: #Arguments formatted wrong
-        return h.badArgs("rate", c.ERR_BRACKETS)
-    elif len(toRate) == 0: #Nothing to rate
-        return h.badArgs("rate", c.ERR_TOO_FEW)
-    elif len(toRate) > 1: #Too many things to rate
-        return h.badArgs("rate", c.ERR_TOO_MANY)
+    try:
+        toRate = h.parse(message.content, "rate", 1, 1)
+    except errors.Error as e:
+        raise e
 
     for i in set(toRate): toRate = i #Change back to string
 

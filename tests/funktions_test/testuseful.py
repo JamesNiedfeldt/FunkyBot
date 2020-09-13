@@ -1,8 +1,9 @@
 import unittest
 import time
 from funktions_test import mockmessage as m
-from funktions import helpers as h, useful as u, constant as c
+from funktions import useful as u, helpers as h
 from reminder import reminder as r
+from errors import errors as err
 
 class TestUseful(unittest.TestCase):
     @classmethod
@@ -39,22 +40,22 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(u.toBin(self.msg), "1023 in binary is: 1111111111")
 
         self.msg.content = "[[65536]]"
-        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", "bad_number"))
-
+        self.assertRaises(err.BadNumberException, u.toBin, self.msg)
+        
         self.msg.content = "[[-1]]"
-        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", "bad_number"))
+        self.assertRaises(err.BadNumberException, u.toBin, self.msg)
 
         self.msg.content = "[[1.25]]"
-        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", "bad_value"))
+        self.assertRaises(err.BadValueException, u.toBin, self.msg)
 
         self.msg.content = "[[words]]"
-        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", "bad_value"))
+        self.assertRaises(err.BadValueException, u.toBin, self.msg)
 
         self.msg.content = "[[]]"
-        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", c.ERR_TOO_FEW))
+        self.assertRaises(err.EmptyArgumentException, u.toBin, self.msg)
 
         self.msg.content = "[[10|20]]"
-        self.assertEqual(u.toBin(self.msg), h.badArgs("binary", c.ERR_TOO_MANY))
+        self.assertRaises(err.TooManyArgumentsException, u.toBin, self.msg)
 
     def test_toHex(self):
         self.msg.content = "[[0]]"
@@ -94,34 +95,32 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(u.toHex(self.msg), "65535 in hexadecimal is: FFFF")
 
         self.msg.content = "[[65536]]"
-        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", "bad_number"))
+        self.assertRaises(err.BadNumberException, u.toHex, self.msg)
 
         self.msg.content = "[[-1]]"
-        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", "bad_number"))
+        self.assertRaises(err.BadNumberException, u.toHex, self.msg)
 
         self.msg.content = "[[1.25]]"
-        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", "bad_value"))
+        self.assertRaises(err.BadValueException, u.toHex, self.msg)
 
         self.msg.content = "[[words]]"
-        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", "bad_value"))
+        self.assertRaises(err.BadValueException, u.toHex, self.msg)
 
         self.msg.content = "[[]]"
-        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", c.ERR_TOO_FEW))
+        self.assertRaises(err.EmptyArgumentException, u.toHex, self.msg)
 
         self.msg.content = "[[10|20]]"
-        self.assertEqual(u.toHex(self.msg), h.badArgs("hex", c.ERR_TOO_MANY))
+        self.assertRaises(err.TooManyArgumentsException, u.toHex, self.msg)
 
     @unittest.skip
     def test_fetchCard(self):
         #Each request must have a delay to comply with Scryfall's rate limits
         self.msg.content = "[[island|swamp|mountain|forest]]"
-        results = u.fetchCard(self.msg, self.apiheaders)
-        self.assertEqual(results, h.badArgs("magic", c.ERR_TOO_MANY))
+        self.assertRaises(err.TooManyArgumentsException, u.fetchCard, self.msg, self.apiheaders)
 
         time.sleep(.1)
         self.msg.content = "[[]]"
-        results = u.fetchCard(self.msg, self.apiheaders)
-        self.assertEqual(results, h.badArgs("magic", c.ERR_TOO_FEW))
+        self.assertRaises(err.EmptyArgumentException, u.fetchCard, self.msg, self.apiheaders)
 
         time.sleep(.1)
         self.msg.content = "[[fake_card]]"
@@ -226,12 +225,6 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, self.msg.author.mention + " ")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = " [[1s|1m|1h|1d]]"
-        reminder = u.makeReminder(self.msg)
-        self.assertEqual(reminder.duration, 3661)
-        self.assertEqual(reminder.message, self.msg.author.mention + " ")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
-
         self.msg.content = "[[01/01/2025 00:00 -0000]]"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 1735689600)
@@ -244,41 +237,35 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, self.msg.author.mention + " ")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
+        self.msg.content = " [[1s|1m|1h|1d]]"
+        self.assertRaises(err.TooManyArgumentsException, u.makeReminder, self.msg)
+
         self.msg.content = "[[]]"
-        expected = h.badArgs("remind", c.ERR_TOO_FEW)
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.EmptyArgumentException, u.makeReminder, self.msg)
 
         self.msg.content = " [[31d]]"
-        expected = h.badArgs("remind", "too_long")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = " [[0]]"
-        expected = h.badArgs("remind", "bad_duration")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = " [[0s|0d|0h]]"
-        expected = h.badArgs("remind", "no_duration")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = " [[-1d]]"
-        expected = h.badArgs("remind", "no_duration")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = " [[-1d]]"
-        expected = h.badArgs("remind", "no_duration")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = "[[01/01/25 00:00 -0000]]"
-        expected = h.badArgs("remind", "bad_date")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = "[[01/01/1990 00:00 -0000]]"
-        expected = h.badArgs("remind", "negative_date")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = "[[20m|01/01/2025 00:00 -0000]]"
-        expected = h.badArgs("remind", "bad_duration")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
     def test_makeReminder_withMessage(self):
         self.msg.content = "[[1s]] test message"
@@ -329,12 +316,6 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[1s|1m|1h|1d]] test message"
-        reminder = u.makeReminder(self.msg)
-        self.assertEqual(reminder.duration, 3661)
-        self.assertEqual(reminder.message, self.msg.author.mention + " test message")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
-
         self.msg.content = "[[01/01/2025 00:00 -0000]] test message"
         reminder = u.makeReminder(self.msg)
         self.assertEqual(reminder.duration, 1735689600)
@@ -347,33 +328,29 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, self.msg.author.mention + " test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
+        self.msg.content = "[[1s|1m|1h|1d]] test message"
+        self.assertRaises(err.TooManyArgumentsException, u.makeReminder, self.msg)
+
         self.msg.content = "[[]] test message"
-        expected = h.badArgs("remind", c.ERR_TOO_FEW)
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.EmptyArgumentException, u.makeReminder, self.msg)
 
         self.msg.content = " [[31d]] test message"
-        expected = h.badArgs("remind", "too_long")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = " [[0]] test message"
-        expected = h.badArgs("remind", "bad_duration")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = " [[0s|0d|0h]] test message"
-        expected = h.badArgs("remind", "no_duration")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = " [[-1d]] test message"
-        expected = h.badArgs("remind", "no_duration")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = "[[01/01/1990 00:00 -0000]] test message"
-        expected = h.badArgs("remind", "negative_date")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
         self.msg.content = "[[20m|01/01/2025 00:00 -0000]] test message"
-        expected = h.badArgs("remind", "bad_duration")
-        self.assertEqual(u.makeReminder(self.msg), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg)
 
     def test_makeReminder_announcmentNoMessage(self):
         self.msg.content = "[[1s]]"
@@ -424,12 +401,6 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, "@everyone ")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[1s|1m|1h|1d]]"
-        reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertEqual(reminder.duration, 3661)
-        self.assertEqual(reminder.message, "@everyone ")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
-
         self.msg.content = "[[01/01/2025 00:00 -0000]]"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 1735689600)
@@ -442,33 +413,29 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, "@everyone ")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
+        self.msg.content = "[[1s|1m|1h|1d]]"
+        self.assertRaises(err.TooManyArgumentsException, u.makeReminder, self.msg, announcement=True)
+
         self.msg.content = "[[]]"
-        expected = h.badArgs("announce", c.ERR_TOO_FEW)
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.EmptyArgumentException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = " [[31d]]"
-        expected = h.badArgs("announce", "too_long")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = " [[0]]"
-        expected = h.badArgs("announce", "bad_duration")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = " [[0s|0d|0h]]"
-        expected = h.badArgs("announce", "no_duration")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = " [[-1d]]"
-        expected = h.badArgs("announce", "no_duration")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = "[[01/01/1990 00:00 -0000]]"
-        expected = h.badArgs("announce", "negative_date")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = "[[20m|01/01/2025 00:00 -0000]]"
-        expected = h.badArgs("announce", "bad_duration")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
     def test_makeReminder_announcementWithMessage(self):
         self.msg.content = "[[1s]] test message"
@@ -519,12 +486,6 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
-        self.msg.content = "[[1s|1m|1h|1d]] test message"
-        reminder = u.makeReminder(self.msg, announcement=True)
-        self.assertEqual(reminder.duration, 3661)
-        self.assertEqual(reminder.message, "@everyone test message")
-        self.assertEqual(reminder.destination, self.msg.channel.id)
-
         self.msg.content = "[[01/01/2025 00:00 -0000]] test message"
         reminder = u.makeReminder(self.msg, announcement=True)
         self.assertEqual(reminder.duration, 1735689600)
@@ -537,33 +498,29 @@ class TestUseful(unittest.TestCase):
         self.assertEqual(reminder.message, "@everyone test message")
         self.assertEqual(reminder.destination, self.msg.channel.id)
 
+        self.msg.content = "[[1s|1m|1h|1d]] test message"
+        self.assertRaises(err.TooManyArgumentsException, u.makeReminder, self.msg, announcement=True)
+
         self.msg.content = "[[]] test message"
-        expected = h.badArgs("announce", c.ERR_TOO_FEW)
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.EmptyArgumentException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = " [[31d]] test message"
-        expected = h.badArgs("announce", "too_long")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = " [[0]] test message"
-        expected = h.badArgs("announce", "bad_duration")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = " [[0s|0d|0h]] test message"
-        expected = h.badArgs("announce", "no_duration")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = " [[-1d]] test message"
-        expected = h.badArgs("announce", "no_duration")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = "[[01/01/1990 00:00 -0000]] test message"
-        expected = h.badArgs("announce", "negative_date")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
         self.msg.content = "[[20m|01/01/2025 00:00 -0000]] test message"
-        expected = h.badArgs("announce", "bad_duration")
-        self.assertEqual(u.makeReminder(self.msg, announcement=True), expected)
+        self.assertRaises(err.CustomCommandException, u.makeReminder, self.msg, announcement=True)
 
     def test_confirmReminder(self):
         self.msg.content = " "
@@ -586,25 +543,25 @@ class TestUseful(unittest.TestCase):
 
     def test_rollDice(self):
         self.msg.content = "[[]]"
-        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", c.ERR_TOO_FEW))
+        self.assertRaises(err.EmptyArgumentException, u.rollDice, self.msg)
 
         self.msg.content = "[[6|8]]"
-        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", c.ERR_TOO_MANY))
+        self.assertRaises(err.TooManyArgumentsException, u.rollDice, self.msg)
 
         self.msg.content = "[[0]]"
-        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", "bad_number"))
+        self.assertRaises(err.BadNumberException, u.rollDice, self.msg)
 
         self.msg.content = "[[-1]]"
-        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", "bad_number"))
+        self.assertRaises(err.BadNumberException, u.rollDice, self.msg)
 
         self.msg.content = "[[1001]]"
-        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", "bad_number"))
+        self.assertRaises(err.BadNumberException, u.rollDice, self.msg)
 
         self.msg.content = "[[words]]"
-        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", "bad_value"))
+        self.assertRaises(err.BadValueException, u.rollDice, self.msg)
 
         self.msg.content = "[[1.5]]"
-        self.assertEqual(u.rollDice(self.msg), h.badArgs("roll", "bad_value"))
+        self.assertRaises(err.BadValueException, u.rollDice, self.msg)
 
         self.msg.content = "[[5]]"
         self.assertIn("You rolled", u.rollDice(self.msg))
@@ -622,8 +579,10 @@ class TestUseful(unittest.TestCase):
     def test_fetchWiki(self):
         #Each request must have a delay to comply with Wikipedia's rate limits
         self.msg.content = "[[]]"
-        results = u.fetchWiki(self.msg, self.apiheaders)
-        self.assertEqual(results, h.badArgs("wiki", c.ERR_TOO_FEW))
+        self.assertRaises(err.EmptyArgumentException, u.fetchWiki, self.msg, self.apiheaders)
+
+        self.msg.content = "[[one|two]]"
+        self.assertRaises(err.TooManyArgumentsException, u.fetchWiki, self.msg, self.apiheaders)
 
         time.sleep(.05)
         self.msg.content = "[[test fake article]]"

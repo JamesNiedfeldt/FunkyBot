@@ -1,7 +1,8 @@
 import unittest
 import discord
 from funktions_test import mockmessage as m
-from funktions import fun as f, helpers as h, constant as c
+from funktions import fun as f
+from errors import errors as err
 
 class TestFun(unittest.TestCase):
     @classmethod
@@ -16,22 +17,22 @@ class TestFun(unittest.TestCase):
         self.assertIn(f.choose(self.msg), ["I choose x!","I choose y!"])
 
         self.msg.content = "[[x]]"
-        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_TOO_FEW))
+        self.assertRaises(err.TooFewArgumentsException, f.choose, self.msg)
 
         self.msg.content = "[[a|b|c|d|e|f|g|h|i|j|k]]"
-        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_TOO_MANY))
+        self.assertRaises(err.TooManyArgumentsException, f.choose, self.msg)
 
         self.msg.content = "[[x|y]"
-        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_BRACKETS))
+        self.assertRaises(err.BadArgumentException, f.choose, self.msg)
 
         self.msg.content = "[x|y]]"
-        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_BRACKETS))
+        self.assertRaises(err.BadArgumentException, f.choose, self.msg)
 
         self.msg.content = "[[]]"
-        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_TOO_FEW))
+        self.assertRaises(err.EmptyArgumentException, f.choose, self.msg)
 
         self.msg.content = ""
-        self.assertEqual(f.choose(self.msg), h.badArgs("choose", c.ERR_BRACKETS))
+        self.assertRaises(err.BadArgumentException, f.choose, self.msg)
 
     def test_findOneLiner(self):
         self.assertIsNotNone(f.findOneLiner())
@@ -41,11 +42,7 @@ class TestFun(unittest.TestCase):
 
         self.assertIsNotNone(f.randomPic("cute_pics"))
 
-        try:
-            f.randomPic("test")
-            self.fail("FileNotFoundError was not raised")
-        except FileNotFoundError:
-            pass
+        self.assertRaises(FileNotFoundError, f.randomPic, "test")
 
     def test_rateSomething(self):
         self.msg.content = "[[x]]"
@@ -83,19 +80,19 @@ class TestFun(unittest.TestCase):
         self.assertIn("I give test", f.rateSomething(self.msg))
 
         self.msg.content = "[[x]"
-        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate", c.ERR_BRACKETS))
-
+        self.assertRaises(err.BadArgumentException, f.rateSomething, self.msg)
+    
         self.msg.content = "[x]]"
-        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate", c.ERR_BRACKETS))
+        self.assertRaises(err.BadArgumentException, f.rateSomething, self.msg)
 
         self.msg.content = "[[]]"
-        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate", c.ERR_TOO_FEW))
+        self.assertRaises(err.EmptyArgumentException, f.rateSomething, self.msg)
 
         self.msg.content = ""
-        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate", c.ERR_BRACKETS))
+        self.assertRaises(err.BadArgumentException, f.rateSomething, self.msg)
 
         self.msg.content = "[[x|y]]"
-        self.assertEqual(f.rateSomething(self.msg), h.badArgs("rate", c.ERR_TOO_MANY))
+        self.assertRaises(err.TooManyArgumentsException, f.rateSomething, self.msg)
 
 if __name__ == "__main__":
     unittest.main()

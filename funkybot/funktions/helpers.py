@@ -77,7 +77,7 @@ def badArgs(exc):
     cmd = getXmlTree("commands").find("./function/[command='{}']".format(exc.command))
     message = c.BAD_ARGS_1
 
-    if exc.errorCode != None:
+    if exc.errorCode != None and cmd != None:
         hint = cmd.find("./error/[@type='{}']".format(exc.errorCode))
         if hint != None:
             message = message + hint.text + " "

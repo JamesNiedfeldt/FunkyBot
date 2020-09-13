@@ -19,12 +19,6 @@ BAD_ARGS_2 = "If you need more help with this command, send `!help [[!%s]]`."
 
 LINE_BREAK = "\n--------------------\n"
 
-ERR_BRACKETS = "brackets"
-
-ERR_TOO_FEW = "too_few"
-
-ERR_TOO_MANY = "too_many"
-
 BOOT_UP = """===============
 %s %s
 I'm ready to work!"""

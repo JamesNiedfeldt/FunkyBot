@@ -4,6 +4,7 @@ from funktions_test import mockmessage as m
 from funktions import information as i
 from funktions import helpers as h
 from funktions import constant as c
+from errors import errors as err
 
 class TestInformation(unittest.TestCase):
     @classmethod
@@ -44,12 +45,10 @@ class TestInformation(unittest.TestCase):
         self.assertEqual(i.sendHelp(msg), empty)
 
         msg.content = "[[]]"
-        expected = h.badArgs("help", c.ERR_TOO_FEW)
-        self.assertEqual(i.sendHelp(msg), expected)
+        self.assertRaises(err.EmptyArgumentException, i.sendHelp, msg)
 
         msg.content = "[[x|y]]"
-        expected = h.badArgs("help", c.ERR_TOO_MANY)
-        self.assertEqual(i.sendHelp(msg), expected)
+        self.assertRaises(err.TooManyArgumentsException, i.sendHelp, msg)
 
         for o in commands:
             msg.content = "[[%s]]" % o
@@ -60,8 +59,7 @@ class TestInformation(unittest.TestCase):
             self.assertIsNotNone(i.sendHelp(msg))
 
         msg.content = "[[fake_command]]"
-        expected = h.badArgs("help", "bad_command")
-        self.assertEqual(i.sendHelp(msg), expected)
+        self.assertRaises(err.CustomCommandException, i.sendHelp, msg)
 
 if __name__ == "__main__":
     unittest.main()

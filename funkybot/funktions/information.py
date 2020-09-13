@@ -49,7 +49,7 @@ def sendHelp(message):
 
             cmd = cmdList.find("./function/[command='{}']".format(arg))
             if cmd == None:
-                toReturn = h.badArgs("help", "bad_command")
+                raise errors.CustomCommandException("help", "bad_command")
             else:
                 toReturn = "Here's how to use `!{}`:\n".format(cmd.find("command").text)
                 for b in cmd.findall("body"):

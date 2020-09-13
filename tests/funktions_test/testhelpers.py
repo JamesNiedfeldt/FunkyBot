@@ -6,6 +6,7 @@ from funktions_test import mockmessage as m
 from funktions import helpers as h
 from reminder import database as db
 from reminder import reminder as r
+from errors import errors as err
 
 class TestHelpers(unittest.TestCase):
     @classmethod
@@ -22,28 +23,55 @@ class TestHelpers(unittest.TestCase):
 
     def test_parse(self):
         string = "[[]]"
-        self.assertEqual(h.parse(string), [])
+        self.assertRaises(err.EmptyArgumentException, h.parse, string, "", 1, 1)
+
+        string = "[[]]"
+        self.assertRaises(err.EmptyArgumentException, h.parse, string, "", 1, 2)
 
         string = "[[x|]]"
-        self.assertEqual(h.parse(string), [])
+        self.assertRaises(err.EmptyArgumentException, h.parse, string, "", 1, 1)
+
+        string = "[[x|]]"
+        self.assertRaises(err.EmptyArgumentException, h.parse, string, "", 1, 2)
 
         string = "[[|x]]"
-        self.assertEqual(h.parse(string), [])
+        self.assertRaises(err.EmptyArgumentException, h.parse, string, "", 1, 1)
+
+        string = "[[|x]]"
+        self.assertRaises(err.EmptyArgumentException, h.parse, string, "", 1, 2)
 
         string = "[]]"
-        self.assertIsNone(h.parse(string))
+        self.assertRaises(err.BadArgumentException, h.parse, string, "", 1, 1)
 
-        string = "[]"
-        self.assertIsNone(h.parse(string))
+        string = "[]]"
+        self.assertRaises(err.BadArgumentException, h.parse, string, "", 1, 2)
 
         string = ""
-        self.assertIsNone(h.parse(string))
+        self.assertRaises(err.BadArgumentException, h.parse, string, "", 1, 1)
+
+        string = ""
+        self.assertRaises(err.BadArgumentException, h.parse, string, "", 1, 2)
 
         string = "[[x]]"
-        self.assertEqual(h.parse(string), ['x'])
+        self.assertEqual(h.parse(string, "", 1, 1), ['x'])
+
+        string = "[[x]]"
+        self.assertEqual(h.parse(string, "", 1, 2), ['x'])
+
+        string = "[[x]]"
+        self.assertRaises(err.TooFewArgumentsException, h.parse, string, "", 2, 2)
 
         string = "[[x|y]]"
-        self.assertEqual(h.parse(string), ['x', 'y'])
+        self.assertEqual(h.parse(string, "", 2, 3), ['x', 'y'])
+
+        string = "[[x|y]]"
+        self.assertRaises(err.TooManyArgumentsException, h.parse, string, "", 1, 1)
+
+        string = "[[x]]"
+        self.assertRaises(err.TooManyArgumentsException, h.parse, string, "", 0, 0)
+
+        string = "[[x]]"
+        self.assertRaises(err.TooManyArgumentsException, h.parse, string, "", 1, 0)
 
     def test_logMessage(self):
         h.logMessage(self.msg)
@@ -114,33 +142,48 @@ class TestHelpers(unittest.TestCase):
 
     def test_badArgs(self):
         msg = "I couldn't understand your command!\n\nIf you need more help with this command, send `!help [[!help]]`."
-        self.assertEqual(h.badArgs("help"), msg)
+        self.assertEqual(h.badArgs(err.CustomCommandException("help", "")), msg)
         
         msg = ("I couldn't understand your command!\n\n"
                + "Make sure the command you want help with is surrounded by double brackets. "
                + "If you want a list of all commands, don't send any brackets. "
                + "If you need more help with this command, send `!help [[!help]]`.")
-        self.assertEqual(h.badArgs("help", "brackets"), msg)
+        self.assertEqual(h.badArgs(err.BadArgumentException("help")), msg)
 
         msg = ("I couldn't understand your command!\n\n"
                + "I need a command to search for. "
                + "If you want a list of all commands, don't send any brackets. "
                + "If you need more help with this command, send `!help [[!help]]`.")
-        self.assertEqual(h.badArgs("help", "too_few"), msg)
+        self.assertEqual(h.badArgs(err.EmptyArgumentException("help")), msg)
+
+        msg = ("I couldn't understand your command!\n\n"
+               + "I need at least two things to choose from. "
+               + "If you need more help with this command, send `!help [[!choose]]`.")
+        self.assertEqual(h.badArgs(err.TooFewArgumentsException("choose")), msg)
 
         msg = ("I couldn't understand your command!\n\n"
                + "I can only search for one command at a time. "
                + "If you need more help with this command, send `!help [[!help]]`.")
-        self.assertEqual(h.badArgs("help", "too_many"), msg)
+        self.assertEqual(h.badArgs(err.TooManyArgumentsException("help")), msg)
 
         msg = ("I couldn't understand your command!\n\n"
                + "I don't have the command you're searching for. "
                + "If you want a list of all commands, send `!help` with no arguments. "
                + "If you need more help with this command, send `!help [[!help]]`.")
-        self.assertEqual(h.badArgs("help", "bad_command"), msg)
+        self.assertEqual(h.badArgs(err.CustomCommandException("help", "bad_command")), msg)
+
+        msg = ("I couldn't understand your command!\n\n"
+               + "I can only convert integers to binary. "
+               + "If you need more help with this command, send `!help [[!binary]]`.")
+        self.assertEqual(h.badArgs(err.BadValueException("binary")), msg)
+
+        msg = ("I couldn't understand your command!\n\n"
+               + "I can only convert numbers 0-65535 to binary. "
+               + "If you need more help with this command, send `!help [[!binary]]`.")
+        self.assertEqual(h.badArgs(err.BadNumberException("binary")), msg)
 
         msg = "I couldn't understand your command!\n\nIf you need more help with this command, send `!help [[!]]`."
-        self.assertEqual(h.badArgs(""), msg)
+        self.assertEqual(h.badArgs(err.CustomCommandException("", "")), msg)
 
     def test_blockQuote(self):
         msg = "> test\n"
@@ -173,9 +216,6 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual(h.convertDurationTime(args), 90)
 
         args = ['5s', '2m', '1h']
-        self.assertEqual(h.convertDurationTime(args), 3725)
-
-        args = ['5s', '2m', '1h', '6d']
         self.assertEqual(h.convertDurationTime(args), 3725)
 
         args = ['5q']

@@ -2,8 +2,7 @@ import unittest
 import os
 from funktions_test import mockmessage as m
 from funktions import information as i
-from funktions import helpers as h
-from funktions import constant as c
+from helpers import helper_functions as h, constant as c
 from errors import errors as err
 
 class TestInformation(unittest.TestCase):

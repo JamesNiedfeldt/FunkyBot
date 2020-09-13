@@ -3,10 +3,12 @@
 Contains the fun FunkyBot commands
 """
 
-from funktions import helpers as h, constant as c
-from errors import errors
+#==== Imports ====
 import random
 import os
+
+from helpers import helper_functions as h, constant as c
+from errors import errors
 
 #==== Answer a yes/no question ====
 def eightBall():

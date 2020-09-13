@@ -7,7 +7,8 @@ Handles database work for FunkyBot reminders
 import sqlite3
 import time
 import os
-from reminder import reminder
+
+from helpers.objects import reminder
 
 #==== Globals ====
 db = None
@@ -21,7 +22,12 @@ class Database():
 
     #==== Connect to/create database ====
     def dbConnect(self):
-        absolute = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        #TODO: make this less awful
+        absolute = os.path.abspath(
+            os.path.dirname(
+                os.path.dirname(
+                    os.path.dirname(__file__))))
+        
         self.db = sqlite3.connect(os.path.join(absolute,"reminders.db"))
         cursor = self.db.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS reminders

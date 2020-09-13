@@ -5,8 +5,9 @@ Contains all necessary functions for searching up Wikipedia articles
 
 #==== Imports ====
 import requests
-from embeddable import embeddable as embed
-from funktions import helpers as h
+
+from helpers.objects import embeddable as embed
+from helpers import helper_functions as h
 
 #==== Fetch an article from Wikipedia ====
 def fetchArticle(query,headers):

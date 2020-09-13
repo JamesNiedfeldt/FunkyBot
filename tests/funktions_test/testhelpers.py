@@ -3,9 +3,8 @@ import discord
 import datetime
 import os
 from funktions_test import mockmessage as m
-from funktions import helpers as h
-from reminder import database as db
-from reminder import reminder as r
+from helpers import helper_functions as h
+from helpers.objects import database as db, reminder as r
 from errors import errors as err
 
 class TestHelpers(unittest.TestCase):

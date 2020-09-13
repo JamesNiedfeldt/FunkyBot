@@ -4,10 +4,12 @@ Sends messages to Discord from useful commands
 """
 
 #==== Imports ====
-from funktions import useful, helpers
-from errors import errors
 import asyncio
 import discord
+
+from funktions import useful
+from helpers import helper_functions as helpers
+from errors import errors
 
 #==== Setup a reminder for everyone ====
 async def announce(message,client):

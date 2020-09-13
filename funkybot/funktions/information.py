@@ -3,10 +3,11 @@
 Contains the informational FunkyBot commands
 """
 
-from funktions import helpers as h
-from funktions import constant as c
-from errors import errors
+#==== Imports ====
 import re
+
+from helpers import helper_functions as h, constant as c
+from errors import errors
 
 #==== Introduce FunkyBot ====
 def sayHello(sender,uptime):

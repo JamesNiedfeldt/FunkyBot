@@ -4,7 +4,8 @@ Sends messages to Discord from information commands
 """
 
 #==== Imports ====
-from funktions import information, helpers
+from funktions import information
+from helpers import helper_functions as helpers
 from errors import errors
 
 #==== Say hello and give some information ====

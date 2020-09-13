@@ -3,15 +3,16 @@
 Contains the non-command functions needed to run
 """
 
+#==== Imports ====
 from datetime import datetime
-from reminder import reminder, database
-from funktions import constant as c
-from errors import errors
-from poll import poll
 import time
 import os
 import re
 import xml.etree.ElementTree as et
+
+from helpers import constant as c
+from helpers.objects import reminder, database, poll
+from errors import errors
 
 #==== Parse a string ====
 def parse(string, command, minArg, maxArg):

@@ -1,7 +1,8 @@
 #==== Imports ====
 import discord
 import asyncio
-from funktions import helpers, constant
+
+from helpers import constant, helper_functions as helpers
 from messenger import (information_messenger as i,
                        useful_messenger as u,
                        fun_messenger as f)

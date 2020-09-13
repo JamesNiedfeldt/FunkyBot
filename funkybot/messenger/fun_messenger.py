@@ -4,9 +4,11 @@ Sends messages to Discord from fun commands
 """
 
 #==== Imports ====
-from funktions import fun, helpers
-from errors import errors
 import discord
+
+from funktions import fun
+from helpers import helper_functions as helpers
+from errors import errors
 
 #==== Answer a yes or no question ====
 async def ask(message):

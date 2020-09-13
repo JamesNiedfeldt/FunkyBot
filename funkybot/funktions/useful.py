@@ -3,13 +3,13 @@
 Contains the useful FunkyBot commands
 """
 
-from funktions import helpers as h, constant as c
+#==== Imports ====
 import random
 import re
-from reminder import reminder
-from poll import poll
-from cardfetcher import cardfetcher as cf
-from wikifetcher import wikifetcher as wf
+
+from helpers import (helper_functions as h, constant as c,
+                     card_fetcher as cf, wiki_fetcher as wf)
+from helpers.objects import reminder, poll
 from errors import errors
 
 #==== Convert a number to binary ====

@@ -5,8 +5,9 @@ Contains all necessary functions for searching up Magic: the Gathering cards
 
 #==== Imports ====
 import requests
-from embeddable import embeddable as emb
-from funktions import helpers as h
+
+from helpers.objects import embeddable as emb
+from helpers import helper_functions as h
 
 #==== Fetch a card from Scryfall ====
 def fetchCard(query,headers):

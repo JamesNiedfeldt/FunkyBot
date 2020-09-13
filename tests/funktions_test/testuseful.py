@@ -1,8 +1,9 @@
 import unittest
 import time
 from funktions_test import mockmessage as m
-from funktions import useful as u, helpers as h
-from reminder import reminder as r
+from funktions import useful as u
+from helpers import helper_functions as h
+from helpers.objects import reminder as r
 from errors import errors as err
 
 class TestUseful(unittest.TestCase):

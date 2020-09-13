@@ -4,7 +4,7 @@ Keeps track of active polls
 """
 
 #==== Imports ====
-from funktions import constant as c
+from helpers import constant as c
 
 #==== Globals ====
 activePolls = [] #Tracks who currently has a poll running in each unique text channel

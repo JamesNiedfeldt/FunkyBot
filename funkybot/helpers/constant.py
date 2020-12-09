@@ -3,13 +3,19 @@
 Contains constants
 """
 
-VERSION = "1.8.3"
+VERSION = "1.8.4"
 
 HELP_REMINDER = "If you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [[!ask]]`."
 
 POLL_START = "To vote in this poll, click on the reaction corresponding to the option you want to vote for. This poll will run for one hour. %s, if you would like to end this poll early send `!end`."
 
 POLL_END = "%s's poll is over! Here are the results: %s"
+
+REMIND_CONFIRM_1 = "Ok %s, I will remind you in %s with the following message:\n\n"
+
+REMIND_CONFIRM_2 = "If that is ok, reply with `!yes`. If not, reply with `!no`."
+
+ANNOUNCE_CONFIRM_1 = "Ok %s, I will remind everyone in %s with the following message:\n\n"
 
 HELLO = "Hello %s, my name is FunkyBot! I am a simple bot made for fun as my creator's personal project. Here's some information about me:"
 

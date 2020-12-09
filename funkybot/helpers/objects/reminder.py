@@ -77,5 +77,5 @@ class Announcement(Reminder):
         message = re.sub("(\[\[.*\]\])|(!REMIND)|(!ANNOUNCE)", "",
                          cmd.content, flags=re.IGNORECASE)
         message = message.lstrip()
-             
+
         self.message = "@everyone" + " " + message

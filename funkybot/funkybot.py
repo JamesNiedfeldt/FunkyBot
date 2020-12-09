@@ -19,6 +19,8 @@ denylist = []
 async def on_ready():
     print((constant.BOOT_UP) % (client.user.name, constant.VERSION) + "\n")
     helpers.setUpReminders(client)
+    
+    await client.change_presence(activity=discord.Game("!help"))
 
 #==== Listen to commands ====
 @client.event
@@ -89,6 +91,6 @@ root = helpers.getXmlTree("denylist")
 for u in root.findall("user"):
     denylist.append(u.text)
 
-root = None #No more use for this
+del root #No more use for this
 
 client.run(token)

@@ -187,8 +187,21 @@ def confirmReminder(message,timer):
             formattedTime = h.formatTime(timer.duration - h.getTime())
         else:
             formattedTime = h.formatTime(timer.duration)
-        return "Ok %s, I will remind you in %s. If that is ok, reply with `!yes`. If not, reply with `!no`." % (
-            message.author.display_name, formattedTime)
+
+        if isinstance(timer, reminder.Announcement):
+            confirmation = c.ANNOUNCE_CONFIRM_1 % (message.author.display_name, formattedTime)
+            reminderText = re.split("@everyone ", timer.message, maxsplit=1)[1]
+            
+        else:
+            confirmation = c.REMIND_CONFIRM_1 % (message.author.display_name, formattedTime)
+            reminderText = re.split("\<*\> ", timer.message, maxsplit=1)[1]
+
+        if reminderText == "":
+            reminderText = "*No message was given*"
+
+        return (confirmation
+                + h.blockQuote(reminderText)
+                + "\n" + c.REMIND_CONFIRM_2)
 
 #==== Send confirmation message of reminder ====
 def startReminder(timer):

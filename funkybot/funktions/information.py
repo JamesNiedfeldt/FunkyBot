@@ -7,13 +7,25 @@ Contains the informational FunkyBot commands
 import re
 
 from helpers import helper_functions as h, constant as c
+from helpers.objects import embeddable
 from errors import errors
 
 #==== Introduce FunkyBot ====
-def sayHello(sender,uptime):
-    return ((c.HELLO % sender.display_name) + "\n" +
-            h.blockQuote("**Current version:** %s" % c.VERSION) +
-            h.blockQuote("**Current uptime:** %s" % h.formatTime(h.getTime(),offset=uptime)))
+def sayHello(uptime):
+    txt = ("**Uptime:**\n%s" % h.formatTime(h.getTime(),offset=uptime)
+           + c.LINE_BREAK
+           + "**Latest changes:**")
+    
+    changeList = h.getXmlTree('changelogs').find("./version/[@num='{}']".format(c.VERSION))
+    if changeList is None:
+        txt = txt + "\n*No changes were found.*"
+    else:
+        for change in changeList.findall('change'):
+            txt = txt + "\n" + change.text
+    
+    emb = embeddable.Embeddable("", "FunkyBot v%s" % c.VERSION, txt, "")
+
+    return emb
 
 #==== Send a help message ====
 def sendHelp(message):

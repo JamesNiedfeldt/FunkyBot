@@ -61,7 +61,8 @@ async def magic(message,apiHeaders):
             if c.empty():
                 await message.channel.send(c.text)
             else:
-                await message.channel.send(c.url, embed=discord.Embed(title=c.title, description=c.text).set_image(url=c.image))
+                await message.channel.send("", embed=discord.Embed(title=c.title,description=c.text,url=c.url)
+                                           .set_image(url=c.image))
     except errors.Error as e:
         await message.channel.send(helpers.badArgs(e))
             
@@ -139,6 +140,7 @@ async def wiki(message,apiHeaders):
         if a.empty():
             await message.channel.send(a.text)
         else:
-            await message.channel.send(a.url, embed=discord.Embed(title=a.title, description=a.text).set_image(url=a.image))
+            await message.channel.send("", embed=discord.Embed(title=a.title,description=a.text,url=a.url)
+                                       .set_image(url=a.image))
     except errors.Error as e:
         await message.channel.send(helpers.badArgs(e))

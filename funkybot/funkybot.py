@@ -32,7 +32,7 @@ async def on_message(message):
 
     #Information commands
     elif message.content.upper().startswith('!HELLO'):
-        await i.hello(message,begin)
+        await i.hello(message,begin,client)
 
     elif message.content.upper().startswith('!HELP'):
         await i.help(message)

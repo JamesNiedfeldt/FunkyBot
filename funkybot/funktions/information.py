@@ -21,7 +21,7 @@ def sayHello(uptime):
         txt = txt + "\n*No changes were found.*"
     else:
         for change in changeList.findall('change'):
-            txt = txt + "\n" + change.text
+            txt = txt + "\n-- " + change.text
     
     emb = embeddable.Embeddable("", "FunkyBot v%s" % c.VERSION, txt, "")
 

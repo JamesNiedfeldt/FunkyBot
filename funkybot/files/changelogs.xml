@@ -2,10 +2,17 @@
 
 <root>
     <!-- These are specifically user-facing changes and thus do not need detail about inner workings of FunkyBot. Changes to jokes and pics do not need to be noted unless significant. -->
+
     <version num="1.8.4">
-        <change>-- Improved feedback for user when using the `!remind` or `!announce` commands</change>
-        <change>-- Replaced message sent with the `!hello` command with an embed containing more information</change>
-        <change>-- Added Discord status to FunkyBot to display '!help'</change>
-        <change>-- Changed links from `!magic` and `!wiki` commands to be in the embed rather than the message</change>
+        <change>Improved feedback for user when using the `!remind` or `!announce` commands</change>
+        <change>Replaced message sent with the `!hello` command with an embed containing more information</change>
+        <change>Added Discord status to FunkyBot to display '!help'</change>
+        <change>Changed links from `!magic` and `!wiki` commands to be in the embed rather than the message</change>
+    </version>
+
+    <version num="1.8.5">
+        <change>`!binary` and `!hex` commands can now convert up to three numbers.</change>
+        <change>`!roll` can now roll up to five dice. If more than one die roll is requested, your total roll will be displayed.</change>
     </version>  
+  
 </root>

@@ -14,29 +14,33 @@ from errors import errors
 
 #==== Convert a number to binary ====
 def toBin(message):
-    remainder = -1 #Remainder used for conversion
-    value = "" #Value to print
+    toReturn = ""
     
     #Parse number, convert it to usable string
     try:
-        number = h.parse(message.content, "binary", 1, 1)
+        numbers = h.parse(message.content, "binary", 1, 3)
     except errors.Error as e:
         raise e
-    
-    for i in set(number): number = i #Change number back to int
 
     try:
-        quotient = int(number)
-        if quotient == 0:
-            value = 0
-        elif quotient > 65535 or quotient < 0:
-            raise RuntimeError('Invalid number')
-        else:
-            while quotient != 0:
-                remainder = quotient % 2
-                quotient = int((quotient - remainder) / 2)
-                value = str(remainder)+value
-        return "%s in binary is: %s" % (number, value)
+        for q in numbers:
+            quotient = int(q)
+            remainder = -1
+            value = ""
+            
+            if quotient == 0:
+                value = 0
+            elif quotient > 65535 or quotient < 0:
+                raise RuntimeError('Invalid number')
+            else:
+                while quotient != 0:
+                    remainder = quotient % 2
+                    quotient = int((quotient - remainder) / 2)
+                    value = str(remainder)+value
+                    
+            toReturn = toReturn + "%s in binary is: %s\n" % (q, value)
+            
+        return toReturn.rstrip() #Get rid of newline
         
     except ValueError: #Non-integer sent
         raise errors.BadValueException("binary")
@@ -45,31 +49,35 @@ def toBin(message):
 
 #==== Convert a number to hexadecimal ====
 def toHex(message):
-    remainder = -1 #Remainder used for conversion
-    value = "" #Value to print
+    toReturn = ""
     
     #Parse number, convert it to usable string
     try:
-        number = h.parse(message.content, "hex", 1, 1)
+        numbers = h.parse(message.content, "hex", 1, 3)
     except errors.Error as e:
         raise e
 
-    for i in set(number): number = i #Change number back to int
-
     try:
-        quotient = int(number)
-        if quotient == 0:
-            value = 0
-        elif quotient > 65535 or quotient < 0:
-            raise RuntimeError('Invalid number')
-        else:
-            while quotient != 0:
-                remainder = quotient % 16
-                quotient = int((quotient - remainder) / 16)
-                if remainder >= 10:
-                    remainder = chr(remainder + 55)
-                value = str(remainder)+value
-        return "%s in hexadecimal is: %s" % (number, value)
+        for q in numbers:
+            quotient = int(q)
+            remainder = -1
+            value = ""
+            
+            if quotient == 0:
+                value = 0
+            elif quotient > 65535 or quotient < 0:
+                raise RuntimeError('Invalid number')
+            else:
+                while quotient != 0:
+                    remainder = quotient % 16
+                    quotient = int((quotient - remainder) / 16)
+                    if remainder >= 10:
+                        remainder = chr(remainder + 55)
+                    value = str(remainder)+value
+                    
+            toReturn = toReturn + "%s in hexadecimal is: %s\n" % (q, value)
+            
+        return toReturn.rstrip() #Get rid of newline
         
     except ValueError: #Non-integer sent
         raise errors.BadValueException("hex")
@@ -215,19 +223,33 @@ def startReminder(timer):
 
 #==== Roll a die ====
 def rollDice(message):
+    ords = ['first','second','third','fourth','fifth']
+    toReturn = ""
+    index = 0
+    total = 0
+    
     try:
-        number = h.parse(message.content, "roll", 1, 1)
+        numbers = h.parse(message.content, "roll", 1, 5)
     except errors.Error as e:
         raise e
     
-    for i in set(number): number = i #Convert back to a number
-    
     try:
-        number = int(number)
-        if number <= 0 or number > 1000:
-            raise RuntimeError('Invalid number')
-        else:
-            return "You rolled %s!" % random.randint(1,number)
+        for n in numbers:
+            number = int(n)
+            
+            if number <= 2 or number > 1000:
+                raise RuntimeError('Invalid number')
+            else:
+                if len(numbers) == 1:
+                    return "You rolled %s!" % random.randint(1,number)
+                else:
+                    roll = random.randint(1,number)
+                    total = total + roll
+                    toReturn = toReturn + "Your %s roll was: %s\n" % (ords[index], roll)
+                    index = index + 1
+
+        toReturn = toReturn + "\nYour total roll was %s!" % total
+        return toReturn
         
     except ValueError: #Non-integer sent
         raise errors.BadValueException("roll")

@@ -70,13 +70,14 @@
         <command>binary</command>
         <format>!binary [[X]]</format>
         <body>
-            <description>Send `!binary [[X]]` to have me convert your number to binary.</description>
-            <hint>I can only convert one number at a time and only numbers 0-65535.</hint>
+            <description>Send `!binary [[X]]` to have me convert your numbers to binary.</description>
+            <hint>I can convert up to three numbers, just make sure they're all in the same double brackets and separate them with the | character.</hint>
+            <hint>I can only convert numbers 0-65535.</hint>
             <hint>For example, to convert 5 to binary, you should send: `!binary [[5]]`.</hint>
         </body>
         <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
         <error type="empty">I need a number to convert.</error>
-        <error type="too_many">I can only convert one number at a time.</error>
+        <error type="too_many">I can only convert at most three numbers at a time.</error>
         <error type="bad_value">I can only convert integers to binary.</error>
         <error type="bad_number">I can only convert numbers 0-65535 to binary.</error>
     </function>
@@ -85,13 +86,14 @@
         <command>hex</command>
         <format>!hex [[X]]</format>
         <body>
-            <description>Send `!hex [[X]]` to have me convert your number to hexadecimal.</description>
-            <hint>I can only convert one number at a time and only numbers 0-65535.</hint>
+            <description>Send `!hex [[X]]` to have me convert your numbers to hexadecimal.</description>
+            <hint>I can convert up to three numbers, just make sure they're all in the same double brackets and separate them with the | character.</hint>
+            <hint>I can only convert numbers 0-65535.</hint>
             <hint>For example, to convert 5 to hexadecimal, you should send: `!hex [[5]]`.</hint>
         </body>
         <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
         <error type="empty">I need a number to convert.</error>
-        <error type="too_many">I can only convert one number at a time.</error>
+        <error type="too_many">I can only convert at most three numbers at a time.</error>
         <error type="bad_value">I can only convert integers to hexadecimal.</error>
         <error type="bad_number">I can only convert numbers 0-65535 to hexadecimal.</error>
     </function>
@@ -169,16 +171,17 @@
         <command>roll</command>
         <format>!roll [[X]]</format>
         <body>
-            <description>Send `!roll [[X]]` to have me roll a die.</description>
-            <hint>I can only roll one die at a time.</hint>
-            <hint>The die must have at least 2 sides (I guess that's just a coin?) and can have up to 1000 sides.</hint>
-            <hint>For example, to roll a 6-sided die, you should send: `!roll [[6]]`.</hint>
+            <description>Send `!roll [[X]]` to have me roll dice.</description>
+            <hint>I can roll up to five dice, just make sure the number of sides are all in the same double brackets and separate them with the | character.</hint>
+            <hint>If you send me multiple dice I will also tell you the total roll.</hint>
+            <hint>Each die must have at least 2 sides (I guess that's just a coin?) and can have up to 1000 sides.</hint>
+            <hint>For example, to roll two 6-sided dice, you should send: `!roll [[6|6]]`.</hint>
         </body>
         <error type="brackets">Make sure the number of sides of your die is surrounded by double brackets.</error>
         <error type="empty">I need a number of sides to roll a die.</error>
-        <error type="too_many">I can only roll one die at a time.</error>
-        <error type="bad_value">I can only roll a die with an integer number of sides.</error>
-        <error type="bad_number">I can only roll a die with 0-1000 sides.</error>
+        <error type="too_many">I can only roll at most five dice at a time.</error>
+        <error type="bad_value">I can only roll dice with an integer number of sides.</error>
+        <error type="bad_number">I can only roll dice with 2-1000 sides.</error>
     </function>
 
     <function category="useful">

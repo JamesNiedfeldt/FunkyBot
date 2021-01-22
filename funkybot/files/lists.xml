@@ -14,10 +14,10 @@
         <answer>answer == "yes"</answer>
         <answer>Ask again later.</answer>
         <answer>It's better for now if you don't know.</answer>
-        <answer>IDK</answer>
         <answer>I'm not telling.</answer>
         <answer>404: Answer not found.</answer>
         <answer>No.</answer>
+        <answer>Negative.</answer>
         <answer>Yeah, I'm gonna say no on that one.</answer>
         <answer>Nope. No way. Negative. Absolutely not.</answer>
         <answer>No way!</answer>

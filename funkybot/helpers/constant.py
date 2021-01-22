@@ -19,7 +19,7 @@ ANNOUNCE_CONFIRM_1 = "Ok %s, I will remind everyone in %s with the following mes
 
 HELLO = "Hello %s, my name is FunkyBot! I am a simple bot made for fun as my creator's personal project. Here's some information about me:"
 
-HELLO_HELP = "For a list of commands, send `!help`."
+HELLO_HELP = "For a list of commands, send '!help'."
 
 HELLO_URL = "https://github.com/JamesNiedfeldt/FunkyBot"
 

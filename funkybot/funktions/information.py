@@ -21,7 +21,7 @@ def sayHello(uptime):
         txt = txt + "\n*No changes were found.*"
     else:
         for change in changeList.findall('change'):
-            txt = txt + "\n-- " + change.text
+            txt = txt + "\n\N{BULLET} " + change.text
     
     emb = embeddable.Embeddable("", "FunkyBot v%s" % c.VERSION, txt, "")
 
@@ -68,7 +68,7 @@ def sendHelp(message):
                 for b in cmd.findall("body"):
                     toReturn = toReturn + "\n" + b.find("description").text + "\n"
                     for i in b.findall("hint"):
-                        toReturn = toReturn + h.blockQuote(" - " + i.text)
+                        toReturn = toReturn + h.blockQuote("\N{BULLET} " + i.text)
                         
         except errors.Error as e:
             raise e

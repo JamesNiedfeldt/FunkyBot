@@ -137,7 +137,7 @@ def finishPoll(message,poll):
         else:
             percent = int((results[r]/totalVotes)*100)
             
-        bar = chr(0x25A0) * int(percent / 5)
+        bar = "\N{BLACK SQUARE}" * int(percent / 5)
         spaces = ' ' * (20 - len(bar))
 
         toReturn = (toReturn + "\n"

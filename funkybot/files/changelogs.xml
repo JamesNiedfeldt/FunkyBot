@@ -13,6 +13,8 @@
     <version num="1.8.5">
         <change>`!binary` and `!hex` commands can now convert up to three numbers.</change>
         <change>`!roll` can now roll up to five dice. If more than one die roll is requested, your total roll will be displayed.</change>
+        <change>Polls now run for three hours instead of one.</change>
+        <change>Slightly changed the possible answers for the `!ask` command to make noncommittal answers less common.</change>
     </version>  
   
 </root>

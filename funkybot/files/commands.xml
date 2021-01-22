@@ -68,7 +68,7 @@
 
     <function category="useful">
         <command>binary</command>
-        <format>!binary [[X]]</format>
+        <format>!binary [[X|...]]</format>
         <body>
             <description>Send `!binary [[X]]` to have me convert your numbers to binary.</description>
             <hint>I can convert up to three numbers, just make sure they're all in the same double brackets and separate them with the | character.</hint>
@@ -84,7 +84,7 @@
 
     <function category="useful">
         <command>hex</command>
-        <format>!hex [[X]]</format>
+        <format>!hex [[X|...]]</format>
         <body>
             <description>Send `!hex [[X]]` to have me convert your numbers to hexadecimal.</description>
             <hint>I can convert up to three numbers, just make sure they're all in the same double brackets and separate them with the | character.</hint>
@@ -120,7 +120,7 @@
         <body>
             <description>Send `!poll [[X|Y]]` to have me start a poll with the given options.</description>
             <hint>When the poll is running, people can vote on the choices by increasing the corresponding reactions that I add to the poll message. Adding new reactions will not do anything.</hint>
-            <hint>The poll will automatically be open for one hour, but you can end it early by send `!end` in the same channel.</hint>
+            <hint>The poll will automatically be open for three hours, but you can end it early by send `!end` in the same channel.</hint>
             <hint>When the poll is concluded, I will display the results.</hint>
             <hint>You can set a custom poll question by typing anywhere in the message outside of the brackets.</hint>
             <hint>I need at least two options, but you can send up to five.</hint>
@@ -169,9 +169,9 @@
 
     <function category="useful">
         <command>roll</command>
-        <format>!roll [[X]]</format>
+        <format>!roll [[X|...]]</format>
         <body>
-            <description>Send `!roll [[X]]` to have me roll dice.</description>
+            <description>Send `!roll [[X]]` to have me roll a die with X sides.</description>
             <hint>I can roll up to five dice, just make sure the number of sides are all in the same double brackets and separate them with the | character.</hint>
             <hint>If you send me multiple dice I will also tell you the total roll.</hint>
             <hint>Each die must have at least 2 sides (I guess that's just a coin?) and can have up to 1000 sides.</hint>

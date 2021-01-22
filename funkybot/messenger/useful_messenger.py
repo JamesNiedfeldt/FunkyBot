@@ -89,7 +89,7 @@ async def poll(message,client):
                 await sentMsg.add_reaction(o)
 
             try:
-                reply = await client.wait_for('message', check=pred, timeout = 3600)
+                reply = await client.wait_for('message', check=pred, timeout = 10800)
             except asyncio.TimeoutError:
                 pass
 

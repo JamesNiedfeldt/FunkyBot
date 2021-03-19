@@ -3,7 +3,7 @@
 Contains constants
 """
 
-VERSION = "1.8.5"
+VERSION = "1.8.6"
 
 HELP_REMINDER = "If you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [[!ask]]`."
 
@@ -28,6 +28,8 @@ BAD_ARGS_1 = "I couldn't understand your command!\n\n"
 BAD_ARGS_2 = "If you need more help with this command, send `!help [[!%s]]`."
 
 LINE_BREAK = "\n--------------------\n"
+
+UNKNOWN_COMMAND = "Sorry, `%s` is not one of my commands. Send `!help` for a list of commands."
 
 BOOT_UP = """===============
 %s %s

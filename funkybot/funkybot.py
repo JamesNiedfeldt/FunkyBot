@@ -80,6 +80,10 @@ async def on_message(message):
 
     elif message.content.upper().startswith('!RATE'):
         await f.rate(message)
+
+    #Attempted command doesn't exist
+    elif message.content.startswith('!'):
+        await i.unknown(message)
         
 #==== Begin FunkyBot ====
 root = helpers.getXmlTree("userinfo")

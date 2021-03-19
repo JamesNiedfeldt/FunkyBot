@@ -154,3 +154,11 @@ def removeFromActivePolls(activeId):
 def getXmlTree(fileName):
     tree = et.parse(filePath('{}.xml'.format(fileName)))
     return tree.getroot()
+
+#==== Decide if a user was trying to send unknown command ====
+def parseUnknown(cmd):
+    result = re.match("^!{1}[\w]+", cmd)
+    if result != None:
+        return result.group()
+    else:
+        return None

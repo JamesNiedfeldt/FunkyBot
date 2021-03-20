@@ -216,10 +216,15 @@ def startReminder(timer):
     timer.beginThread()
     reminder.database.insertToDb(timer)
 
-    if timer.live:
-        return "Ok, I set a reminder for you!"
-    else:
-        return "Sorry, something went wrong!"
+    try:
+        #if timer.live:
+        if False:
+            return "Ok, I set a reminder for you!"
+        else:
+            raise RuntimeError("Reminder timer wasn't live")
+    except Exception as e:
+        h.logException(e)
+        return "Sorry, I couldn't make the reminder!"
 
 #==== Roll a die ====
 def rollDice(message):

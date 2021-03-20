@@ -88,6 +88,5 @@ class Database():
         self.__getFromDb()
         for i in self.reminders:
             i.beginThread()
-        print("Number of reminders from DB: %s" % len(self.reminders))
 
 db = Database()

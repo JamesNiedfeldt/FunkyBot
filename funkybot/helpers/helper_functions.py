@@ -9,6 +9,7 @@ import time
 import os
 import re
 import xml.etree.ElementTree as et
+import traceback
 
 from helpers import constant as c
 from helpers.objects import reminder, database, poll
@@ -36,7 +37,7 @@ def parse(string, command, minArg, maxArg):
     
 #==== Log deleted messages ====
 def logMessage(message):
-    with open(filePath('logs/'+str(message.guild)+'-log.txt'),'a+', encoding='utf-8') as log:
+    with open(filePath('logs/'+str(message.guild)+'-log.log'),'a+', encoding='utf-8') as log:
         toLog = "%s - %s - %s: %s\n" % (message.created_at.strftime("%Y-%b-%d %H:%M"),message.channel,message.author.name,message.content)
         log.write(toLog)
 
@@ -212,4 +213,21 @@ def lDistance(unknown):
                 toReturn = target
         
     return toReturn
+
+#==== Return number of reminders running ====
+def getNumReminders():
+    return len(database.db.reminders)
+
+#==== Log startup ====
+def logStartup(startTime):
+    with open(filePath("logs/funkylog.log"), 'a+') as f:
+        f.write(c.LINE_BREAK + "Starting session at {}\n".format(
+            datetime.fromtimestamp(startTime)))
+        f.write("Number of reminders from DB: {}\n".format(getNumReminders()))
+
+#==== Log exceptions ====
+def logException(e):
+    with open(filePath("logs/funkylog.log"), 'a+') as f:
+        f.write('\n')
+        traceback.print_exc(file=f)
         

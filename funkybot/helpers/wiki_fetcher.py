@@ -23,8 +23,9 @@ def fetchArticle(query,headers):
         else:
             return __formatArticle(results) 
 
-    except KeyError as e:
-        return embed.empty("Something went wrong!")
+    except Exception as e:
+        h.logException(e)
+        return embed.empty("Sorry, something went wrong finding \"{}\"!".format(query))
 
 def __formatArticle(article):
     title = article['title']

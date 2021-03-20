@@ -43,8 +43,9 @@ def fetchCard(query,headers):
         else:
             return emb.empty("Sorry, I couldn't find \"{}\"!".format(query))
 
-    except KeyError as e:
-        return emb.empty("Something went wrong!")
+    except Exception as e:
+        h.logException(e)
+        return emb.empty("Sorry, something went wrong finding \"{}\"!".format(query))
 
 def __formatCard(card, givenUri=None, givenPrice=None):
     name = card['name']

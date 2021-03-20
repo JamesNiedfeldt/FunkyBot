@@ -23,7 +23,10 @@ def sayHello(uptime):
         for change in changeList.findall('change'):
             txt = txt + "\n\N{BULLET} " + change.text
     
-    emb = embeddable.Embeddable("", "FunkyBot v%s" % c.VERSION, txt, "")
+    emb = embeddable.Embeddable(url=c.HELLO_URL,
+                                title="FunkyBot v%s" % c.VERSION,
+                                text=txt,
+                                footer=c.HELLO_HELP)
 
     return emb
 

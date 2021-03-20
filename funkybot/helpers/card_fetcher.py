@@ -46,23 +46,32 @@ def fetchCard(query,headers):
     except KeyError as e:
         return emb.empty("Something went wrong!")
 
-def __formatCard(card, givenUri=None):
+def __formatCard(card, givenUri=None, givenPrice=None):
     name = card['name']
     cost = ""
     textBox = ""
     imageUri = ""
+    price = "No price info found"
     toReturn = []
 
     if givenUri == None:
         uri = card['scryfall_uri']
     else:
         uri = givenUri
+
+    if givenPrice == None:
+        if 'prices' in card and card['prices']['usd'] != None:
+                price = "$" + card['prices']['usd']
+    else:
+        price = givenPrice
     
     if 'card_faces' in card:
         if card['layout'] == "transform" or card['layout'] == "modal_dfc":
             cost = card['card_faces'][0]['mana_cost']
+            if 'prices' in card and card['prices']['usd'] != None:
+                price = "$" + card['prices']['usd']
             for f in card['card_faces']:
-                toReturn.append(__formatCard(f, givenUri=uri))
+                toReturn.append(__formatCard(f, givenUri=uri, givenPrice=price))
         else:
             textBox = card['type_line']
             for f in card['card_faces']:
@@ -71,13 +80,29 @@ def __formatCard(card, givenUri=None):
                            "\n" + __makeTextBox(f))
             cost = card['mana_cost']
             imageUri = card['image_uris']['normal']
-            toReturn = emb.Embeddable(uri, name + " " + cost, textBox, imageUri)
+            if 'prices' in card and card['prices']['usd'] != None:
+                price = "$" + card['prices']['usd']
+                
+            toReturn = emb.Embeddable(
+                url=uri,
+                title=name + " " + cost,
+                text=textBox,
+                image=imageUri,
+                footer=price)
 
     else:
         textBox = __makeTextBox(card)
         cost = card['mana_cost']
         imageUri = card['image_uris']['normal']
-        toReturn = emb.Embeddable(uri, name + " " + cost, textBox, imageUri)
+        if 'prices' in card and card['prices']['usd'] != None:
+                price = "$" + card['prices']['usd']
+            
+        toReturn = emb.Embeddable(
+            url=uri,
+            title=name + " " + cost,
+            text=textBox,
+            image=imageUri,
+            footer=price)
         
     return toReturn
 

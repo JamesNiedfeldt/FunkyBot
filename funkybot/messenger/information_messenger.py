@@ -16,8 +16,8 @@ async def hello(message,startTime,client):
     av = client.user.avatar_url
     if av is None:
         av = ""
-    emb = discord.Embed(title=e.title, description=e.text, url=constant.HELLO_URL)
-    emb.set_thumbnail(url=av).set_footer(text=constant.HELLO_HELP)
+    emb = discord.Embed(title=e.title, description=e.text, url=e.url)
+    emb.set_thumbnail(url=av).set_footer(text=e.footer)
 
     await message.channel.send(constant.HELLO % message.author.display_name,
                                embed=emb)

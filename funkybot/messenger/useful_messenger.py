@@ -62,7 +62,7 @@ async def magic(message,apiHeaders):
                 await message.channel.send(c.text)
             else:
                 await message.channel.send("", embed=discord.Embed(title=c.title,description=c.text,url=c.url)
-                                           .set_image(url=c.image))
+                                           .set_image(url=c.image).set_footer(text=c.footer))
     except errors.Error as e:
         await message.channel.send(helpers.badArgs(e))
             

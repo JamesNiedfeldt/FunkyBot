@@ -158,7 +158,58 @@ def getXmlTree(fileName):
 #==== Decide if a user was trying to send unknown command ====
 def parseUnknown(cmd):
     result = re.match("^!{1}[\w]+", cmd)
-    if result != None:
-        return result.group()
-    else:
+    if result == None:
         return None
+
+    else:
+        result = result.group()[1:]
+        toReturn = c.UNKNOWN_COMMAND % result
+        attempted = lDistance(result)
+        if attempted != None:
+            toReturn = toReturn + "\n\nDid you perhaps mean `!%s`?" % attempted
+
+        return toReturn
+
+#==== Find Levenshtein distance between two strings ====
+def lDistance(unknown):
+    index = getXmlTree('commands').findall('./function')
+    bestScore = None
+    toReturn = None
+
+    for cmd in index:
+        if cmd.get("category") != "contextual":
+            mat = []
+            target = cmd.find("command").text
+    
+            for l in range(len(unknown) + 1):
+                y = []
+                for r in range(len(target) + 1):
+                    y.append(0)
+                mat.append(y)
+
+            for i in range(1, len(unknown) + 1):
+                mat[i][0] = i
+            for i in range(1, len(target) + 1):
+                mat[0][i] = i
+            
+            i = 1
+            while i < len(mat):
+                j = 1
+                while j < len(mat[i]):
+                    if unknown[i - 1] == target[j - 1]:
+                        subCost = 0
+                    else:
+                        subCost = 1
+                        
+                    mat[i][j] = min(mat[i-1][j] + 1,
+                                  mat[i][j-1] + 1,
+                                  mat[i-1][j-1] + subCost)
+                    j = j + 1
+                i = i + 1
+
+            if bestScore == None or mat[len(unknown)][len(target)] < bestScore:
+                bestScore = mat[len(unknown)][len(target)]
+                toReturn = target
+        
+    return toReturn
+        

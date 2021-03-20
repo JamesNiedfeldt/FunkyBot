@@ -33,4 +33,4 @@ async def help(message):
 async def unknown(message):
     cmd = helpers.parseUnknown(message.content)
     if cmd != None:
-        await message.channel.send(constant.UNKNOWN_COMMAND % cmd)
+        await message.channel.send(cmd)

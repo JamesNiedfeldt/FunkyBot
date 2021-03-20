@@ -29,7 +29,7 @@ BAD_ARGS_2 = "If you need more help with this command, send `!help [[!%s]]`."
 
 LINE_BREAK = "\n--------------------\n"
 
-UNKNOWN_COMMAND = "Sorry, `%s` is not one of my commands. Send `!help` for a list of commands."
+UNKNOWN_COMMAND = "Sorry, `!%s` is not one of my commands. Send `!help` for a full list."
 
 BOOT_UP = """===============
 %s %s

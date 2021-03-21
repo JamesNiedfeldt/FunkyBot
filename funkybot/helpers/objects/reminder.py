@@ -9,12 +9,9 @@ import re
 import discord
 from aiohttp import client_exceptions
 
-from helpers.objects import database, timer
-from helpers import helper_functions as h
-
-#==== Globals ====
-client = None
-database = database.db
+from helpers.objects import timer
+from helpers import (helper_functions as h,
+                     global_vars as g)
 
 #==== Reminder class ====
 class Reminder():
@@ -57,9 +54,9 @@ class Reminder():
         
         while self.live:
             try:
-                await client.get_channel(self.destination).send(self.message)
+                await g.client.get_channel(self.destination).send(self.message)
                 self.live = False
-                database.deleteFromDb(self)
+                g.db.deleteFromDb(self)
             #If bot is trying to reconnect, delay the message
             except client_exceptions.ClientConnectorError:
                 await self.timer.timeForDuration(1)

@@ -7,10 +7,10 @@ Contains all necessary functions for searching up Magic: the Gathering cards
 import requests
 
 from helpers.objects import embeddable as emb
-from helpers import helper_functions as h
+from helpers import helper_functions as h, global_vars as g
 
 #==== Fetch a card from Scryfall ====
-def fetchCard(query,headers):
+def fetchCard(query):
     name = "https://api.scryfall.com/cards/named"
     search = "https://api.scryfall.com/cards/search"
     random = "https://api.scryfall.com/cards/random"
@@ -18,17 +18,17 @@ def fetchCard(query,headers):
     try:
         #Random card requested
         if query.upper().startswith("RANDOM"):
-            response = requests.get(url = random, params = {'q':__parseRandom(query)}, headers = headers)
+            response = requests.get(url = random, params = {'q':__parseRandom(query)}, headers = g.apiHeaders)
             results = response.json()
 
         else:
             #Find by name first
-            response = requests.get(url = name, params = {'fuzzy':query}, headers = headers)
+            response = requests.get(url = name, params = {'fuzzy':query}, headers = g.apiHeaders)
             results = response.json()
 
             if results['object'] == "error":
                 #Try a search if not found by name
-                response = requests.get(url = search, params = {'q':query}, headers = headers)
+                response = requests.get(url = search, params = {'q':query}, headers = g.apiHeaders)
                 results = response.json()
 
         #If found multiple cards, take the first

@@ -6,13 +6,15 @@ Contains the informational FunkyBot commands
 #==== Imports ====
 import re
 
-from helpers import helper_functions as h, constant as c
+from helpers import (helper_functions as h,
+                     constant as c,
+                     global_vars as g)
 from helpers.objects import embeddable
 from errors import errors
 
 #==== Introduce FunkyBot ====
-def sayHello(uptime):
-    txt = ("**Uptime:**\n%s" % h.formatTime(h.getTime(),offset=uptime)
+def sayHello():
+    txt = ("**Uptime:**\n%s" % h.formatTime(h.getTime(),offset=g.begin)
            + c.LINE_BREAK
            + "**Latest changes:**")
     

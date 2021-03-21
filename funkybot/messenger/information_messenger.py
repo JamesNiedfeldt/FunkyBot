@@ -7,13 +7,15 @@ Sends messages to Discord from information commands
 import discord
 
 from funktions import information
-from helpers import helper_functions as helpers, constant
+from helpers import (helper_functions as helpers,
+                     constant,
+                     global_vars as globs)
 from errors import errors
 
 #==== Say hello and give some information ====
-async def hello(message,startTime,client):
-    e = information.sayHello(startTime)
-    av = client.user.avatar_url
+async def hello(message):
+    e = information.sayHello()
+    av = globs.client.user.avatar_url
     if av is None:
         av = ""
     emb = discord.Embed(title=e.title, description=e.text, url=e.url)

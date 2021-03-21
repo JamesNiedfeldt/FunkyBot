@@ -2,47 +2,44 @@
 import discord
 import asyncio
 
-from helpers import constant, helper_functions as helpers
+from helpers import (constant,
+                     helper_functions as helpers,
+                     global_vars as globs)
 from messenger import (information_messenger as i,
                        useful_messenger as u,
                        fun_messenger as f)
 
-#==== Definitions ====
-client = discord.Client()
-token = None
-apiHeaders = None
-begin = helpers.getTime()
-denylist = []
+#==== Begin FunkyBot ====
+helpers.initGlobals(discord.Client())
 
 #==== Alert that Funky is ready ====
-@client.event
+@globs.client.event
 async def on_ready():
-    helpers.setUpReminders(client)
-    helpers.logStartup(begin)
-    print((constant.BOOT_UP) % (client.user.name, constant.VERSION) + "\n")
+    helpers.logStartup()
+    print((constant.BOOT_UP) % (globs.client.user.name, constant.VERSION) + "\n")
     print("Number of reminders from DB: %s" % helpers.getNumReminders())
     
-    await client.change_presence(activity=discord.Game("!help"))
+    await globs.client.change_presence(activity=discord.Game("!help"))
 
 #==== Listen to commands ====
-@client.event
+@globs.client.event
 async def on_message(message):
     try:
-        if message.author == client.user: #Do not refer to self
+        if message.author == globs.client.user: #Do not refer to self
             pass
-        elif str(message.author.id) in denylist: #User not allowed to use Funky
+        elif str(message.author.id) in globs.denylist: #User not allowed to use Funky
             pass
 
         #Information commands
         elif message.content.upper().startswith('!HELLO'):
-            await i.hello(message,begin,client)
+            await i.hello(message)
 
         elif message.content.upper().startswith('!HELP'):
             await i.help(message)
 
         #Useful commands
         elif message.content.upper().startswith('!ANNOUNCE'):
-            await u.announce(message,client)
+            await u.announce(message)
 
         elif message.content.upper().startswith('!BINARY'):
             await u.binary(message)
@@ -51,19 +48,19 @@ async def on_message(message):
             await u.hexadec(message)
 
         elif message.content.upper().startswith('!MAGIC'):
-            await u.magic(message,apiHeaders)
+            await u.magic(message)
 
         elif message.content.upper().startswith('!POLL'):
-            await u.poll(message,client)
+            await u.poll(message)
 
         elif message.content.upper().startswith('!REMIND'):
-            await u.remind(message,client)
+            await u.remind(message)
 
         elif message.content.upper().startswith('!ROLL'):
             await u.roll(message)
 
         elif message.content.upper().startswith('!WIKI'):
-            await u.wiki(message,apiHeaders)
+            await u.wiki(message)
 
         #Fun commands
         elif message.content.upper().startswith('!ASK'):
@@ -85,23 +82,14 @@ async def on_message(message):
             await f.rate(message)
 
         #Attempted command doesn't exist
-        elif message.content.startswith('!'):
+        elif message.content.startswith('!') and not (
+            message.content.startswith('!yes') or
+            message.content.startswith('!no') or
+            message.content.startswith('!end')):
             await i.unknown(message)
 
     except Exception as e:
         #If an exception makes it all the way here, output it to a log file
         helpers.logException(e)
-        
-#==== Begin FunkyBot ====
-root = helpers.getXmlTree("userinfo")
-token = root.find("token").text
-apiHeaders = {'User-Agent': root.find("user-agent").text,
-              'From': root.find("email").text }
 
-root = helpers.getXmlTree("denylist")
-for u in root.findall("user"):
-    denylist.append(u.text)
-
-del root #No more use for this
-
-client.run(token)
+globs.client.run(globs.token)

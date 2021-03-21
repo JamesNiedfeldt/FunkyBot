@@ -10,9 +10,6 @@ import os
 
 from helpers.objects import reminder
 
-#==== Globals ====
-db = None
-
 #==== Database class ====
 class Database():
     def __init__(self):
@@ -88,5 +85,3 @@ class Database():
         self.__getFromDb()
         for i in self.reminders:
             i.beginThread()
-
-db = Database()

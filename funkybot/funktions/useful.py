@@ -7,7 +7,7 @@ Contains the useful FunkyBot commands
 import random
 import re
 
-from helpers import (helper_functions as h, constant as c,
+from helpers import (helper_functions as h, constant as c, global_vars as g,
                      card_fetcher as cf, wiki_fetcher as wf)
 from helpers.objects import reminder, poll
 from errors import errors
@@ -85,7 +85,7 @@ def toHex(message):
         raise errors.BadNumberException("hex")
 
 #==== Fetch a card ====
-def fetchCard(message,apiHeaders):
+def fetchCard(message):
     toReturn = []
     
     #Parse card name
@@ -95,7 +95,7 @@ def fetchCard(message,apiHeaders):
         raise e
     
     for i in cards:
-        result = cf.fetchCard(i,apiHeaders)
+        result = cf.fetchCard(i)
         
         if isinstance(result, list):
             toReturn = toReturn + result
@@ -214,11 +214,10 @@ def confirmReminder(message,timer):
 #==== Send confirmation message of reminder ====
 def startReminder(timer):
     timer.beginThread()
-    reminder.database.insertToDb(timer)
+    g.db.insertToDb(timer)
 
     try:
-        #if timer.live:
-        if False:
+        if timer.live:
             return "Ok, I set a reminder for you!"
         else:
             raise RuntimeError("Reminder timer wasn't live")
@@ -262,7 +261,7 @@ def rollDice(message):
         raise errors.BadNumberException("roll")
 
 #==== Fetch a Wikipedia article ====
-def fetchWiki(message,apiHeaders):
+def fetchWiki(message):
     try:
         terms = h.parse(message.content, "wiki", 1, 1)
     except errors.Error as e:
@@ -270,4 +269,4 @@ def fetchWiki(message,apiHeaders):
 
     for i in set(terms): terms = i #Convert back to a string
 
-    return wf.fetchArticle(terms,apiHeaders)
+    return wf.fetchArticle(terms)

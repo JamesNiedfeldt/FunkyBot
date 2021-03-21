@@ -6,6 +6,7 @@
     <version num="1.8.6">
         <change>Feedback added when a user enters an incorrect command.</change>
         <change>`!magic` now provides price information in USD.</change>
+        <change>Made `!cute` and `!react` commands less likely to post images recently posted using them.</change>
     </version>
 
     <version num="1.8.5">

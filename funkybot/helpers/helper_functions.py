@@ -11,7 +11,8 @@ import re
 import xml.etree.ElementTree as et
 import traceback
 
-from helpers import constant as c
+from helpers import (constant as c,
+                     global_vars as g)
 from helpers.objects import reminder, database, poll
 from errors import errors
 
@@ -37,7 +38,7 @@ def parse(string, command, minArg, maxArg):
     
 #==== Log deleted messages ====
 def logMessage(message):
-    with open(filePath('logs/'+str(message.guild)+'-log.log'),'a+', encoding='utf-8') as log:
+    with open(filePath('logs/'+str(message.guild)+'-deletions.log'),'a+', encoding='utf-8') as log:
         toLog = "%s - %s - %s: %s\n" % (message.created_at.strftime("%Y-%b-%d %H:%M"),message.channel,message.author.name,message.content)
         log.write(toLog)
 
@@ -47,6 +48,26 @@ def validFolder(files):
         return True
     else:
         return False
+
+#==== Check if randomized image was recently used ====
+def duplicateImage(img, path):
+    if path == 'cute_pics':
+        return img in g.recentCute
+    elif path == 'reaction_pics':
+        return img in g.recentReact
+    else:
+        return False
+
+#==== Add image to recently used randomized images ====
+def updateDuplicateImages(img, path):
+    if path == 'cute_pics':
+        g.recentCute.append(img)
+        if len(g.recentCute) > 5:
+            g.recentCute.pop(0)
+    elif path == 'reaction_pics':
+        g.recentReact.append(img)
+        if len(g.recentReact) > 5:
+            g.recentReact.pop(0)
 
 #==== Calculate uptime ====
 def getTime():
@@ -87,11 +108,6 @@ def badArgs(exc):
     message = message + c.BAD_ARGS_2 % exc.command
 
     return message
-
-#==== Setup and pull from reminder database at startup ====
-def setUpReminders(client):
-    reminder.client = client
-    database.db.runThreads()
 
 #==== Format string to use block quotes ====
 def blockQuote(string):
@@ -141,15 +157,15 @@ def convertDateTime(timeArgs):
 
 #==== Check if a poll is already being run by someone ====
 def isPollRunning(activeId):
-    return activeId in poll.activePolls
+    return activeId in g.activePolls
 
 #==== Add an ID to active running polls ====
 def addToActivePolls(activeId):
-    poll.activePolls.append(activeId)
+    g.activePolls.append(activeId)
 
 #==== Remove an ID from active running polls ====
 def removeFromActivePolls(activeId):
-    poll.activePolls.remove(activeId)
+    g.activePolls.remove(activeId)
 
 #==== Grab a root XML tree from a file ====
 def getXmlTree(fileName):
@@ -216,18 +232,34 @@ def lDistance(unknown):
 
 #==== Return number of reminders running ====
 def getNumReminders():
-    return len(database.db.reminders)
+    return len(g.db.reminders)
 
 #==== Log startup ====
-def logStartup(startTime):
-    with open(filePath("logs/funkylog.log"), 'a+') as f:
+def logStartup():
+    with open(filePath("logs/funkybot.log"), 'a+') as f:
         f.write(c.LINE_BREAK + "Starting session at {}\n".format(
-            datetime.fromtimestamp(startTime)))
+            datetime.fromtimestamp(g.begin)))
         f.write("Number of reminders from DB: {}\n".format(getNumReminders()))
 
 #==== Log exceptions ====
 def logException(e):
-    with open(filePath("logs/funkylog.log"), 'a+') as f:
+    with open(filePath("logs/funkybot.log"), 'a+') as f:
         f.write('\n')
         traceback.print_exc(file=f)
-        
+
+#==== Initalize global variables ====
+def initGlobals(client):
+    g.client = client
+    g.begin = getTime()
+    
+    root = getXmlTree("userinfo")
+    g.token = root.find("token").text
+    g.apiHeaders = {'User-Agent': root.find("user-agent").text,
+                  'From': root.find("email").text }
+
+    root = getXmlTree("denylist")
+    for u in root.findall("user"):
+        g.denylist.append(u.text)
+
+    g.db = database.Database()
+    g.db.runThreads()

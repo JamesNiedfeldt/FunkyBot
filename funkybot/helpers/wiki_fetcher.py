@@ -7,15 +7,15 @@ Contains all necessary functions for searching up Wikipedia articles
 import requests
 
 from helpers.objects import embeddable as embed
-from helpers import helper_functions as h
+from helpers import helper_functions as h, global_vars as g
 
 #==== Fetch an article from Wikipedia ====
-def fetchArticle(query,headers):
+def fetchArticle(query):
     uri = "https://en.wikipedia.org/api/rest_v1/page/summary/"
     notFound = "https://mediawiki.org/wiki/HyperSwitch/errors/not_found"
 
     try:
-        response = requests.get(url=uri + query.replace(' ', '_'), headers=headers)
+        response = requests.get(url=uri + query.replace(' ', '_'), headers=g.apiHeaders)
         results = response.json()
 
         if results['type'] == notFound:

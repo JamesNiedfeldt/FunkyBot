@@ -8,11 +8,11 @@ import asyncio
 import discord
 
 from funktions import useful
-from helpers import helper_functions as helpers
+from helpers import helper_functions as helpers, global_vars as globs
 from errors import errors
 
 #==== Setup a reminder for everyone ====
-async def announce(message,client):
+async def announce(message):
     if message.author.guild_permissions.administrator:
         try:
             reminder = useful.makeReminder(message, announcement=True)
@@ -25,7 +25,7 @@ async def announce(message,client):
                         (msg.content.upper().startswith('!YES') or msg.content.upper().startswith('!NO')))
 
             try:
-                reply = await client.wait_for('message', check=pred, timeout=30)
+                reply = await globs.client.wait_for('message', check=pred, timeout=30)
                 if reply.content.upper().startswith('!YES'):
                     await message.channel.send(useful.startReminder(reminder))
                 elif reply.content.upper().startswith('!NO'):
@@ -55,9 +55,9 @@ async def hexadec(message):
         await message.channel.send(helpers.badArgs(e))
 
 #==== Search for Magic cards ====
-async def magic(message,apiHeaders):
+async def magic(message):
     try:
-        for c in useful.fetchCard(message,apiHeaders):
+        for c in useful.fetchCard(message):
             if c.empty():
                 await message.channel.send(c.text)
             else:
@@ -67,7 +67,7 @@ async def magic(message,apiHeaders):
         await message.channel.send(helpers.badArgs(e))
             
 #==== Setup a poll ====
-async def poll(message,client):
+async def poll(message):
     activeId = str(message.author.id) + str(message.channel.id)
 
     if helpers.isPollRunning(activeId): #Only begin a poll if not already one in channel
@@ -89,7 +89,7 @@ async def poll(message,client):
                 await sentMsg.add_reaction(o)
 
             try:
-                reply = await client.wait_for('message', check=pred, timeout = 10800)
+                reply = await globs.client.wait_for('message', check=pred, timeout = 10800)
             except asyncio.TimeoutError:
                 pass
 
@@ -101,7 +101,7 @@ async def poll(message,client):
             await message.channel.send(helpers.badArgs(e))
 
 #==== Setup reminder ====
-async def remind(message,client):
+async def remind(message):
     try:
         reminder = useful.makeReminder(message)
 
@@ -113,7 +113,7 @@ async def remind(message,client):
                     (msg.content.upper().startswith('!YES') or msg.content.upper().startswith('!NO')))
 
         try:
-            reply = await client.wait_for('message', check=pred, timeout=30)
+            reply = await globs.client.wait_for('message', check=pred, timeout=30)
             if reply.content.upper().startswith('!YES'):
                 await message.channel.send(useful.startReminder(reminder))
             elif reply.content.upper().startswith('!NO'):
@@ -134,9 +134,9 @@ async def roll(message):
         await message.channel.send(helpers.badArgs(e))
 
 #==== Search for a Wikipedia article ====
-async def wiki(message,apiHeaders):
+async def wiki(message):
     try:
-        a = useful.fetchWiki(message,apiHeaders)
+        a = useful.fetchWiki(message)
         if a.empty():
             await message.channel.send(a.text)
         else:

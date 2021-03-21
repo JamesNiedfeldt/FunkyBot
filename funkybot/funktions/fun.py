@@ -43,10 +43,16 @@ def randomPic(path):
             raise RuntimeError
         while not found: #Search for a valid file path
             selection = random.choice(pics)
+            
             if (selection != "Thumbs.db" and
-                selection != ".gitkeep"):
+                selection != ".gitkeep" and
+                not h.duplicateImage(selection,path)):
+                
                 found = True
+                h.updateDuplicateImages(selection,path)
+                    
                 return h.filePath(path + '/' + selection)
+                
     except FileNotFoundError: #Bad path
         raise
     except RuntimeError: #Folder is empty

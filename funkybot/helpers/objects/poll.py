@@ -6,9 +6,6 @@ Keeps track of active polls
 #==== Imports ====
 from helpers import constant as c
 
-#==== Globals ====
-activePolls = [] #Tracks who currently has a poll running in each unique text channel
-
 #==== Poll class ====
 class Poll():
     def __init__(self,author,question,options):

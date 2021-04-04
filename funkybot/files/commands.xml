@@ -83,6 +83,29 @@
     </function>
 
     <function category="useful">
+        <command>calc</command>
+        <format>!calc [[X]]</format>
+        <body>
+            <description>Send `!calc [[X]]` to have me calculate an equation for you.</description>
+            <hint>I can only calculate one equation at a time.</hint>
+            <hint>You can use positive and negative integers or decimals as operands (just make sure the `-` sign is attached to negative numbers).</hint>
+            <hint>I can use the following operators and functions: `+`, `-`, `*`, `/`, `^` (exponent), and `sqrt()` (square root).</hint>
+            <hint>You can use perentheses, just make sure open and closed perentheses are matched.</hint>
+            <hint>For best results, make sure that there are spaces between operators and operands.</hint>
+            <hint>For example, to calculate 6 plus the square root of 4, you should send: `!calc [[6 + sqrt(4)]]`</hint>
+        </body>
+        <error type="brackets">Make sure the equation you want me to calculate is surrounded by double brackets.</error>
+        <error type="empty">I need an equation to calculate.</error>
+        <error type="too_many">I can only calculate one equation at a time.</error>
+        <error type="few_operands">There must be enough operands for me to work with.</error>
+        <error type="few_operators">There are not enough operators or functions for me to use on the operands.</error>
+        <error type="open_perens">Make sure every open parenthesis has a matching closed perenthesis and vice versa.</error>
+        <error type="too_many_operators">There are too many operators for the operands you gave me.</error>
+        <error type="div_by_zero">I can't divide by zero! Are you trying to end the world?</error>
+        <error type="sqrt_negative">I can't take the square root of a negative number.</error>
+    </function>
+
+    <function category="useful">
         <command>hex</command>
         <format>!hex [[X|...]]</format>
         <body>

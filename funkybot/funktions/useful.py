@@ -8,7 +8,7 @@ import random
 import re
 
 from helpers import (helper_functions as h, constant as c, global_vars as g,
-                     card_fetcher as cf, wiki_fetcher as wf)
+                     card_fetcher as cf, wiki_fetcher as wf, calculator as ca)
 from helpers.objects import reminder, poll
 from errors import errors
 
@@ -46,6 +46,29 @@ def toBin(message):
         raise errors.BadValueException("binary")
     except RuntimeError: #Non-integer sent or invalid number
         raise errors.BadNumberException("binary")
+
+#==== Calculate an equation ====
+def calc(message):
+    #Parse arguments
+    try:
+        eq = h.parse(message.content, "calc", 1, 1)
+        for r in eq: eq = r #Convert to string
+    except errors.Error as e:
+        raise e
+
+    try:
+        answer = ca.calculate(eq)
+        return "Here's what I calculated:\n`%s\n`= %s" % (eq.strip(), answer)
+    except errors.Error as e:
+        raise e
+    except ZeroDivisionError:
+        raise errors.CustomCommandException("calc", "div_by_zero")
+    except Exception as e:
+        if str(e) == "math domain error": #Probably sqrt of negative
+            raise errors.CustomCommandException("calc", "sqrt_negative")
+        else:
+            raise e
+            #return "Sorry, I couldn't finish the calculation. Make sure your equation is right and try again!"
 
 #==== Convert a number to hexadecimal ====
 def toHex(message):

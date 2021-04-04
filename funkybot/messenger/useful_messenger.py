@@ -47,6 +47,13 @@ async def binary(message):
     except errors.Error as e:
         await message.channel.send(helpers.badArgs(e))
 
+#==== Calculate an equation ====
+async def calc(message):
+    try:
+        await message.channel.send(useful.calc(message))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))
+
 #==== Convert number to hexadecimal ====
 async def hexadec(message):
     try:

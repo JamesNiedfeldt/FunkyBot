@@ -44,6 +44,9 @@ async def on_message(message):
         elif message.content.upper().startswith('!BINARY'):
             await u.binary(message)
 
+        elif message.content.upper().startswith('!CALC'):
+            await u.calc(message)
+
         elif message.content.upper().startswith('!HEX'):
             await u.hexadec(message)
 

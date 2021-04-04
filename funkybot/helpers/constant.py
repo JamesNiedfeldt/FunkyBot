@@ -3,7 +3,7 @@
 Contains constants
 """
 
-VERSION = "1.8.6"
+VERSION = "1.9.0"
 
 HELP_REMINDER = "If you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [[!ask]]`."
 

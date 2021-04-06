@@ -103,7 +103,12 @@ def __doMath(rpn):
         else:
             i += 1
 
-    return rpn[0]
+    #if rpn[0] == -0: #Negative zeroes sometimes
+        #return 0
+    if rpn[0].is_integer():
+        return int(rpn[0])
+    else:
+        return rpn[0]
 
 #==== Verify if tokens are workable ====
 def __verifyTokens(tokens):
@@ -113,9 +118,17 @@ def __verifyTokens(tokens):
     numLeftPeren = tokens.count('(')
     numRightPeren = tokens.count(')')
 
-    if numOperands <= 0:
-        raise errors.CustomCommandException("calc", "few_operands")
-    elif numOperators + numFuncs <= 0:
+    if tokens[0] in _prec.keys() or tokens[-1] in _prec.keys():
+        raise errors.CustomCommandException("calc", "missing_operand")
+
+    for i in range(len(tokens)-1):
+        if re.match('^(?!sqrt|[0-9]|[+\-*/()^])', tokens[i]) != None:
+            raise errors.CustomCommandException("calc", "bad_tokens")
+        elif (tokens[i] in _prec.keys()
+              and tokens[i-1] in _prec.keys()):
+            raise errors.CustomCommandException("calc", "missing_operand")
+
+    if numOperators + numFuncs <= 0:
         raise errors.CustomCommandException("calc", "few_operators")
     elif numLeftPeren != numRightPeren:
         raise errors.CustomCommandException("calc", "open_perens")

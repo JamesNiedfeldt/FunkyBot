@@ -49,6 +49,8 @@ def toBin(message):
 
 #==== Calculate an equation ====
 def calc(message):
+    toReturn = ""
+    
     #Parse arguments
     try:
         eq = h.parse(message.content, "calc", 1, 1)
@@ -58,17 +60,23 @@ def calc(message):
 
     try:
         answer = ca.calculate(eq)
-        return "Here's what I calculated:\n`%s\n`= %s" % (eq.strip(), answer)
+        toReturn = "Here's what I calculated:" + c.LINE_BREAK
+        toReturn = toReturn + "`" + " ".join(eq.split()) + "`\n= %s" % answer
+
+        return toReturn
     except errors.Error as e:
         raise e
     except ZeroDivisionError:
-        raise errors.CustomCommandException("calc", "div_by_zero")
+        return "It's not possible to divide by zero. Are you trying to end the world?! %s" % c.RETRY_EQUATION
     except Exception as e:
         if str(e) == "math domain error": #Probably sqrt of negative
-            raise errors.CustomCommandException("calc", "sqrt_negative")
+            return "It's not possible to take the square root of a negative number. %s" % c.RETRY_EQUATION
+        elif isinstance(e, OverflowError):
+            return "Sorry, the answer was too big for me to calculate."
         else:
-            raise e
-            #return "Sorry, I couldn't finish the calculation. Make sure your equation is right and try again!"
+            if not isinstance(e, IndexError) or not isinstance(e, ValueError):
+                h.logException(e)
+            return "Sorry, I couldn't finish the calculation. %s" % c.RETRY_EQUATION
 
 #==== Convert a number to hexadecimal ====
 def toHex(message):

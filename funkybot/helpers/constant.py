@@ -31,6 +31,8 @@ LINE_BREAK = "\n--------------------\n"
 
 UNKNOWN_COMMAND = "Sorry, `!%s` is not one of my commands. Send `!help` for a full list."
 
+RETRY_EQUATION = "Make sure your equation is right and try again."
+
 BOOT_UP = """===============
 %s %s
 I'm ready to work!"""

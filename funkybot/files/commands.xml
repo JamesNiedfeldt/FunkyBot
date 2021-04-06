@@ -97,12 +97,11 @@
         <error type="brackets">Make sure the equation you want me to calculate is surrounded by double brackets.</error>
         <error type="empty">I need an equation to calculate.</error>
         <error type="too_many">I can only calculate one equation at a time.</error>
-        <error type="few_operands">There must be enough operands for me to work with.</error>
-        <error type="few_operators">There are not enough operators or functions for me to use on the operands.</error>
+        <error type="bad_tokens">I can only calculate using numbers, operators, and the sqrt function.</error>
+        <error type="missing_operand">Each operator needs an operand on its left and right.</error>
+        <error type="few_operators">There are not enough operators or functions for me to use on the operands. Make sure you add spaces between operators and operands!</error>
         <error type="open_perens">Make sure every open parenthesis has a matching closed perenthesis and vice versa.</error>
         <error type="too_many_operators">There are too many operators for the operands you gave me.</error>
-        <error type="div_by_zero">I can't divide by zero! Are you trying to end the world?</error>
-        <error type="sqrt_negative">I can't take the square root of a negative number.</error>
     </function>
 
     <function category="useful">

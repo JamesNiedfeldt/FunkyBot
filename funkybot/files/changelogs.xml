@@ -5,6 +5,7 @@
 
     <version num="1.9.0">
         <change>Added the `!calc` command to calculate equations. To learn more, send `!help [[!calc]]`.</change>
+        <change>Made suggestions for incorrect commands more helpful.</change>
     </version>
 
     <version num="1.8.6">

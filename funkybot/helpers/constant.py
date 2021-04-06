@@ -36,3 +36,11 @@ RETRY_EQUATION = "Make sure your equation is right and try again."
 BOOT_UP = """===============
 %s %s
 I'm ready to work!"""
+
+#Common mistaken command names, to be updated as they become apparent
+COMMON_MISTAKES = {
+        'bin': 'binary',
+        'math': 'calc',
+        'shibe': 'cute',
+        'mtg': 'magic',
+        'card': 'magic'}

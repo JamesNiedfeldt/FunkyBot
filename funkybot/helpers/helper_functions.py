@@ -103,7 +103,7 @@ def badArgs(exc):
     if exc.errorCode != None and cmd != None:
         hint = cmd.find("./error/[@type='{}']".format(exc.errorCode))
         if hint != None:
-            message = message + hint.text + " "
+            message = message + hint.text + c.LINE_BREAK
 
     message = message + c.BAD_ARGS_2 % exc.command
 
@@ -175,19 +175,26 @@ def getXmlTree(fileName):
 #==== Decide if a user was trying to send unknown command ====
 def parseUnknown(cmd):
     result = re.match("^!{1}[\w]+", cmd)
+    
     if result == None:
         return None
-
+        
     else:
         result = result.group()[1:]
         toReturn = c.UNKNOWN_COMMAND % result
-        attempted = lDistance(result)
+        
+        if result in c.COMMON_MISTAKES.keys():
+            attempted = c.COMMON_MISTAKES[result]
+        else:
+            attempted = lDistance(result)
+            
         if attempted != None:
             toReturn = toReturn + "\n\nDid you perhaps mean `!%s`?" % attempted
 
         return toReturn
 
 #==== Find Levenshtein distance between two strings ====
+#https://en.wikipedia.org/wiki/Levenshtein_distance
 def lDistance(unknown):
     index = getXmlTree('commands').findall('./function')
     bestScore = None
@@ -213,10 +220,14 @@ def lDistance(unknown):
             while i < len(mat):
                 j = 1
                 while j < len(mat[i]):
-                    if unknown[i - 1] == target[j - 1]:
+                    if unknown[i - 1] == target[j - 1]: #Perfect match
                         subCost = 0
-                    else:
+                    elif unknown[i - 1] in target[j:]: #Match later
                         subCost = 1
+                    elif unknown[i - 1] in target[:j]: #Match earlier
+                        subCost = 1
+                    else: #No match
+                        subCost = 2
                         
                     mat[i][j] = min(mat[i-1][j] + 1,
                                   mat[i][j-1] + 1,

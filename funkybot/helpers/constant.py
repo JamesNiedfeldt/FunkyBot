@@ -29,7 +29,9 @@ BAD_ARGS_2 = "If you need more help with this command, send `!help [[!%s]]`."
 
 LINE_BREAK = "\n--------------------\n"
 
-UNKNOWN_COMMAND = "Sorry, `!%s` is not one of my commands. Send `!help` for a full list."
+UNKNOWN_COMMAND = "Sorry, `%s` is not one of my commands. Send `!help` for a full list."
+
+SUGGESTED_COMMAND = "Did you perhaps mean `%s`? If so, send `!yes` within 15 seconds to use that command."
 
 RETRY_EQUATION = "Make sure your equation is right and try again."
 
@@ -39,8 +41,9 @@ I'm ready to work!"""
 
 #Common mistaken command names, to be updated as they become apparent
 COMMON_MISTAKES = {
-        'bin': 'binary',
-        'math': 'calc',
-        'shibe': 'cute',
-        'mtg': 'magic',
-        'card': 'magic'}
+        '!bin': '!binary',
+        '!math': '!calc',
+        '!choice': '!choose',
+        '!shibe': '!cute',
+        '!mtg': '!magic',
+        '!card': '!magic'}

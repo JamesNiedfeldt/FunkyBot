@@ -17,7 +17,7 @@ from helpers.objects import reminder, database, poll
 from errors import errors
 
 #==== Parse a string ====
-def parse(string, command, minArg, maxArg):
+def parseArgs(string, command, minArg, maxArg):
     contents = re.findall("\[\[([^\[\]]*)\]\]", string) #Find contents of '[[]]'
 
     if len(contents) == 0: #Nothing was found
@@ -173,34 +173,24 @@ def getXmlTree(fileName):
     return tree.getroot()
 
 #==== Decide if a user was trying to send unknown command ====
-def parseUnknown(cmd):
-    result = re.match("^!{1}[\w]+", cmd)
-    
-    if result == None:
-        return None
-        
-    else:
-        result = result.group()[1:]
-        toReturn = c.UNKNOWN_COMMAND % result
-        
-        if result in c.COMMON_MISTAKES.keys():
-            attempted = c.COMMON_MISTAKES[result]
-        else:
-            attempted = lDistance(result)
-            
-        if attempted != None:
-            toReturn = toReturn + "\n\nDid you perhaps mean `!%s`?" % attempted
+def parseCommand(cmd):
+    cmdList = getXmlTree('commands')
 
-        return toReturn
+    for i in cmdList:
+        if i.find("command").text == cmd[1:]:
+            return cmd
+    if cmd in c.COMMON_MISTAKES.keys():
+        return c.COMMON_MISTAKES[cmd]
+    else:
+        return "!" + _lDistance(cmd, cmdList)
 
 #==== Find Levenshtein distance between two strings ====
 #https://en.wikipedia.org/wiki/Levenshtein_distance
-def lDistance(unknown):
-    index = getXmlTree('commands').findall('./function')
+def _lDistance(unknown, cmdList):
     bestScore = None
     toReturn = None
 
-    for cmd in index:
+    for cmd in cmdList.findall('./function'):
         if cmd.get("category") != "contextual":
             mat = []
             target = cmd.find("command").text

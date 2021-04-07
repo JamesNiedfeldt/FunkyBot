@@ -20,7 +20,7 @@ def eightBall():
 def choose(message):
     #Parse choices
     try:
-        choices = h.parse(message.content, "choose", 2, 10)
+        choices = h.parseArgs(message.content, "choose", 2, 10)
     except errors.Error as e:
         raise e
 
@@ -65,7 +65,7 @@ def rateSomething(message):
     
     #Parse string
     try:
-        toRate = h.parse(message.content, "rate", 1, 1)
+        toRate = h.parseArgs(message.content, "rate", 1, 1)
     except errors.Error as e:
         raise e
 

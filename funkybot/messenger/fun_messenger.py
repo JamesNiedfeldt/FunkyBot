@@ -33,12 +33,13 @@ async def joke(message):
     await message.channel.send(fun.findOneLiner())
 
 #==== Send random reaction image ====
-async def react(message):
-    try:
-        await message.delete()
-        helpers.logMessage(message)
-    except discord.errors.Forbidden: #Can't delete
-        pass
+async def react(message, corrected):
+    if not corrected: #If this command was sent via suggestion, don't delete
+        try:
+            await message.delete()
+            helpers.logMessage(message)
+        except discord.errors.Forbidden: #Can't delete
+            pass
     try:
         await message.channel.send(file=discord.File(fun.randomPic("reaction_pics")))
     except (RuntimeError, FileNotFoundError): #No valid images or bad path

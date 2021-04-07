@@ -30,9 +30,3 @@ async def help(message):
         await message.channel.send(information.sendHelp(message))
     except errors.Error as e:
         await message.channel.send(helpers.badArgs(e))
-
-#==== Correct user if an incorrect command was sent
-async def unknown(message):
-    cmd = helpers.parseUnknown(message.content)
-    if cmd != None:
-        await message.channel.send(cmd)

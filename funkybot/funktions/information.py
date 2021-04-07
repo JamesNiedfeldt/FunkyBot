@@ -59,7 +59,7 @@ def sendHelp(message):
     else:
         try:
             #Specific request
-            arg = h.parse(message.content, "help", 1, 1)
+            arg = h.parseArgs(message.content, "help", 1, 1)
             
             for i in set(arg): arg = i.lower() #Change back to string
             if(arg.startswith("!")):

@@ -18,7 +18,7 @@ def toBin(message):
     
     #Parse number, convert it to usable string
     try:
-        numbers = h.parse(message.content, "binary", 1, 3)
+        numbers = h.parseArgs(message.content, "binary", 1, 3)
     except errors.Error as e:
         raise e
 
@@ -53,7 +53,7 @@ def calc(message):
     
     #Parse arguments
     try:
-        eq = h.parse(message.content, "calc", 1, 1)
+        eq = h.parseArgs(message.content, "calc", 1, 1)
         for r in eq: eq = r #Convert to string
     except errors.Error as e:
         raise e
@@ -84,7 +84,7 @@ def toHex(message):
     
     #Parse number, convert it to usable string
     try:
-        numbers = h.parse(message.content, "hex", 1, 3)
+        numbers = h.parseArgs(message.content, "hex", 1, 3)
     except errors.Error as e:
         raise e
 
@@ -121,7 +121,7 @@ def fetchCard(message):
     
     #Parse card name
     try:
-        cards = h.parse(message.content, "magic", 1, 3)
+        cards = h.parseArgs(message.content, "magic", 1, 3)
     except errors.Error as e:
         raise e
     
@@ -142,12 +142,12 @@ def makePoll(message):
     results = []
 
     try:
-        options = h.parse(message.content, "poll", 2, 5)
+        options = h.parseArgs(message.content, "poll", 2, 5)
     except errors.Error as e:
         raise e
     
-    question = (re.sub("(\[\[.*\]\])|(!POLL)", "",
-                       message.content, flags=re.IGNORECASE))
+    question = (re.sub("(\[\[.*\]\])", "",
+                       message.content.split(' ',1)[1], flags=re.IGNORECASE))
             
     return poll.Poll(message.author, question, options)
 
@@ -186,7 +186,7 @@ def makeReminder(message,announcement=False):
         cmd = "remind"
         
     try:
-        timeArgs = h.parse(message.content, cmd, 1, 3)
+        timeArgs = h.parseArgs(message.content, cmd, 1, 3)
     except errors.Error as e:
         raise e
 
@@ -264,7 +264,7 @@ def rollDice(message):
     total = 0
     
     try:
-        numbers = h.parse(message.content, "roll", 1, 5)
+        numbers = h.parseArgs(message.content, "roll", 1, 5)
     except errors.Error as e:
         raise e
     
@@ -272,7 +272,7 @@ def rollDice(message):
         for n in numbers:
             number = int(n)
             
-            if number <= 2 or number > 1000:
+            if number <= 1 or number > 1000:
                 raise RuntimeError('Invalid number')
             else:
                 if len(numbers) == 1:
@@ -294,7 +294,7 @@ def rollDice(message):
 #==== Fetch a Wikipedia article ====
 def fetchWiki(message):
     try:
-        terms = h.parse(message.content, "wiki", 1, 1)
+        terms = h.parseArgs(message.content, "wiki", 1, 1)
     except errors.Error as e:
         raise e
 

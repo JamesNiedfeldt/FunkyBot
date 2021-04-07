@@ -15,6 +15,7 @@ helpers.initGlobals(discord.Client())
 #==== Alert that Funky is ready ====
 @globs.client.event
 async def on_ready():
+    globs.begin = helpers.getTime()
     helpers.logStartup()
     print((constant.BOOT_UP) % (globs.client.user.name, constant.VERSION) + "\n")
     print("Number of reminders from DB: %s" % helpers.getNumReminders())

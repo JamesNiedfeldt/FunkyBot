@@ -4,7 +4,7 @@ Contains the non-command functions needed to run
 """
 
 #==== Imports ====
-from datetime import datetime
+from datetime import datetime, date
 import time
 import os
 import re
@@ -237,14 +237,14 @@ def getNumReminders():
 
 #==== Log startup ====
 def logStartup():
-    with open(filePath("logs/funkybot.log"), 'a+') as f:
+    with open(filePath("logs/funkybot-%s.log" % date.today()), 'a+') as f:
         f.write(c.LINE_BREAK + "Starting session at {}\n".format(
             datetime.fromtimestamp(g.begin)))
         f.write("Number of reminders from DB: {}\n".format(getNumReminders()))
 
 #==== Log exceptions ====
 def logException(e):
-    with open(filePath("logs/funkybot.log"), 'a+') as f:
+    with open(filePath("logs/funkybot-%s.log" % date.today()), 'a+') as f:
         f.write('\n')
         traceback.print_exc(file=f)
 

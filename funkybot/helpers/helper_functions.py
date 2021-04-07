@@ -263,4 +263,7 @@ def initGlobals(client):
         g.denylist.append(u.text)
 
     g.db = database.Database()
+
+#==== Start reminders from database ====
+def startReminders():
     g.db.runThreads()

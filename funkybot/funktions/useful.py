@@ -178,42 +178,51 @@ def finishPoll(message,poll):
 
     return toReturn
 
-#==== Create a Reminder ====
-def makeReminder(message,announcement=False):
+#==== Create a Reminder object with duration ====
+def makeDurationReminder(message):
+    try:
+        timeArgs = h.parseArgs(message.content, "timer", 1, 3)
+    except errors.Error as e:
+        raise e
+
+    duration = h.convertDurationTime(timeArgs)
+
+
+    if duration == None: #Duration was formatted incorrectly
+        raise errors.CustomCommandException("timer", "bad_duration")
+    elif duration > 2592000: #Duration over 30 days
+        raise errors.CustomCommandException("timer", "too_long")
+    elif duration <= 0: #Duration empty or negative
+        raise errors.CustomCommandException("timer", "no_duration")
+
+    timer = reminder.Reminder(duration=duration,msg=message,dt=False)
+
+    return timer
+
+#==== Create a Reminder object with date ====
+def makeDateReminder(message, announcement=False):
     if announcement:
         cmd = "announce"
     else:
         cmd = "remind"
         
     try:
-        timeArgs = h.parseArgs(message.content, cmd, 1, 3)
+        timeArgs = h.parseArgs(message.content, cmd, 1, 1)
     except errors.Error as e:
         raise e
 
-    #Argument is a datetime
-    if '/' in timeArgs[0]:
-        duration = h.convertDateTime(timeArgs)
-        date = True
-    #Argument is a duration
-    else: 
-        duration = h.convertDurationTime(timeArgs)
-        date = False
+    duration = h.convertDateTime(timeArgs)
+    date = True
 
-    if date and duration == None: #Datetime was not parsed correctly
+    if duration == None: #Datetime was not parsed correctly
         raise errors.CustomCommandException(cmd, "bad_date")
-    elif date and duration <= 0: #Datetime is negative
+    elif duration <= 0: #Datetime is negative
         raise errors.CustomCommandException(cmd, "negative_date")
-    elif not date and duration == None: #Duration was formatted incorrectly
-        raise errors.CustomCommandException(cmd, "bad_duration")
-    elif not date and duration > 2592000: #Duration over 30 days
-        raise errors.CustomCommandException(cmd, "too_long")
-    elif not date and duration <= 0: #Duration empty or negative
-        raise errors.CustomCommandException(cmd, "no_duration")
 
     if announcement:
-        timer = reminder.Announcement(duration=duration,msg=message,dt=date)
+        timer = reminder.Announcement(duration=duration,msg=message,dt=True)
     else:
-        timer = reminder.Reminder(duration=duration,msg=message,dt=date)
+        timer = reminder.Reminder(duration=duration,msg=message,dt=True)
 
     return timer
 

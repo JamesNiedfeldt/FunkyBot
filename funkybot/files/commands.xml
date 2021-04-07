@@ -33,37 +33,24 @@
     <!-- Useful commands -->
     <function category="useful">
         <command>announce</command>
-        <format>!announce [[X|...]]</format>
+        <format>!announce [[X]]</format>
         <body>
-            <description>Send `!announce [[X|Y|Z]]` to have me send everyone a notification after the set time.</description>
-            <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
-            <hint>Time cannot exceed 30 days.</hint>
-            <hint>Separate each argument in the brackets with the | character.</hint>
-            <hint>I need at least one argument but I can take up to three.</hint>
-            <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
-            <hint>For example, to remind everyone to join you in a game in two and a half days, send: `!announce [[2d|12h]] play game`.</hint>
-            <hint>Only server administrators can use this command.</hint>
-        </body>
-        <body>
-            <description>You can also use a special format to set an announcement for a certain date.</description>
+            <description>Send `!announce [[X]]` to have me send everyone a notification at the specified date.</description>
             <hint>You must supply the date, time, and timezone as a UTC offset.</hint>
             <hint>Date should be format `MM/DD/YYYY`.</hint>
             <hint>Time should be format `HH:MM` as a 24 hour clock.</hint>
             <hint>UTC offset should be format `(+/-)HHHH`.</hint>
             <hint>The date you set cannot be before the current date and time.</hint>
-            <hint>I will ignore any more than one argument of this format.</hint>
-            <hint>I can only use either time or a date argument. If you send any time arguments after a date, I will ignore them.</hint>
+            <hint>I can only set an announcement for one date at a time.</hint>
+            <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
+            <hint>Only server administrators can use this command.</hint>
             <hint>For example, to set an announcement for your birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!announce [[05/20/2021 14:30 -0600]] birthday party`.</hint>
         </body>
-        <error type="brackets">Make sure the time or date you want me to use to set your announcement is surrounded by double brackets.</error>
-        <error type="empty">At least one of the arguments you gave me was empty.</error>
-        <error type="too_many">I can only take three arguments.</error>
-        <error type="too_few">I need at least one time or date argument to set your announcement.</error>
-        <error type="bad_duration">Make sure your time arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
-        <error type="too_long">Time arguments cannot exceed 30 days.</error>
-	<error type="no_duration">The time arguments must last at least one second.</error>
+        <error type="brackets">Make sure the date you want me to use to set your announcement is surrounded by double brackets.</error>
+        <error type="empty">I need a date to set your announcement for.</error>
+        <error type="too_many">I can only set an announcement for one date at a time.</error>
         <error type="bad_date">Make sure your date argument is in the proper format: `MM/DD/YYYY HH:MM (+/-)HHHH`.</error>
-        <error type="negative_date">Date arguments must be set for a date in the future.</error>
+        <error type="negative_date">Announcements must be set for a date in the future.</error>
     </function>
 
     <function category="useful">
@@ -157,36 +144,23 @@
 
     <function category="useful">
         <command>remind</command>
-        <format>!remind [[X|...]]</format>
+        <format>!remind [[X]]</format>
         <body>
-            <description>Send `!remind [[X|Y|Z]]` to have me send you a notification after the set time.</description>
-            <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
-            <hint>Time cannot exceed 30 days.</hint>
-            <hint>Separate each argument in the brackets with the | character.</hint>
-            <hint>I need at least one argument but I can take up to three.</hint>
-            <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
-            <hint>For example, to remind yourself to go to sleep in two and a half hours, send: `!announce [[2h|30m]] go to sleep`.</hint>
-        </body>
-        <body>
-            <description>You can also use a special format to set a reminder for a certain date.</description>
+            <description>Send `!remind [[X]]` to have me send you a notification at the specified date.</description>
             <hint>You must supply the date, time, and timezone as a UTC offset.</hint>
             <hint>Date should be format `MM/DD/YYYY`.</hint>
             <hint>Time should be format `HH:MM` as a 24 hour clock.</hint>
             <hint>UTC offset should be format `(+/-)HHHH`.</hint>
             <hint>The date you set cannot be before the current date and time.</hint>
-            <hint>I will ignore any more than one argument of this format.</hint>
-            <hint>I can only use either time or a date argument. If you send any time arguments after a date, I will ignore them.</hint>
+            <hint>I can only set an announcement for one date at a time.</hint>
+            <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
             <hint>For example, to set a reminder for a friend's birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!remind [[05/20/2021 14:30 -0600]] birthday party`.</hint>
         </body>
-        <error type="brackets">Make sure the time or date you want me to use to set your reminder is surrounded by double brackets.</error>
-        <error type="too_many">I can only take three arguments.</error>
-        <error type="too_few">I need at least one time or date argument to set your reminder.</error>
-        <error type="bad_duration">Make sure your time arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
-        <error type="too_long">Time arguments cannot exceed 30 days.</error>
-        <error type="empty">You must put something in the double brackets and after each `|` character.</error>
-	<error type="no_duration">The time arguments must last at least one second.</error>
+        <error type="brackets">Make sure the date you want me to use to set your reminder is surrounded by double brackets.</error>
+        <error type="empty">I need a date to set your reminder for.</error>
+        <error type="too_many">I can only set a reminder for one date at a time.</error>
         <error type="bad_date">Make sure your date argument is in the proper format: `MM/DD/YYYY HH:MM (+/-)HHHH`.</error>
-        <error type="negative_date">Date arguments must be set for a date in the future.</error>
+        <error type="negative_date">Reminders must be set for a date in the future.</error>
     </function>
 
     <function category="useful">
@@ -204,6 +178,27 @@
         <error type="too_many">I can only roll at most five dice at a time.</error>
         <error type="bad_value">I can only roll dice with an integer number of sides.</error>
         <error type="bad_number">I can only roll dice with 2-1000 sides.</error>
+    </function>
+
+    <function category="useful">
+        <command>time</command>
+        <format>!time [[X|Y|Z]]</format>
+        <body>
+            <description>Send `!time [[X|Y|Z]]` to have me send you a notification after the set time.</description>
+            <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
+            <hint>Time cannot exceed 30 days.</hint>
+            <hint>Separate each argument in the brackets with the | character.</hint>
+            <hint>I need at least one argument but I can take up to three.</hint>
+            <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
+            <hint>For example, to remind yourself to go to sleep in two and a half hours, send: `!time [[2h|30m]] go to sleep`.</hint>
+        </body>
+        <error type="brackets">Make sure the time you want me to use to set your timer is surrounded by double brackets.</error>
+        <error type="too_many">I can only take three arguments.</error>
+        <error type="too_few">I need at least one time argument to set your reminder.</error>
+        <error type="bad_duration">Make sure your time arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
+        <error type="too_long">Time cannot exceed 30 days.</error>
+        <error type="empty">You must put something in the double brackets and after each `|` character.</error>
+	    <error type="no_duration">The time arguments must last at least one second.</error>
     </function>
 
     <function category="useful">

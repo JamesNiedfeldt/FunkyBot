@@ -18,9 +18,10 @@ async def on_ready():
     globs.begin = helpers.getTime()
     helpers.logStartup()
     print((constant.BOOT_UP) % (globs.client.user.name, constant.VERSION) + "\n")
-    print("Number of reminders from DB: %s" % helpers.getNumReminders())
     
     await globs.client.change_presence(activity=discord.Game("!help"))
+    helpers.startReminders()
+    print("Number of reminders from DB: %s" % helpers.getNumReminders())
 
 #==== Listen to commands ====
 @globs.client.event
@@ -84,10 +85,13 @@ async def on_message(message):
             await u.poll(message)
 
         elif cmd == '!remind':
-            await u.remind(message)
+            await u.remind(message, time=False)
 
         elif cmd == '!roll':
             await u.roll(message)
+
+        elif cmd == '!time':
+            await u.remind(message, time=True)
 
         elif cmd == '!wiki':
             await u.wiki(message)

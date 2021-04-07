@@ -15,7 +15,7 @@ from errors import errors
 async def announce(message):
     if message.author.guild_permissions.administrator:
         try:
-            reminder = useful.makeReminder(message, announcement=True)
+            reminder = useful.makeDateReminder(message, announcement=True)
 
             await message.channel.send(useful.confirmReminder(message, reminder))
 
@@ -108,9 +108,12 @@ async def poll(message):
             await message.channel.send(helpers.badArgs(e))
 
 #==== Setup reminder ====
-async def remind(message):
+async def remind(message, time=False):
     try:
-        reminder = useful.makeReminder(message)
+        if time:
+            reminder = useful.makeDurationReminder(message)
+        else:
+            reminder = useful.makeDateReminder(message)
 
         await message.channel.send(useful.confirmReminder(message, reminder))
 

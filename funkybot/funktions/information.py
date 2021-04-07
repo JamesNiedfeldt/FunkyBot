@@ -23,7 +23,7 @@ def sayHello():
         txt = txt + "\n*No changes were found.*"
     else:
         for change in changeList.findall('change'):
-            txt = txt + "\n\N{BULLET} " + change.text
+            txt = txt + "\n\N{BULLET} %s\n" % change.text
     
     emb = embeddable.Embeddable(url=c.HELLO_URL,
                                 title="FunkyBot v%s" % c.VERSION,

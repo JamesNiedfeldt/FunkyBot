@@ -103,12 +103,10 @@ def __doMath(rpn):
         else:
             i += 1
 
-    #if rpn[0] == -0: #Negative zeroes sometimes
-        #return 0
     if rpn[0].is_integer():
         return int(rpn[0])
     else:
-        return rpn[0]
+        return round(rpn[0], 10)
 
 #==== Verify if tokens are workable ====
 def __verifyTokens(tokens):

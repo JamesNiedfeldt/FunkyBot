@@ -181,7 +181,7 @@ def finishPoll(message,poll):
 #==== Create a Reminder object with duration ====
 def makeDurationReminder(message):
     try:
-        timeArgs = h.parseArgs(message.content, "timer", 1, 3)
+        timeArgs = h.parseArgs(message.content, "time", 1, 3)
     except errors.Error as e:
         raise e
 

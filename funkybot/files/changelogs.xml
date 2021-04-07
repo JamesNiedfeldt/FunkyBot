@@ -7,6 +7,7 @@
         <change>Added the `!calc` command to calculate equations. To learn more, send `!help [[!calc]]`.</change>
         <change>When sending an unknown command, you can now send `!yes` to automatically use the provided suggestion.</change>
         <change>Separated `!remind` command into `!remind` and `!time`. `!remind` and `!announce` now only support date arguments, while `!time` only supports time arguments.</change>
+        <change>`!remind` and `!announce` commands are now more flexible with the formatting of arguments they accept.</change>
         <change>Fixed a bug where `!roll` command wouldn't work with an argument of `2`.</change>
         <change>Fixed a bug where reminders and announcements wouldn't trigger after FunkyBot resets.</change>
     </version>

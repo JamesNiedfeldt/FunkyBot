@@ -4,7 +4,7 @@ Contains the non-command functions needed to run
 """
 
 #==== Imports ====
-from datetime import datetime, date
+from datetime import datetime, date, timezone, timedelta
 import time
 import os
 import re
@@ -144,14 +144,33 @@ def convertDurationTime(timeArgs):
 
 #==== Convert reminder arguments to datetime ====
 def convertDateTime(timeArgs):
-    arg = timeArgs[0]
-    
     try:
-        date = datetime.strptime(arg, "%m/%d/%Y %H:%M %z")
-        if date.timestamp() <= getTime():
+        tokens = timeArgs[0].split()
+
+        date = [int(i) for i in tokens[0].split('/')]
+        time = [int(i) for i in tokens[1].split(':')]
+        
+        if tokens[2].lower() == 'pm':
+            time[0] = time[0] + 12
+            offset = tokens[3]
+        elif tokens[2].lower() == 'am':
+            offset = tokens[3]
+        else:
+            offset = tokens[2]
+            
+        delta = timedelta(
+            hours=int(offset[0] + offset[1] + offset[2]),
+            minutes=int(offset[3] + offset[4]))
+
+        timestamp = datetime(
+            date[2], date[0], date[1],
+            hour=time[0], minute=time[1],
+            tzinfo=timezone(delta)).timestamp()
+        if timestamp <= getTime():
             return -1
         else:
-            return date.timestamp()
+            return timestamp
+        
     except ValueError:
         return None
 

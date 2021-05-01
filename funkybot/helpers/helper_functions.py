@@ -5,7 +5,6 @@ Contains the non-command functions needed to run
 
 #==== Imports ====
 from datetime import datetime, date, timezone, timedelta
-import time
 import os
 import re
 import xml.etree.ElementTree as et
@@ -69,9 +68,9 @@ def updateDuplicateImages(img, path):
         if len(g.recentReact) > 5:
             g.recentReact.pop(0)
 
-#==== Calculate uptime ====
+#==== Get current time ====
 def getTime():
-    return time.time()
+    return datetime.now().timestamp()
 
 #==== Format uptime ====
 def formatTime(time,offset=0):
@@ -147,31 +146,34 @@ def convertDateTime(timeArgs):
     try:
         tokens = timeArgs[0].split()
 
-        date = [int(i) for i in tokens[0].split('/')]
-        time = [int(i) for i in tokens[1].split(':')]
+        tzOffset = tokens[-1]
+        tz = timezone(timedelta(hours=int(tzOffset)))
         
-        if tokens[2].lower() == 'pm':
-            time[0] = time[0] + 12
-            offset = tokens[3]
-        elif tokens[2].lower() == 'am':
-            offset = tokens[3]
+        if '/' in tokens[0]: #First token is a date
+            datePcs = [int(i) for i in tokens[0].split('/')]
+            tokens = tokens[1:]
         else:
-            offset = tokens[2]
-            
-        delta = timedelta(
-            hours=int(offset[0] + offset[1] + offset[2]),
-            minutes=int(offset[3] + offset[4]))
+            datePcs = datetime.now(tz)
+            datePcs = [datePcs.month, datePcs.day, datePcs.year]
 
-        timestamp = datetime(
-            date[2], date[0], date[1],
-            hour=time[0], minute=time[1],
-            tzinfo=timezone(delta)).timestamp()
-        if timestamp <= getTime():
+        time = [int(i) for i in tokens[0].split(':')]
+        if tokens[1].lower() == 'pm':
+            if time[0] < 12:
+                time[0] = time[0] + 12
+        elif tokens[1].lower() == 'am':
+            if time[0] == 12:
+                time[0] = time[0] - 12
+
+        calculatedDt = datetime(
+            datePcs[2], datePcs[0], datePcs[1],
+            hour=time[0], minute=time[1], tzinfo=tz)
+
+        if calculatedDt.timestamp() <= getTime():
             return -1
         else:
-            return timestamp
+            return calculatedDt.timestamp()
         
-    except ValueError:
+    except:
         return None
 
 #==== Check if a poll is already being run by someone ====

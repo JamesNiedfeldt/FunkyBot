@@ -79,6 +79,8 @@
 
     <list type="ratings">
         <rating>
+            <rank>0</rank>
+            <descriptor>Seriously...?</descriptor>
 	    <rank>1</rank>
             <descriptor>Why would you even have me rate this?</descriptor>
         </rating>

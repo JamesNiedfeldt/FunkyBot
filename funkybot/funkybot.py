@@ -16,11 +16,11 @@ helpers.initGlobals(discord.Client())
 @globs.client.event
 async def on_ready():
     globs.begin = helpers.getTime()
-    helpers.logStartup()
     print((constant.BOOT_UP) % (globs.client.user.name, constant.VERSION) + "\n")
     
     await globs.client.change_presence(activity=discord.Game("!help"))
     helpers.startReminders()
+    helpers.logStartup()
     print("Number of reminders from DB: %s" % helpers.getNumReminders())
 
 #==== Listen to commands ====

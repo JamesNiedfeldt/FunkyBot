@@ -23,8 +23,10 @@ def parseArgs(string, command, minArg, maxArg):
         raise errors.BadArgumentException(command)
     
     contents = re.split("\|", contents[0])  #Split multiple deliminated with '|'
+    for i in range(len(contents)):
+        contents[i] = contents[i].strip()
     
-    for i in list(contents):
+    for i in contents:
         if i == "": #Is there a blank entry?
            raise errors.EmptyArgumentException(command)
 
@@ -32,7 +34,7 @@ def parseArgs(string, command, minArg, maxArg):
         raise errors.TooFewArgumentsException(command)
     elif len(contents) > maxArg:
         raise errors.TooManyArgumentsException(command)
-        
+
     return contents
     
 #==== Log deleted messages ====
@@ -151,6 +153,8 @@ def convertDateTime(timeArgs):
         
         if '/' in tokens[0]: #First token is a date
             datePcs = [int(i) for i in tokens[0].split('/')]
+            if len(str(datePcs[2])) == 2: #2 digit year
+                datePcs[2] = datePcs[2] + 2000
             tokens = tokens[1:]
         else:
             datePcs = datetime.now(tz)

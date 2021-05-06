@@ -7,7 +7,7 @@ VERSION = "1.9.1"
 
 HELP_REMINDER = "If you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [[!ask]]`."
 
-POLL_START = "To vote in this poll, click on the reaction corresponding to the option you want to vote for. This poll will run for one hour. %s, if you would like to end this poll early send `!end`."
+POLL_START = "To vote in this poll, click on the reaction corresponding to the option you want to vote for. This poll will run for three hours. %s, if you would like to end this poll early send `!end`."
 
 POLL_END = "%s's poll is over! Here are the results: %s"
 
@@ -46,4 +46,5 @@ COMMON_MISTAKES = {
         '!choice': '!choose',
         '!shibe': '!cute',
         '!mtg': '!magic',
-        '!card': '!magic'}
+        '!card': '!magic',
+        '!vote': '!poll'}

@@ -42,9 +42,10 @@ class Reminder():
 
     #Shouldn't be called outside of this class or subclasses
     def _formatMessage(self,cmd):
-        message = re.sub("(\[\[.*\]\])", "",
+        message = re.sub("\[([^\[\]]*)\]", "",
                          cmd.content.split(' ',1)[1], flags=re.IGNORECASE)
-        message = message.lstrip()
+        
+        message = " ".join(message.split())
                 
         self.message = "%s %s" % (cmd.author.mention,message)
         
@@ -71,8 +72,8 @@ class Announcement(Reminder):
         super().beginThread()
 
     def _formatMessage(self,cmd):
-        message = re.sub("(\[\[.*\]\])", "",
+        message = re.sub("\[([^\[\]]*)\]", "",
                          cmd.content.split(' ',1)[1], flags=re.IGNORECASE)
-        message = message.lstrip()
+        message = " ".join(message.split())
 
         self.message = "@everyone" + " " + message

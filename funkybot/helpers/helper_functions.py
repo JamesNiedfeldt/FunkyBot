@@ -17,12 +17,11 @@ from errors import errors
 
 #==== Parse a string ====
 def parseArgs(string, command, minArg, maxArg):
-    contents = re.findall("\[\[([^\[\]]*)\]\]", string) #Find contents of '[[]]'
+    contents = re.findall("\[([^\[\]]*)\]", string)
 
     if len(contents) == 0: #Nothing was found
         raise errors.BadArgumentException(command)
     
-    contents = re.split("\|", contents[0])  #Split multiple deliminated with '|'
     for i in range(len(contents)):
         contents[i] = contents[i].strip()
     

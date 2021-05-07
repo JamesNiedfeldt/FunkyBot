@@ -24,7 +24,7 @@ class Poll():
         return optDict
 
     def __formatBody(self):
-        self.question = self.question.lstrip()
+        self.question = " ".join(self.question.split())
         if self.question == "":
             self.question = "*No question was given*"
         self.question = self.question + "\n"

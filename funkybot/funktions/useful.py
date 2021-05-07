@@ -146,7 +146,7 @@ def makePoll(message):
     except errors.Error as e:
         raise e
     
-    question = (re.sub("(\[\[.*\]\])", "",
+    question = (re.sub("\[([^\[\]]*)\]", "",
                        message.content.split(' ',1)[1], flags=re.IGNORECASE))
             
     return poll.Poll(message.author, question, options)

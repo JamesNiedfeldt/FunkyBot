@@ -3,9 +3,9 @@
 Contains constants
 """
 
-VERSION = "1.9.1"
+VERSION = "2.0.0"
 
-HELP_REMINDER = "If you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [[!ask]]`."
+HELP_REMINDER = "If you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [!ask]`."
 
 POLL_START = "To vote in this poll, click on the reaction corresponding to the option you want to vote for. This poll will run for three hours. %s, if you would like to end this poll early send `!end`."
 
@@ -25,7 +25,7 @@ HELLO_URL = "https://github.com/JamesNiedfeldt/FunkyBot"
 
 BAD_ARGS_1 = "I couldn't understand your command!\n\n"
 
-BAD_ARGS_2 = "If you need more help with this command, send `!help [[!%s]]`."
+BAD_ARGS_2 = "If you need more help with this command, send `!help [!%s]`."
 
 LINE_BREAK = "\n--------------------\n"
 

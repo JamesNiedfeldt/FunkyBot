@@ -7,24 +7,24 @@
         <format>!hello</format>
         <body>
             <description>Send `!hello` to see some information about me.</description>
-            <hint>Using this command, you can get a quick description as well as see my version number and the time I've been working.</hint>
+            <hint>Using this command, you can see my version number, a list of recent changes, and the time I've been working.</hint>
         </body>
     </function>
 
     <function category="information">
         <command>help</command>
-        <format>!help [[X]]</format>
+        <format>!help [X]</format>
         <body>
-            <description>This is the command you're using! Send `!help [[X]]` to have me explain a command in detail.</description>
+            <description>This is the command you're using! Send `!help [X]` to have me explain a command in detail.</description>
             <hint>You can also send just the name of the command without the ! character.</hint>
             <hint>I can only send an explanation of one command at a time.</hint>
-            <hint> For commands with arguments in double brackets, you just need to send the name of the command. Don't send any brackets.</hint>
-            <hint>For example, to get an explanation of the `!binary` command, you should send: `!help [[!binary]]`.</hint>
+            <hint>For commands with arguments in brackets, you just need to send the name of the command. Don't send any brackets.</hint>
+            <hint>For example, to get an explanation of the `!binary` command, you should send: `!help [!binary]`.</hint>
         </body>
         <body>
             <description>You can also send `!help` with no arguments to get a list of commands.</description>
         </body>
-        <error type="brackets">Make sure the command you want help with is surrounded by double brackets. If you want a list of all commands, don't send any brackets.</error>
+        <error type="brackets">Make sure the command you want help with is surrounded by brackets. If you want a list of all commands, don't send any brackets.</error>
         <error type="empty">I need a command to search for. If you want a list of all commands, don't send any brackets.</error>
         <error type="too_many">I can only search for one command at a time.</error>
         <error type="bad_command">I don't have the command you're searching for. If you want a list of all commands, send `!help` with no arguments.</error>
@@ -33,38 +33,38 @@
     <!-- Useful commands -->
     <function category="useful">
         <command>announce</command>
-        <format>!announce [[X]]</format>
+        <format>!announce [X]</format>
         <body>
-            <description>Send `!announce [[X]]` to have me send everyone a notification at the specified date.</description>
+            <description>Send `!announce [X]` to have me send everyone a notification at the specified date.</description>
             <hint>You must supply the date, time, and timezone in that order.</hint>
             <hint>Your argument should be formatted as `MM/DD/YYYY HH:MM TZ`.</hint>
-            <hint>If you don't provide a date, I will use the time you provide with the current date.</hint> 
+            <hint>If you don't provide a date, I will use the time you provide with the current date based on the timezone you send.</hint> 
             <hint>If you use a 12 hour clock, you can add specify AM or PM after a space. If you don't specify, I will use AM unless it's a 24 hour clock.</hint>
             <hint>Timezone should be the standard UTC offset format `(+/-)HH`.</hint>
             <hint>I can only set an announcement for one date at a time.</hint>
             <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
             <hint>Only server administrators can use this command.</hint>
-            <hint>For example, to set an announcement for your birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!announce [[05/20/2021 14:30 -6]] birthday party`.</hint>
-            <hint>This would also work: `!announce [[5/20/21 2:30 PM -6]] birthday party`.</hint>
-            <hint>If you wanted to have the announcement happen the same day you set it, you could send this: `!announce [[2:30 PM -06]] birthday party`.</hint>
+            <hint>For example, to set an announcement for your birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!announce [05/20/2021 14:30 -6] birthday party`.</hint>
+            <hint>This would also work: `!announce [5/20/21 2:30 PM -6] birthday party`.</hint>
+            <hint>If you wanted to have the announcement happen the same day you set it, you could send this: `!announce [2:30 PM -06] birthday party`.</hint>
         </body>
-        <error type="brackets">Make sure the date you want me to use to set your announcement is surrounded by double brackets.</error>
+        <error type="brackets">Make sure the date you want me to use to set your announcement is surrounded by brackets.</error>
         <error type="empty">I need a date to set your announcement for.</error>
         <error type="too_many">I can only set an announcement for one date at a time.</error>
-        <error type="bad_date">Make sure your date argument is in the proper format: `MM/DD/YYYY HH:MM (+/-)HHHH`.</error>
+        <error type="bad_date">Make sure your date argument is in the proper format: `MM/DD/YYYY HH:MM (+/-)TZ`.</error>
         <error type="negative_date">Announcements must be set for a date in the future.</error>
     </function>
 
     <function category="useful">
         <command>binary</command>
-        <format>!binary [[X|...]]</format>
+        <format>!binary [X][...]</format>
         <body>
-            <description>Send `!binary [[X]]` to have me convert your numbers to binary.</description>
-            <hint>I can convert up to three numbers, just make sure they're all in the same double brackets and separate them with the | character.</hint>
+            <description>Send `!binary [X]` to have me convert your numbers to binary.</description>
+            <hint>I can convert up to three numbers.</hint>
             <hint>I can only convert numbers 0-65535.</hint>
-            <hint>For example, to convert 5 to binary, you should send: `!binary [[5]]`.</hint>
+            <hint>For example, to convert 5 to binary, you should send: `!binary [5]`.</hint>
         </body>
-        <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
+        <error type="brackets">Make sure the numbers you want me to convert are surrounded by brackets.</error>
         <error type="empty">I need a number to convert.</error>
         <error type="too_many">I can only convert at most three numbers at a time.</error>
         <error type="bad_value">I can only convert integers to binary.</error>
@@ -73,17 +73,17 @@
 
     <function category="useful">
         <command>calc</command>
-        <format>!calc [[X]]</format>
+        <format>!calc [X]</format>
         <body>
-            <description>Send `!calc [[X]]` to have me calculate an equation for you.</description>
+            <description>Send `!calc [X]` to have me calculate an equation for you.</description>
             <hint>I can only calculate one equation at a time.</hint>
             <hint>You can use positive and negative integers or decimals as operands (just make sure the `-` sign is attached to negative numbers).</hint>
             <hint>I can use the following operators and functions: `+`, `-`, `*`, `/`, `^` (exponent), and `sqrt()` (square root).</hint>
             <hint>You can use perentheses, just make sure open and closed perentheses are matched.</hint>
             <hint>For best results, make sure that there are spaces between operators and operands.</hint>
-            <hint>For example, to calculate 6 plus the square root of 4, you should send: `!calc [[6 + sqrt(4)]]`</hint>
+            <hint>For example, to calculate 6 plus the square root of 4, you should send: `!calc [6 + sqrt(4)]`</hint>
         </body>
-        <error type="brackets">Make sure the equation you want me to calculate is surrounded by double brackets.</error>
+        <error type="brackets">Make sure the equation you want me to calculate is surrounded by brackets.</error>
         <error type="empty">I need an equation to calculate.</error>
         <error type="too_many">I can only calculate one equation at a time.</error>
         <error type="bad_tokens">I can only calculate using numbers, operators, and the sqrt function.</error>
@@ -95,14 +95,14 @@
 
     <function category="useful">
         <command>hex</command>
-        <format>!hex [[X|...]]</format>
+        <format>!hex [X][...]</format>
         <body>
-            <description>Send `!hex [[X]]` to have me convert your numbers to hexadecimal.</description>
-            <hint>I can convert up to three numbers, just make sure they're all in the same double brackets and separate them with the | character.</hint>
+            <description>Send `!hex [X]` to have me convert your numbers to hexadecimal.</description>
+            <hint>I can convert up to three numbers.</hint>
             <hint>I can only convert numbers 0-65535.</hint>
-            <hint>For example, to convert 5 to hexadecimal, you should send: `!hex [[5]]`.</hint>
+            <hint>For example, to convert 5 to hexadecimal, you should send: `!hex [5]`.</hint>
         </body>
-        <error type="brackets">Make sure the number you want me to convert is surrounded by double brackets.</error>
+        <error type="brackets">Make sure the number you want me to convert is surrounded by brackets.</error>
         <error type="empty">I need a number to convert.</error>
         <error type="too_many">I can only convert at most three numbers at a time.</error>
         <error type="bad_value">I can only convert integers to hexadecimal.</error>
@@ -111,73 +111,73 @@
 
     <function category="useful">
         <command>magic</command>
-        <format>!magic [[X|...]]</format>
+        <format>!magic [X][...]</format>
         <body>
-            <description>Send `!magic [[X]]` to have me search for a Magic: The Gathering card.</description>
-            <hint>I can search for up to three cards, just make sure they're all in the same double brackets and separate them with the | character.</hint>
-            <hint>For example, to search for Island, you should send: `!magic [[island]]`.</hint>
-            <hint>I can also search for a random card using the word "random". For example: `!magic [[random]]`.</hint>
-            <hint>You can also use Scryfall's syntax to add search terms to random as long as they don't contain the | character. For example, to search for a random red and green commander, you should send: `!magic [[random c=rg is:commander]]`.</hint>
+            <description>Send `!magic [X]` to have me search for a Magic: The Gathering card.</description>
+            <hint>I can search for up to three cards.</hint>
+            <hint>For example, to search for Island, you should send: `!magic [island]`.</hint>
+            <hint>I can also search for a random card using the word "random". For example: `!magic [random]`.</hint>
+            <hint>You can also use Scryfall's syntax to narrow down possible cards when searching for a random card. For example, to search for a random red and green commander, you should send: `!magic [random c=rg is:commander]`.</hint>
         </body>
-        <error type="brackets">Make sure the cards you want me to search for are surrounded by double brackets.</error>
-        <error type="empty">You must put something in the double brackets and after each `|` character.</error>
+        <error type="brackets">Make sure the cards you want me to search for are surrounded by brackets.</error>
+        <error type="empty">You must put something in the brackets.</error>
         <error type="too_few">I need at least one card to search for.</error>
         <error type="too_many">I can only search for at most three cards at a time.</error>
     </function>
 
     <function category="useful">
         <command>poll</command>
-        <format>!poll [[X|Y|...]]</format>
+        <format>!poll [X][Y][...]</format>
         <body>
-            <description>Send `!poll [[X|Y]]` to have me start a poll with the given options.</description>
+            <description>Send `!poll [X][Y]` to have me start a poll with the given options.</description>
             <hint>When the poll is running, people can vote on the choices by increasing the corresponding reactions that I add to the poll message. Adding new reactions will not do anything.</hint>
             <hint>The poll will automatically be open for three hours, but you can end it early by send `!end` in the same channel.</hint>
             <hint>When the poll is concluded, I will display the results.</hint>
             <hint>You can set a custom poll question by typing anywhere in the message outside of the brackets.</hint>
             <hint>I need at least two options, but you can send up to five.</hint>
             <hint>You can only run a single poll per channel at a time.</hint>
-            <hint>For example, to poll people on what their favorite color is, send: `!poll What is your favorite color? [[Red|Yellow|Blue]]`.</hint>
+            <hint>For example, to poll people on what their favorite color is, send: `!poll What is your favorite color? [Red][Yellow][Blue]`.</hint>
         </body>
-        <error type="brackets">Make sure the options you want on the poll are surrounded by double brackets.</error>
-        <error type="empty">You must put something in the double brackets and after each `|` character.</error>
+        <error type="brackets">Make sure each option you want on the poll are surrounded by brackets.</error>
+        <error type="empty">You must put something in the brackets.</error>
         <error type="too_few">I need at least two poll options for people to vote on.</error>
         <error type="too_many">I can only set up to five options for people to vote on.</error>
     </function>
 
     <function category="useful">
         <command>remind</command>
-        <format>!remind [[X]]</format>
+        <format>!remind [X]</format>
         <body>
-            <description>Send `!remind [[X]]` to have me send you a notification at the specified date.</description>
+            <description>Send `!remind [X]` to have me send you a notification at the specified date.</description>
             <hint>You must supply the date, time, and timezone in that order.</hint>
             <hint>Your argument should be formatted as `MM/DD/YYYY HH:MM TZ`.</hint>
-            <hint>If you don't provide a date, I will use the time you provide with the current date.</hint> 
+            <hint>If you don't provide a date, I will use the time you provide with the current date based on the timezone you send.</hint> 
             <hint>If you use a 12 hour clock, you can add specify AM or PM after a space. If you don't specify, I will use AM unless it's a 24 hour clock.</hint>
             <hint>Timezone should be the standard UTC offset format `(+/-)HH`.</hint>
-            <hint>I can only set an announcement for one date at a time.</hint>
+            <hint>I can only set a reminder for one date at a time.</hint>
             <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
-            <hint>For example, to set an announcement for a friend's birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!remind [[05/20/2021 14:30 -6]] birthday party`.</hint>
-            <hint>This would also work: `!remind [[5/20/21 2:30 PM -6]] birthday party`.</hint>
-            <hint>If you wanted to have the reminder happen the same day you set it, you could send this: `!remind [[2:30 PM -06]] birthday party`.</hint>
+            <hint>For example, to set a reminder for a friend's birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!remind [05/20/2021 14:30 -6] birthday party`.</hint>
+            <hint>This would also work: `!remind [5/20/21 2:30 PM -6] birthday party`.</hint>
+            <hint>If you wanted to have the reminder happen the same day you set it, you could send this: `!remind [2:30 PM -06] birthday party`.</hint>
         </body>
-        <error type="brackets">Make sure the date you want me to use to set your reminder is surrounded by double brackets.</error>
+        <error type="brackets">Make sure the date you want me to use to set your reminder is surrounded by brackets.</error>
         <error type="empty">I need a date to set your reminder for.</error>
         <error type="too_many">I can only set a reminder for one date at a time.</error>
-        <error type="bad_date">Make sure your date argument is in the proper format: `MM/DD/YYYY HH:MM (+/-)HHHH`.</error>
+        <error type="bad_date">Make sure your date argument is in the proper format: `MM/DD/YYYY HH:MM (+/-)TZ`.</error>
         <error type="negative_date">Reminders must be set for a date in the future.</error>
     </function>
 
     <function category="useful">
         <command>roll</command>
-        <format>!roll [[X|...]]</format>
+        <format>!roll [X][...]</format>
         <body>
-            <description>Send `!roll [[X]]` to have me roll a die with X sides.</description>
-            <hint>I can roll up to five dice, just make sure the number of sides are all in the same double brackets and separate them with the | character.</hint>
+            <description>Send `!roll [X]` to have me roll a die with X sides.</description>
+            <hint>I can roll up to five dice.</hint>
             <hint>If you send me multiple dice I will also tell you the total roll.</hint>
             <hint>Each die must have at least 2 sides (I guess that's just a coin?) and can have up to 1000 sides.</hint>
-            <hint>For example, to roll two 6-sided dice, you should send: `!roll [[6|6]]`.</hint>
+            <hint>For example, to roll two 6-sided dice, you should send: `!roll [6][6]`.</hint>
         </body>
-        <error type="brackets">Make sure the number of sides of your die is surrounded by double brackets.</error>
+        <error type="brackets">Make sure the number of sides of each die is surrounded by brackets.</error>
         <error type="empty">I need a number of sides to roll a die.</error>
         <error type="too_many">I can only roll at most five dice at a time.</error>
         <error type="bad_value">I can only roll dice with an integer number of sides.</error>
@@ -186,35 +186,35 @@
 
     <function category="useful">
         <command>time</command>
-        <format>!time [[X|...]]</format>
+        <format>!time [X][...]</format>
         <body>
-            <description>Send `!time [[X|...]]` to have me send you a notification after the set time.</description>
+            <description>Send `!time [X]` to have me send you a notification after the set time.</description>
             <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
             <hint>Time cannot exceed 30 days.</hint>
-            <hint>Separate each argument in the brackets with the | character.</hint>
+            <hint>Each unit of time must be in separate brackets.</hint>
             <hint>I need at least one argument but I can take up to three.</hint>
             <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
-            <hint>For example, to remind yourself to go to sleep in two and a half hours, send: `!time [[2h|30m]] go to sleep`.</hint>
+            <hint>For example, to remind yourself to go to sleep in two and a half hours, send: `!time [2h][30m] go to sleep`.</hint>
         </body>
-        <error type="brackets">Make sure the time you want me to use to set your timer is surrounded by double brackets.</error>
+        <error type="brackets">Make sure each time unit you want me to use to set your timer is surrounded by brackets.</error>
         <error type="too_many">I can only take three arguments.</error>
-        <error type="too_few">I need at least one time argument to set your reminder.</error>
-        <error type="bad_duration">Make sure your time arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
+        <error type="too_few">I need at least one argument to set your reminder.</error>
+        <error type="bad_duration">Make sure your arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
         <error type="too_long">Time cannot exceed 30 days.</error>
-        <error type="empty">You must put something in the double brackets and after each `|` character.</error>
-	    <error type="no_duration">The time arguments must last at least one second.</error>
+        <error type="empty">You must put something in the brackets.</error>
+	    <error type="no_duration">The time for the reminder to run must last at least one second.</error>
     </function>
 
     <function category="useful">
         <command>wiki</command>
-        <format>!wiki [[X]]</format>
+        <format>!wiki [X]</format>
         <body>
-            <description>Send `!wiki [[X]]` to have me search for a Wikipedia article.</description>
+            <description>Send `!wiki [X]` to have me search for a Wikipedia article.</description>
             <hint>I can only search for one article at a time.</hint>
             <hint>I can't screen the content I find, so please don't break server rules by searching for certain articles!</hint>
-            <hint>For example, to search for "shiba inu," you should send: `!wiki [[Shiba Inu]]`.</hint>
+            <hint>For example, to search for "shiba inu," you should send: `!wiki [Shiba Inu]`.</hint>
         </body>
-        <error type="brackets">Make sure the article you want me to search for is surrounded by double brackets.</error>
+        <error type="brackets">Make sure the article you want me to search for is surrounded by brackets.</error>
         <error type="empty">I need an article to search for.</error>
         <error type="too_many">I can only search for one article at a time.</error>
     </function>
@@ -230,14 +230,14 @@
 
     <function category="fun">
         <command>choose</command>
-        <format>!choose [[X|Y|...]]</format>
+        <format>!choose [X][Y][...]</format>
         <body>
-            <description>Send `!choose [[X|Y]]` to have me choose from your options.</description>
+            <description>Send `!choose [X][Y]` to have me choose from your options.</description>
             <hint>I need at least two choices to choose from, but you can send up to ten.</hint>
-            <hint>Make sure you separate each choice using the | character.</hint>
-            <hint>For example, to choose from cats or dogs, you should send: `!choose [[cats|dogs]]`.</hint>
+            <hint>Make sure each option is in its own set of brackets.</hint>
+            <hint>For example, to choose from cats or dogs, you should send: `!choose [cats][dogs]`.</hint>
         </body>
-        <error type="brackets">Make sure the options you want me to choose from are surrounded by double brackets.</error>
+        <error type="brackets">Make sure each option you want me to choose from are surrounded by brackets.</error>
         <error type="empty">At least one of the arguments you gave me was empty.</error>
         <error type="too_few">I need at least two things to choose from.</error>
         <error type="too_many">I can only choose from at most 10 things at a time.</error>
@@ -272,11 +272,11 @@
         <command>rate</command>
         <format>!rate</format>
         <body>
-            <description>Send `!rate [[X]]` to have me rate something on a scale from 1 to 10.</description>
+            <description>Send `!rate [X]` to have me rate something on a scale from 1 to 10.</description>
             <hint>I can only rate one thing at a time.</hint>
-            <hint>For example, to rate Discord, you should send: `!rate [[Discord]]`.</hint>
+            <hint>For example, to rate Discord, you should send: `!rate [Discord]`.</hint>
         </body>
-        <error type="brackets">Make sure the thing you want me to rate is surrounded by double brackets.</error>
+        <error type="brackets">Make sure the thing you want me to rate is surrounded by brackets.</error>
         <error type="empty">I need something to rate.</error>
         <error type="too_many">I can only rate one thing at a time.</error>
     </function>

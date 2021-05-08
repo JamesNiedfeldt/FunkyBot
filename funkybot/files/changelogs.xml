@@ -6,6 +6,8 @@
     <version num="2.0.0">
         <change>All commands now use a different syntax. Instead of using double brackets `[[like this]]`, arguments must be in single brackets `[like this]`. For commands that take multiple arguments, each argument must be in its own set of brackets `[like][this]`. Each argument can be anywhere in your message, even if there are words in between them.</change>
         <change>`!remind` and `!announce` now accept more different date formats. You can now use two-digit years and omit the date argument altogether, and timezones are now accepted as standard zones (e.g. +8 or -6) rather than UTC offsets. Send `!help [!remind]` or `!help [!announce]` for details.</change>
+        <change>The command list from sending `!help` is now much easier to read.</change>
+        <change>Embeds from the `!magic` command are now colored according to their card's color.</change>
         <change>Fixed `!remind` and `!announce` to correctly accept time between 12:00 and 12:59 AM or PM.</change>
     </version>
 

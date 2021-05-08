@@ -27,8 +27,9 @@ def sayHello():
     
     emb = embeddable.Embeddable(url=c.HELLO_URL,
                                 title="FunkyBot v%s" % c.VERSION,
-                                text=txt,
-                                footer=c.HELLO_HELP)
+                                text=txt)
+    emb.setThumbnail(str(g.client.user.avatar_url))
+    emb.setFooter(c.HELLO_HELP)
 
     return emb
 
@@ -40,22 +41,22 @@ def sendHelp(message):
     #No attempted arguments sent, so send list of commands
     if re.search("\[|\]", message.content) == None:
         toReturn = "Here are my commands:\n"
-        info = "**Information:**"
-        useful = "**Useful:**"
-        fun = "**Fun:**"
+        info = {"name": "**Information:**", "inline": "true", "value": ""}
+        useful = {"name": "**Useful:**", "inline": "true", "value": ""}
+        fun = {"name": "**Fun:**", "inline": "true", "value": ""}
 
         for cmd in cmdList.findall("./function"):
             if not h.isDisabled(cmd.find("command").text):
                 if cmd.get("category") == "information":
-                    info = info + " `{}`".format(cmd.find("format").text)
+                    info['value'] = info['value'] + " `{}`\n".format(cmd.find("format").text)
                 elif cmd.get("category") == "useful":
-                    useful = useful + " `{}`".format(cmd.find("format").text)
+                    useful['value'] = useful['value'] + " `{}`\n".format(cmd.find("format").text)
                 elif cmd.get("category") == "fun":
-                    fun = fun + " `{}`".format(cmd.find("format").text)
+                    fun['value'] = fun['value'] + " `{}`\n".format(cmd.find("format").text)
 
-        toReturn = (toReturn + h.blockQuote(info)
-                    + h.blockQuote(useful) + h.blockQuote(fun)
-                    + "\n" + c.HELP_REMINDER)
+        toReturn = embeddable.Embeddable()
+        toReturn.addField(info, useful, fun)
+        toReturn.setFooter(c.HELP_REMINDER)
 
     else:
         try:
@@ -78,6 +79,8 @@ def sendHelp(message):
                     for i in b.findall("hint"):
                         toReturn = toReturn + h.blockQuote(
                             "\N{BULLET} " + h.formatProps(cmd.find("command").text, i.text))
+
+            toReturn = embeddable.empty(toReturn)                        
                         
         except errors.Error as e:
             raise e

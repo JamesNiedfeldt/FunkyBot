@@ -10,7 +10,8 @@ token=
 # need someone to contact, though this is extremely unlikely as FunkyBot under 
 # normal use does not make many API requests.
 #
-# These properties are required unless the !magic and !wiki command are both disabled.
+# These properties are required even if the !magic and !wiki command are both disabled,
+# though they won't be used.
 # 
 # EXAMPLE:
 # request_name=Firstname Lastname

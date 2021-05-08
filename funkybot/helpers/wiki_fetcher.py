@@ -40,4 +40,7 @@ def __formatArticle(article):
 
     textBox = description + "\n-----\n" + extract
 
-    return embed.Embeddable(url, title, textBox, imageUri)
+    return embed.Embeddable(url=url,
+                            title=title,
+                            text=textBox,
+                            image=imageUri)

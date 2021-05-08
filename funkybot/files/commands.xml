@@ -131,7 +131,7 @@
         <body>
             <description>Send `!poll [X][Y]` to have me start a poll with the given options.</description>
             <hint>When the poll is running, people can vote on the choices by increasing the corresponding reactions that I add to the poll message. Adding new reactions will not do anything.</hint>
-            <hint>The poll will automatically be open for {poll_max_duration} hours, but you can end it early by send `!end` in the same channel.</hint>
+            <hint>The poll will automatically be open for {poll_max_duration} hours, but you can end it early by sending `!end` in the same channel.</hint>
             <hint>When the poll is concluded, I will display the results.</hint>
             <hint>You can set a custom poll question by typing anywhere in the message outside of the brackets.</hint>
             <hint>I need at least two options, but you can send up to five.</hint>

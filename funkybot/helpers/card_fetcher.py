@@ -103,8 +103,9 @@ def __formatCard(card, givenUri=None, givenPrice=None):
                 url=uri,
                 title=name + " " + cost,
                 text=textBox,
-                image=imageUri,
-                footer=price)
+                image=imageUri)
+            toReturn.setColor(__colorEmbed(card))
+            toReturn.setFooter(price)
 
     else:
         textBox = __makeTextBox(card)
@@ -122,10 +123,31 @@ def __formatCard(card, givenUri=None, givenPrice=None):
             url=uri,
             title=name + " " + cost,
             text=textBox,
-            image=imageUri,
-            footer=price)
+            image=imageUri)
+        toReturn.setColor(__colorEmbed(card))
+        toReturn.setFooter(price)
         
     return toReturn
+
+def __colorEmbed(card):
+    if "Land" in card['type_line']:
+        return 6697779
+    elif len(card['colors']) > 1:
+        return 13408563
+    elif len(card['colors']) == 0:
+        return 10066329
+    elif card['colors'][0] == 'W':
+        return 16777214
+    elif card['colors'][0] == 'U':
+        return 39372
+    elif card['colors'][0] == 'B':
+        return 0
+    elif card['colors'][0] == 'R':
+        return 13369395
+    elif card['colors'][0] == 'G':
+        return 32768
+    else:
+        return 2303786
 
 def __makeTextBox(card):
     textBox = card['type_line'] + "\n\n" + card['oracle_text']

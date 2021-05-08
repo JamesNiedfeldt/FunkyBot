@@ -66,10 +66,9 @@ async def magic(message):
     try:
         for c in useful.fetchCard(message):
             if c.empty():
-                await message.channel.send(c.text)
+                await message.channel.send(c.description)
             else:
-                await message.channel.send("", embed=discord.Embed(title=c.title,description=c.text,url=c.url)
-                                           .set_image(url=c.image).set_footer(text=c.footer))
+                await message.channel.send("", embed=discord.Embed.from_dict(c.asDict()))
     except errors.Error as e:
         await message.channel.send(helpers.badArgs(e))
             
@@ -96,8 +95,8 @@ async def poll(message):
                 await sentMsg.add_reaction(o)
 
             try:
-                reply = await globs.client.wait_for('message', check=pred,
-                                                    timeout = globs.props['poll_run_duration'] * 3600)
+                reply = await globs.client.wait_for(
+                    'message', check=pred, timeout = int(globs.props['poll_run_duration']) * 3600)
             except asyncio.TimeoutError:
                 pass
 
@@ -149,9 +148,8 @@ async def wiki(message):
     try:
         a = useful.fetchWiki(message)
         if a.empty():
-            await message.channel.send(a.text)
+            await message.channel.send(a.description)
         else:
-            await message.channel.send("", embed=discord.Embed(title=a.title,description=a.text,url=a.url)
-                                       .set_image(url=a.image))
+            await message.channel.send("", embed=discord.Embed.from_dict(a.asDict()))
     except errors.Error as e:
         await message.channel.send(helpers.badArgs(e))

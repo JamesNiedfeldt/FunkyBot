@@ -15,18 +15,18 @@ from errors import errors
 #==== Say hello and give some information ====
 async def hello(message):
     e = information.sayHello()
-    av = globs.client.user.avatar_url
-    if av is None:
-        av = ""
-    emb = discord.Embed(title=e.title, description=e.text, url=e.url)
-    emb.set_thumbnail(url=av).set_footer(text=e.footer)
 
     await message.channel.send(constant.HELLO % message.author.display_name,
-                               embed=emb)
+                               embed=discord.Embed.from_dict(e.asDict()))
 
 #==== Send list of commands or get instructions ====
 async def help(message):
     try:
-        await message.channel.send(information.sendHelp(message))
+        m = information.sendHelp(message)
+        if m.empty():
+            await message.channel.send(m.description)
+        else:
+            await message.channel.send("Here are my commands:",
+                                       embed=discord.Embed.from_dict(m.asDict()))
     except errors.Error as e:
         await message.channel.send(helpers.badArgs(e))

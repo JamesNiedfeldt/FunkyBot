@@ -96,7 +96,8 @@ async def poll(message):
                 await sentMsg.add_reaction(o)
 
             try:
-                reply = await globs.client.wait_for('message', check=pred, timeout = 10800)
+                reply = await globs.client.wait_for('message', check=pred,
+                                                    timeout = globs.props['poll_run_duration'] * 3600)
             except asyncio.TimeoutError:
                 pass
 

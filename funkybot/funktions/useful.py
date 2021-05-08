@@ -18,7 +18,7 @@ def toBin(message):
     
     #Parse number, convert it to usable string
     try:
-        numbers = h.parseArgs(message.content, "binary", 1, 3)
+        numbers = h.parseArgs(message.content, "binary", 1, int(g.props['binary_max_args']))
     except errors.Error as e:
         raise e
 
@@ -84,7 +84,7 @@ def toHex(message):
     
     #Parse number, convert it to usable string
     try:
-        numbers = h.parseArgs(message.content, "hex", 1, 3)
+        numbers = h.parseArgs(message.content, "hex", 1, int(g.props['hex_max_args']))
     except errors.Error as e:
         raise e
 
@@ -189,11 +189,11 @@ def makeDurationReminder(message):
 
 
     if duration == None: #Duration was formatted incorrectly
-        raise errors.CustomCommandException("timer", "bad_duration")
-    elif duration > 2592000: #Duration over 30 days
-        raise errors.CustomCommandException("timer", "too_long")
+        raise errors.CustomCommandException("time", "bad_duration")
+    elif duration > int(g.props['time_max_duration']) * 86400: #Duration longer than set property
+        raise errors.CustomCommandException("time", "too_long")
     elif duration <= 0: #Duration empty or negative
-        raise errors.CustomCommandException("timer", "no_duration")
+        raise errors.CustomCommandException("time", "no_duration")
 
     timer = reminder.Reminder(duration=duration,msg=message,dt=False)
 
@@ -267,13 +267,14 @@ def startReminder(timer):
 
 #==== Roll a die ====
 def rollDice(message):
-    ords = ['first','second','third','fourth','fifth']
+    ords = ['first','second','third','fourth','fifth',
+            'sixth', 'seventh', 'eighth', 'ninth', 'tenth']
     toReturn = ""
     index = 0
     total = 0
     
     try:
-        numbers = h.parseArgs(message.content, "roll", 1, 5)
+        numbers = h.parseArgs(message.content, "roll", 1, int(g.props['roll_max_args']))
     except errors.Error as e:
         raise e
     

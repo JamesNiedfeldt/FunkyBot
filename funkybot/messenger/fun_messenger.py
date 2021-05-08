@@ -7,7 +7,7 @@ Sends messages to Discord from fun commands
 import discord
 
 from funktions import fun
-from helpers import helper_functions as helpers
+from helpers import helper_functions as helpers, global_vars as globs
 from errors import errors
 
 #==== Answer a yes or no question ====
@@ -22,7 +22,14 @@ async def choose(message):
         await message.channel.send(helpers.badArgs(e))
 
 #==== Send random cute animal image ====
-async def cute(message):
+async def cute(message, corrected):
+    #If this command was sent via suggestion, don't delete
+    if not corrected and globs.props['cute_delete'] == 'true':
+        try:
+            await message.delete()
+            helpers.logMessage(message)
+        except discord.errors.Forbidden: #Can't delete
+            pass
     try:
         await message.channel.send(file=discord.File(fun.randomPic("cute_pics")))
     except (RuntimeError, FileNotFoundError): #No valid images or bad path
@@ -34,7 +41,8 @@ async def joke(message):
 
 #==== Send random reaction image ====
 async def react(message, corrected):
-    if not corrected: #If this command was sent via suggestion, don't delete
+    #If this command was sent via suggestion, don't delete
+    if not corrected and globs.props['react_delete'] == 'true': 
         try:
             await message.delete()
             helpers.logMessage(message)

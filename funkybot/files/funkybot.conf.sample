@@ -1,0 +1,81 @@
+# Bot token for logging in
+# This can be found on the bot page of your Discord Developer Portal.
+# FunkyBot cannot connect to Discord without this token.
+token=
+
+# User information for making API requests
+#
+# request_name and request_email are used for creating the user agent header
+# when the bot makes API requests. They are there in case the owners of the APIs
+# need someone to contact, though this is extremely unlikely as FunkyBot under 
+# normal use does not make many API requests.
+#
+# These properties are required unless the !magic and !wiki command are both disabled.
+# 
+# EXAMPLE:
+# request_name=Firstname Lastname
+# request_email=email@email.com
+request_name=
+request_email=
+
+# Toggle certain commands on/off
+#
+# If any of these commands are disabled, they will not appear in command lists and can't be
+# called. These values must be either true or false. Only !announce, !magic, and !wiki are listed
+# here as they either tag everyone or send API requests, but any command can go here and be 
+# toggled if you choose. If a command is not present, it is enabled by default.
+#
+# DEFAULT:
+# announce=true
+# magic=true
+# wiki=true
+announce=true
+magic=true
+wiki=true
+
+# Toggle message deletion of picture post commands
+#
+# If any of these are set to true, the message sent to call them will be deleted by FunkyBot
+# if it has the proper permissions on the channel the command was called from. If the property
+# is enabled but FunkyBot doesn't have permission, it will simply post the picture normally.
+# These values must be either 'true' or 'false'.
+#
+# DEFAULT:
+# cute_delete=false
+# react_delete=true
+cute_delete=false
+react_delete=true
+
+# Maximum values for commands
+#
+# These properties change maximum values used by certain commands. These values must be integers
+# and cannot be blank. Each property has a valid range of values:
+#
+# roll_max_args: min 1, max 10
+# choose_max_args: min 2, max 10
+# binary_max_args: min 1, max 10
+# hex_max_args: min 1, max 10
+# time_max_duration: min 1, max 30 (in days)
+# poll_run_duration: min 1, max 10 (in hours)
+#
+# DEFAULT:
+# roll_max_args=5
+# choose_max_args=10
+# binary_max_args=3
+# hex_max_args=3
+# time_max_duration=30
+# poll_run_duration=3
+roll_max_args=5
+choose_max_args=10
+binary_max_args=3
+hex_max_args=3
+time_max_duration=30
+poll_run_duration=3
+
+# What currency to display with the !magic command
+# 
+# Must be either 'usd', 'eur', or 'tix'. It can be left blank only if the !magic command is disabled.
+#
+# DEFAULT:
+# magic_currency=usd
+magic_currency=usd

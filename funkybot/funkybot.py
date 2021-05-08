@@ -35,7 +35,7 @@ async def on_message(message):
         #Check if a command exists, and if not, suggest one
         if message.content.startswith('!'):
             corrected = False #Only used for commands that delete messages
-            cmd = message.content.split(' ',1)[0].lower()
+            cmd = message.content.split(' ',1)[0].lower()[1:]
             expected = helpers.parseCommand(cmd)
             
             if cmd != expected:
@@ -58,65 +58,69 @@ async def on_message(message):
         else:
             return
 
+        #Check if command is enabled
+        if helpers.isDisabled(cmd):
+            await message.channel.send("Sorry, that command is disabled.")
+
         #Information commands
-        if cmd == '!hello':
+        elif cmd == 'hello':
             await i.hello(message)
 
-        elif cmd == '!help':
+        elif cmd == 'help':
             await i.help(message)
 
         #Useful commands
-        elif cmd == '!announce':
+        elif cmd == 'announce':
             await u.announce(message)
 
-        elif cmd == '!binary':
+        elif cmd == 'binary':
             await u.binary(message)
 
-        elif cmd == '!calc':
+        elif cmd == 'calc':
             await u.calc(message)
 
-        elif cmd == '!hex':
+        elif cmd == 'hex':
             await u.hexadec(message)
 
-        elif cmd == '!magic':
+        elif cmd == 'magic':
             await u.magic(message)
 
-        elif cmd == '!poll':
+        elif cmd == 'poll':
             await u.poll(message)
 
-        elif cmd == '!remind':
+        elif cmd == 'remind':
             await u.remind(message, time=False)
 
-        elif cmd == '!roll':
+        elif cmd == 'roll':
             await u.roll(message)
 
-        elif cmd == '!time':
+        elif cmd == 'time':
             await u.remind(message, time=True)
 
-        elif cmd == '!wiki':
+        elif cmd == 'wiki':
             await u.wiki(message)
 
         #Fun commands
-        elif cmd == '!ask':
+        elif cmd == 'ask':
             await f.ask(message)
 
-        elif cmd == '!choose':
+        elif cmd == 'choose':
             await f.choose(message)
 
-        elif cmd == '!cute':
-            await f.cute(message)
+        elif cmd == 'cute':
+            await f.cute(message, corrected)
 
-        elif cmd == '!joke':
+        elif cmd == 'joke':
             await f.joke(message)
 
-        elif cmd == '!react':
+        elif cmd == 'react':
             await f.react(message, corrected)
 
-        elif cmd == '!rate':
+        elif cmd == 'rate':
             await f.rate(message)
 
     except Exception as e:
         #If an exception makes it all the way here, output it to a log file
         helpers.logException(e)
 
-globs.client.run(globs.token)
+globs.client.run(globs.props['token'])

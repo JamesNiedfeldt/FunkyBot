@@ -45,12 +45,13 @@ def sendHelp(message):
         fun = "**Fun:**"
 
         for cmd in cmdList.findall("./function"):
-            if cmd.get("category") == "information":
-                info = info + " `{}`".format(cmd.find("format").text)
-            elif cmd.get("category") == "useful":
-                useful = useful + " `{}`".format(cmd.find("format").text)
-            elif cmd.get("category") == "fun":
-                fun = fun + " `{}`".format(cmd.find("format").text)
+            if not h.isDisabled(cmd.find("command").text):
+                if cmd.get("category") == "information":
+                    info = info + " `{}`".format(cmd.find("format").text)
+                elif cmd.get("category") == "useful":
+                    useful = useful + " `{}`".format(cmd.find("format").text)
+                elif cmd.get("category") == "fun":
+                    fun = fun + " `{}`".format(cmd.find("format").text)
 
         toReturn = (toReturn + h.blockQuote(info)
                     + h.blockQuote(useful) + h.blockQuote(fun)
@@ -68,12 +69,15 @@ def sendHelp(message):
             cmd = cmdList.find("./function/[command='{}']".format(arg))
             if cmd == None:
                 raise errors.CustomCommandException("help", "bad_command")
+            elif h.isDisabled(cmd.find("command").text):
+                toReturn = "Sorry, the command you're trying to find help for is disabled."
             else:
                 toReturn = "Here's how to use `!{}`:\n".format(cmd.find("command").text)
                 for b in cmd.findall("body"):
                     toReturn = toReturn + "\n" + b.find("description").text + "\n"
                     for i in b.findall("hint"):
-                        toReturn = toReturn + h.blockQuote("\N{BULLET} " + i.text)
+                        toReturn = toReturn + h.blockQuote(
+                            "\N{BULLET} " + h.formatProps(cmd.find("command").text, i.text))
                         
         except errors.Error as e:
             raise e

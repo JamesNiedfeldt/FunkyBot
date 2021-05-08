@@ -103,7 +103,7 @@ def badArgs(exc):
     if exc.errorCode != None and cmd != None:
         hint = cmd.find("./error/[@type='{}']".format(exc.errorCode))
         if hint != None:
-            message = message + hint.text + c.LINE_BREAK
+            message = message + formatProps(exc.errorCode, hint.text) + c.LINE_BREAK
 
     message = message + c.BAD_ARGS_2 % exc.command
 
@@ -196,17 +196,24 @@ def getXmlTree(fileName):
     tree = et.parse(filePath('{}.xml'.format(fileName)))
     return tree.getroot()
 
+#==== Determine if a function is disabled ====
+def isDisabled(cmd):
+    return cmd in g.props and g.props[cmd] != 'true'
+
 #==== Decide if a user was trying to send unknown command ====
 def parseCommand(cmd):
     cmdList = getXmlTree('commands')
 
     for i in cmdList:
-        if i.find("command").text == cmd[1:]:
+        if i.find("command").text == cmd:
             return cmd
-    if cmd in c.COMMON_MISTAKES.keys():
+        
+    #Is it a common mistake for an enabled command?
+    if cmd in c.COMMON_MISTAKES and not isDisabled(c.COMMON_MISTAKES[cmd]):
         return c.COMMON_MISTAKES[cmd]
+    #If not, find the best match
     else:
-        return "!" + _lDistance(cmd, cmdList)
+        return _lDistance(cmd, cmdList)
 
 #==== Find Levenshtein distance between two strings ====
 #https://en.wikipedia.org/wiki/Levenshtein_distance
@@ -218,6 +225,9 @@ def _lDistance(unknown, cmdList):
         if cmd.get("category") != "contextual":
             mat = []
             target = cmd.find("command").text
+
+            if isDisabled(target):
+                continue
     
             for l in range(len(unknown) + 1):
                 y = []
@@ -276,11 +286,11 @@ def logException(e):
 def initGlobals(client):
     g.client = client
     g.begin = getTime()
-    
-    root = getXmlTree("userinfo")
-    g.token = root.find("token").text
-    g.apiHeaders = {'User-Agent': root.find("user-agent").text,
-                  'From': root.find("email").text }
+
+    __readConfig() #Get properties from funkybot.conf
+    __verifyProps() #Check if FunkyBot is ok to load with set properties
+    g.apiHeaders = {'User-Agent': g.props['request_name'],
+                  'From': g.props['request_email'] }
 
     root = getXmlTree("denylist")
     for u in root.findall("user"):
@@ -288,6 +298,94 @@ def initGlobals(client):
 
     g.db = database.Database()
 
+#==== Read the config file ====
+def __readConfig():
+    with open(filePath("funkybot.conf")) as f: 
+        for line in f:
+            ln = line.strip()
+            if not ln.startswith("#") and ln != "":
+                pair = ln.split("=")
+                g.props[pair[0].strip()] = pair[1].strip()
+
+#==== Verify properties ====
+def __verifyProps():
+    expectedProps = []
+    
+    #Grab prop names from sample file since it is a reference to defaults
+    with open(filePath("funkybot.conf.sample")) as f:
+        for line in f:
+            ln = line.strip()
+            if not ln.startswith("#") and ln != "":
+                prop = ln.split("=")[0]
+                if prop not in ('announce', 'magic', 'wiki'):
+                    expectedProps.append(prop)
+
+    try:
+        for key in expectedProps:
+            if g.props[key] == '':
+                raise RuntimeError("{} property must not be left blank. Check /files/funkybot.conf".format(key))
+
+
+        if g.props['cute_delete'] not in ('true', 'false'):
+            raise RuntimeError("cute_delete property may only be 'true' or \"false\". "
+                               + "Check /files/funkybot.conf")
+        if g.props['react_delete'] not in ('true', 'false'):
+            raise RuntimeError("react_delete property may only be \"true\" or \"false\". "
+                               + "Check /files/funkybot.conf")
+        if g.props['magic_currency'] not in ('usd', 'eur', 'tix'):
+            raise RuntimeError("magic_currency property may only be \"usd\", \"eur\", or \"tix\". "
+                               + "Check /files/funkybot.conf.")
+
+        # roll_max_args: min 1, max 10
+        if (not g.props['roll_max_args'].isnumeric()
+            or int(g.props['roll_max_args']) < 1 or int(g.props['roll_max_args']) > 10):
+            raise RuntimeError("roll_max_args property may only be an integer between 1 and 10. "
+                               + "Check /files/funkybot.conf.")
+        # choose_max_args: min 2, max 10
+        if (not g.props['choose_max_args'].isnumeric()
+            or int(g.props['choose_max_args']) < 2 or int(g.props['choose_max_args']) > 10):
+            raise RuntimeError("choose_max_args property may only be an integer between 2 and 10. "
+                               + "Check /files/funkybot.conf.")
+        # binary_max_args: min 1, max 10
+        if (not g.props['binary_max_args'].isnumeric()
+            or int(g.props['binary_max_args']) < 1 or int(g.props['binary_max_args']) > 10):
+            raise RuntimeError("binary_max_args property may only be an integer between 1 and 10. "
+                               + "Check /files/funkybot.conf.")
+        # hex_max_args: min 1, max 10
+        if (not g.props['hex_max_args'].isnumeric()
+            or int(g.props['hex_max_args']) < 1 or int(g.props['hex_max_args']) > 10):
+            raise RuntimeError("hex_max_args property may only be an integer between 1 and 10. "
+                               + "Check /files/funkybot.conf.")
+        # time_max_duration: min 1, max 30
+        if (not g.props['time_max_duration'].isnumeric()
+            or int(g.props['time_max_duration']) < 1 or int(g.props['time_max_duration']) > 30):
+            raise RuntimeError("time_max_duration property may only be an integer between 1 and 30. "
+                               + "Check /files/funkybot.conf.")
+        # poll_run_duration: min 1, max 10
+        if (not g.props['poll_run_duration'].isnumeric()
+            or int(g.props['poll_run_duration']) < 1 or int(g.props['poll_run_duration']) > 10):
+            raise RuntimeError("poll_run_duration property may only be an integer between 1 and 10. "
+                               + "Check /files/funkybot.conf.")
+        
+
+    except RuntimeError:
+        print("ERROR STARTING FUNKYBOT: Could not verify properties.")
+        raise
+    except KeyError:
+        print("ERROR STARTING FUNKYBOT: Could not verify properties.")
+
 #==== Start reminders from database ====
 def startReminders():
     g.db.runThreads()
+
+#==== Format a help string with property values ====
+def formatProps(cmd, string):
+    props = {
+        'roll_max_args': g.props['roll_max_args'],
+        'choose_max_args': g.props['choose_max_args'],
+        'binary_max_args': g.props['binary_max_args'],
+        'hex_max_args': g.props['hex_max_args'],
+        'time_max_duration': g.props['time_max_duration'],
+        'poll_max_duration': g.props['poll_run_duration']}
+    
+    return string.format(**props)

@@ -7,11 +7,11 @@ These should not be changed after startup
 #Discord client
 client = None
 
-#Bot login token
-token = None
+#Properties from conf file
+props = {}
 
-#REST API headers
-apiHeaders = None
+#Headers for API requests
+apiHeaders = {}
 
 #Startup time
 begin = None

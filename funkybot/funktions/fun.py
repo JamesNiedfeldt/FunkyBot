@@ -7,7 +7,7 @@ Contains the fun FunkyBot commands
 import random
 import os
 
-from helpers import helper_functions as h, constant as c
+from helpers import helper_functions as h, constant as c, global_vars as g
 from errors import errors
 
 #==== Answer a yes/no question ====
@@ -20,7 +20,7 @@ def eightBall():
 def choose(message):
     #Parse choices
     try:
-        choices = h.parseArgs(message.content, "choose", 2, 10)
+        choices = h.parseArgs(message.content, "choose", 2, int(g.props['choose_max_args']))
     except errors.Error as e:
         raise e
 

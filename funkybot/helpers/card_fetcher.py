@@ -61,16 +61,26 @@ def __formatCard(card, givenUri=None, givenPrice=None):
         uri = givenUri
 
     if givenPrice == None:
-        if 'prices' in card and card['prices']['usd'] != None:
-                price = "$" + card['prices']['usd']
+        if 'prices' in card and card['prices'][g.props['magic_currency']] != None:
+                price = card['prices'][g.props['magic_currency']]
+                if g.props['magic_currency'] == 'usd':
+                    price = "$" + price
+                elif g.props['magic_currency'] == 'eur':
+                    price = "€" + price
     else:
         price = givenPrice
     
     if 'card_faces' in card:
         if card['layout'] == "transform" or card['layout'] == "modal_dfc":
             cost = card['card_faces'][0]['mana_cost']
-            if 'prices' in card and card['prices']['usd'] != None:
-                price = "$" + card['prices']['usd']
+            
+            if 'prices' in card and card['prices'][g.props['magic_currency']] != None:
+                price = card['prices'][g.props['magic_currency']]
+                if g.props['magic_currency'] == 'usd':
+                    price = "$" + price
+                elif g.props['magic_currency'] == 'eur':
+                    price = "€" + price
+                    
             for f in card['card_faces']:
                 toReturn.append(__formatCard(f, givenUri=uri, givenPrice=price))
         else:
@@ -81,8 +91,13 @@ def __formatCard(card, givenUri=None, givenPrice=None):
                            "\n" + __makeTextBox(f))
             cost = card['mana_cost']
             imageUri = card['image_uris']['normal']
-            if 'prices' in card and card['prices']['usd'] != None:
-                price = "$" + card['prices']['usd']
+            
+            if 'prices' in card and card['prices'][g.props['magic_currency']] != None:
+                price = card['prices'][g.props['magic_currency']]
+                if g.props['magic_currency'] == 'usd':
+                    price = "$" + price
+                elif g.props['magic_currency'] == 'eur':
+                    price = "€" + price
                 
             toReturn = emb.Embeddable(
                 url=uri,
@@ -95,8 +110,13 @@ def __formatCard(card, givenUri=None, givenPrice=None):
         textBox = __makeTextBox(card)
         cost = card['mana_cost']
         imageUri = card['image_uris']['normal']
-        if 'prices' in card and card['prices']['usd'] != None:
-                price = "$" + card['prices']['usd']
+        
+        if 'prices' in card and card['prices'][g.props['magic_currency']] != None:
+            price = card['prices'][g.props['magic_currency']]
+            if g.props['magic_currency'] == 'usd':
+                price = "$" + price
+            elif g.props['magic_currency'] == 'eur':
+                price = "€" + price
             
         toReturn = emb.Embeddable(
             url=uri,

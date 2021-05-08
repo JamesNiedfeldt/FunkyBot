@@ -3,6 +3,7 @@ funkybot/files/reaction_pics/**
 funkybot/files/cute_pics/**
 funkybot/files/userinfo.xml
 funkybot/files/denylist.xml
+funkybot/files/funkybot.conf
 **/__pycache__
 funkybot/reminders.db
 tests/test_logs/*

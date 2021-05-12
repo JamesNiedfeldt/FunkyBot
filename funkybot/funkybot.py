@@ -119,6 +119,9 @@ async def on_message(message):
         elif cmd == 'rate':
             await f.rate(message)
 
+        elif cmd == 'rps':
+            await f.rps(message)
+
     except Exception as e:
         #If an exception makes it all the way here, output it to a log file
         helpers.logException(e)

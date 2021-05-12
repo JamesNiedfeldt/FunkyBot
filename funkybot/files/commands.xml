@@ -281,6 +281,19 @@
         <error type="too_many">I can only rate one thing at a time.</error>
     </function>
 
+    <function category="fun">
+        <command>rps</command>
+        <format>!rps [X]</format>
+        <body>
+            <description>Send `!rps [X]` to play rock paper scissors with me.</description>
+            <hint>You must use `rock`, `paper`, or `scissors` as your argument.</hint>
+            <hint>You can only send one choice at a time.</hint>
+            <hint>For example, to play rock paper scissors with paper as your choice, send `!rps [paper]`.</hint>
+        </body>
+        <error type="empty">I need an option to play against.</error>
+        <error type="too_many">You can only play against one option at a time.</error>
+    </function>
+
     <!-- Contextual commands -->
     <!-- These only have function in specific contexts. They will not show up in the command list. -->
     <function category="contextual">

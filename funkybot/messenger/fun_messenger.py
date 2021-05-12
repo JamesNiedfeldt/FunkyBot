@@ -59,3 +59,10 @@ async def rate(message):
         await message.channel.send(fun.rateSomething(message))
     except errors.Error as e:
         await message.channel.send(helpers.badArgs(e))
+
+#==== Play rock, paper, scissors ====
+async def rps(message):
+    try:
+        await message.channel.send(fun.playRps(message))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))

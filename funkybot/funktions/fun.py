@@ -79,3 +79,33 @@ def rateSomething(message):
             toRate = message.author.display_name
         return ("I give %s a %s out of 10. %s" %
                 (toRate, rank.find("rank").text, rank.find("descriptor").text))
+
+#==== Play rock, paper, scissors ====
+def playRps(message):
+    options = {'rock': 0,
+               'paper': 1,
+               'scissors': 2}
+    funkyChoice = random.choice(list(options))
+    toReturn = "I choose **{}**!\n\n".format(funkyChoice)
+
+    #Parse string
+    try:
+        playerChoice = h.parseArgs(message.content, "rps", 1, 1)[0]
+    except errors.Error as e:
+        raise e
+
+    if playerChoice.lower() not in options:
+        toReturn = toReturn + "{} beats...hey, you can't pick \"{}\"!".format(
+            funkyChoice.capitalize(), playerChoice)
+    elif options[playerChoice] == options[funkyChoice]:
+        toReturn = toReturn + "It's a draw!"
+    elif (options[playerChoice] + 1) % 3 == options[funkyChoice]:
+        toReturn = toReturn + "{} beats {}. I win, better luck next time!".format(
+            funkyChoice.capitalize(), playerChoice)
+    else:
+        toReturn = toReturn + "{} beats {}. You win this time!".format(
+            playerChoice.capitalize(), funkyChoice)
+
+    return toReturn
+
+    

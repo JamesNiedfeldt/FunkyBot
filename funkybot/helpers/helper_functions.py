@@ -148,7 +148,7 @@ def convertDateTime(timeArgs):
         tokens = timeArgs[0].split()
 
         tzOffset = tokens[-1]
-        tz = timezone(timedelta(hours=int(tzOffset)))
+        tz = timezone(timedelta(hours=float(tzOffset)))
         
         if '/' in tokens[0]: #First token is a date
             datePcs = [int(i) for i in tokens[0].split('/')]
@@ -323,56 +323,47 @@ def __verifyProps():
     try:
         for key in expectedProps:
             if g.props[key] == '':
-                raise RuntimeError("{} property must not be left blank. Check /files/funkybot.conf".format(key))
+                raise RuntimeError(c.BAD_PROPERTY_BLANK % key)
 
 
         if g.props['cute_delete'] not in ('true', 'false'):
-            raise RuntimeError("cute_delete property may only be 'true' or \"false\". "
-                               + "Check /files/funkybot.conf")
+            raise RuntimeError(c.BAD_PROPERTY_BOOL % 'cute_delete')
         if g.props['react_delete'] not in ('true', 'false'):
-            raise RuntimeError("react_delete property may only be \"true\" or \"false\". "
-                               + "Check /files/funkybot.conf")
+            raise RuntimeError(c.BAD_PROPERTY_BOOL % 'react_delete')
         if g.props['magic_currency'] not in ('usd', 'eur', 'tix'):
-            raise RuntimeError("magic_currency property may only be \"usd\", \"eur\", or \"tix\". "
-                               + "Check /files/funkybot.conf.")
+            raise RuntimeError(c.BAD_PROPERTY_MAGIC)
 
         # roll_max_args: min 1, max 10
         if (not g.props['roll_max_args'].isnumeric()
             or int(g.props['roll_max_args']) < 1 or int(g.props['roll_max_args']) > 10):
-            raise RuntimeError("roll_max_args property may only be an integer between 1 and 10. "
-                               + "Check /files/funkybot.conf.")
+            raise RuntimeError(c.BAD_PROPERTY_INT % ('roll_max_args', 1, 10))
         # choose_max_args: min 2, max 10
         if (not g.props['choose_max_args'].isnumeric()
             or int(g.props['choose_max_args']) < 2 or int(g.props['choose_max_args']) > 10):
-            raise RuntimeError("choose_max_args property may only be an integer between 2 and 10. "
-                               + "Check /files/funkybot.conf.")
+            raise RuntimeError(c.BAD_PROPERTY_INT % ('choose_max_args', 2, 10))
         # binary_max_args: min 1, max 10
         if (not g.props['binary_max_args'].isnumeric()
             or int(g.props['binary_max_args']) < 1 or int(g.props['binary_max_args']) > 10):
-            raise RuntimeError("binary_max_args property may only be an integer between 1 and 10. "
-                               + "Check /files/funkybot.conf.")
+            raise RuntimeError(c.BAD_PROPERTY_INT % ('binary_max_args', 1, 10))
         # hex_max_args: min 1, max 10
         if (not g.props['hex_max_args'].isnumeric()
             or int(g.props['hex_max_args']) < 1 or int(g.props['hex_max_args']) > 10):
-            raise RuntimeError("hex_max_args property may only be an integer between 1 and 10. "
-                               + "Check /files/funkybot.conf.")
+            raise RuntimeError(c.BAD_PROPERTY_INT % ('hex_max_args', 1, 10))
         # time_max_duration: min 1, max 30
         if (not g.props['time_max_duration'].isnumeric()
             or int(g.props['time_max_duration']) < 1 or int(g.props['time_max_duration']) > 30):
-            raise RuntimeError("time_max_duration property may only be an integer between 1 and 30. "
-                               + "Check /files/funkybot.conf.")
+            raise RuntimeError(c.BAD_PROPERTY_INT % ('time_max_duration', 1, 30))
         # poll_run_duration: min 1, max 10
         if (not g.props['poll_run_duration'].isnumeric()
             or int(g.props['poll_run_duration']) < 1 or int(g.props['poll_run_duration']) > 10):
-            raise RuntimeError("poll_run_duration property may only be an integer between 1 and 10. "
-                               + "Check /files/funkybot.conf.")
+            raise RuntimeError(c.BAD_PROPERTY_INT % ('poll_run_duration', 1, 10))
         
 
     except RuntimeError:
-        print("ERROR STARTING FUNKYBOT: Could not verify properties.")
+        print(c.CANT_BOOT)
         raise
     except KeyError:
-        print("ERROR STARTING FUNKYBOT: Could not verify properties.")
+        print(c.CANT_BOOT)
 
 #==== Start reminders from database ====
 def startReminders():

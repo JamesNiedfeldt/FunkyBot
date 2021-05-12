@@ -35,6 +35,18 @@ SUGGESTED_COMMAND = "Did you perhaps mean `!%s`? If so, send `!yes` within 15 se
 
 RETRY_EQUATION = "Make sure your equation is right and try again."
 
+CHECK_CONFIG = " Check /files/funkybot.conf."
+
+BAD_PROPERTY_BLANK = "ERROR LOADING CONFIG: %s property must not be left blank." + CHECK_CONFIG
+
+BAD_PROPERTY_BOOL = "ERROR LOADING CONFIG: %s may only be \"true\" or \"false\"." + CHECK_CONFIG 
+
+BAD_PROPERTY_INT = "ERROR LOADING CONFIG: %s may only be an integer between %s and %s." + CHECK_CONFIG
+
+BAD_PROPERTY_MAGIC = "ERROR LOADING CONFIG: magic_currency property may only be \"usd\", \"eur\", or \"tix\"." + CHECK_CONFIG
+
+CANT_BOOT = "ERROR STARTING FUNKYBOT: Could not verify properties."
+
 BOOT_UP = """===============
 %s %s
 I'm ready to work!"""

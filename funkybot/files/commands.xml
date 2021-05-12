@@ -40,13 +40,13 @@
             <hint>Your argument should be formatted as `MM/DD/YYYY HH:MM TZ`.</hint>
             <hint>If you don't provide a date, I will use the time you provide with the current date based on the timezone you send.</hint> 
             <hint>If you use a 12 hour clock, you can add specify AM or PM after a space. If you don't specify, I will use AM unless it's a 24 hour clock.</hint>
-            <hint>Timezone should be the standard UTC offset format `(+/-)HH`.</hint>
+            <hint>Timezone should be the UTC offset in hours `(+/-)HH`.</hint>
             <hint>I can only set an announcement for one date at a time.</hint>
             <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
             <hint>Only server administrators can use this command.</hint>
             <hint>For example, to set an announcement for your birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!announce [05/20/2021 14:30 -6] birthday party`.</hint>
             <hint>This would also work: `!announce [5/20/21 2:30 PM -6] birthday party`.</hint>
-            <hint>If you wanted to have the announcement happen the same day you set it, you could send this: `!announce [2:30 PM -06] birthday party`.</hint>
+            <hint>If you wanted to have the announcement happen the same day you set it, you could send this: `!announce [2:30 PM -6] birthday party`.</hint>
         </body>
         <error type="brackets">Make sure the date you want me to use to set your announcement is surrounded by brackets.</error>
         <error type="empty">I need a date to set your announcement for.</error>
@@ -154,12 +154,12 @@
             <hint>Your argument should be formatted as `MM/DD/YYYY HH:MM TZ`.</hint>
             <hint>If you don't provide a date, I will use the time you provide with the current date based on the timezone you send.</hint> 
             <hint>If you use a 12 hour clock, you can add specify AM or PM after a space. If you don't specify, I will use AM unless it's a 24 hour clock.</hint>
-            <hint>Timezone should be the standard UTC offset format `(+/-)HH`.</hint>
+            <hint>Timezone should be the UTC offset in hours `(+/-)HH`.</hint>
             <hint>I can only set a reminder for one date at a time.</hint>
             <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
             <hint>For example, to set a reminder for a friend's birthday party on May 21, 2021 at 2:30 PM US Mountain Time, send: `!remind [05/20/2021 14:30 -6] birthday party`.</hint>
             <hint>This would also work: `!remind [5/20/21 2:30 PM -6] birthday party`.</hint>
-            <hint>If you wanted to have the reminder happen the same day you set it, you could send this: `!remind [2:30 PM -06] birthday party`.</hint>
+            <hint>If you wanted to have the reminder happen the same day you set it, you could send this: `!remind [2:30 PM -6] birthday party`.</hint>
         </body>
         <error type="brackets">Make sure the date you want me to use to set your reminder is surrounded by brackets.</error>
         <error type="empty">I need a date to set your reminder for.</error>

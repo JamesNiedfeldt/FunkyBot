@@ -14,6 +14,7 @@ def fetchCard(query):
     name = "https://api.scryfall.com/cards/named"
     search = "https://api.scryfall.com/cards/search"
     random = "https://api.scryfall.com/cards/random"
+    expansion = ""
     
     try:
         #Random card requested
@@ -22,11 +23,18 @@ def fetchCard(query):
             results = response.json()
 
         else:
+            if '|' in query:
+                expansion = query.split('|')[1].strip()
+                query = query.split('|')[0].strip()
+                
             #Find by name first
-            response = requests.get(url = name, params = {'fuzzy':query}, headers = g.apiHeaders)
+            response = requests.get(url = name,
+                                    params = {'fuzzy':query, 'set': expansion},
+                                    headers = g.apiHeaders)
             results = response.json()
 
             if results['object'] == "error":
+                print(error)
                 #Try a search if not found by name
                 response = requests.get(url = search, params = {'q':query}, headers = g.apiHeaders)
                 results = response.json()
@@ -130,21 +138,19 @@ def __formatCard(card, givenUri=None, givenPrice=None):
     return toReturn
 
 def __colorEmbed(card):
-    if "Land" in card['type_line']:
-        return 6697779
-    elif len(card['colors']) > 1:
+    if len(card['color_identity']) > 1:
         return 13408563
-    elif len(card['colors']) == 0:
+    elif len(card['color_identity']) == 0:
         return 10066329
-    elif card['colors'][0] == 'W':
+    elif card['color_identity'][0] == 'W':
         return 16777214
-    elif card['colors'][0] == 'U':
+    elif card['color_identity'][0] == 'U':
         return 39372
-    elif card['colors'][0] == 'B':
+    elif card['color_identity'][0] == 'B':
         return 0
-    elif card['colors'][0] == 'R':
+    elif card['color_identity'][0] == 'R':
         return 13369395
-    elif card['colors'][0] == 'G':
+    elif card['color_identity'][0] == 'G':
         return 32768
     else:
         return 2303786

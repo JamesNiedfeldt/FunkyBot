@@ -34,7 +34,6 @@ def fetchCard(query):
             results = response.json()
 
             if results['object'] == "error":
-                print(error)
                 #Try a search if not found by name
                 response = requests.get(url = search, params = {'q':query}, headers = g.apiHeaders)
                 results = response.json()

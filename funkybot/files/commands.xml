@@ -77,19 +77,19 @@
         <body>
             <description>Send `!calc [X]` to have me calculate an equation for you.</description>
             <hint>I can only calculate one equation at a time.</hint>
-            <hint>You can use positive and negative integers or decimals as operands (just make sure the `-` sign is attached to negative numbers).</hint>
-            <hint>I can use the following operators and functions: `+`, `-`, `*`, `/`, `^` (exponent), and `sqrt()` (square root).</hint>
-            <hint>You can use perentheses, just make sure open and closed perentheses are matched.</hint>
-            <hint>For best results, make sure that there are spaces between operators and operands.</hint>
+            <hint>You can use positive and negative integers or decimals as operands.</hint>
+            <hint>I can use the following operators: `+`, `-`, `*`, `/`, `^` (exponent).</hint>
+            <hint>I can use the following functions: `sqrt()` (square root), `abs()` (absolute value), and `log()` (log base 10).</hint>
+            <hint>You can use parentheses, just make sure open and closed perentheses are matched.</hint>
             <hint>For example, to calculate 6 plus the square root of 4, you should send: `!calc [6 + sqrt(4)]`</hint>
         </body>
         <error type="brackets">Make sure the equation you want me to calculate is surrounded by brackets.</error>
         <error type="empty">I need an equation to calculate.</error>
         <error type="too_many">I can only calculate one equation at a time.</error>
-        <error type="bad_tokens">I can only calculate using numbers, operators, and the sqrt function.</error>
+        <error type="bad_tokens">I can only calculate using numbers, operators, and the sqrt, abs, and log functions.</error>
         <error type="missing_operand">Each operator needs an operand on its left and right.</error>
-        <error type="few_operators">There are not enough operators or functions for me to use on the operands. Make sure you add spaces between operators and operands!</error>
-        <error type="open_perens">Make sure every open parenthesis has a matching closed perenthesis and vice versa.</error>
+        <error type="few_operators">There are not enough operators or functions for me to use on the operands.</error>
+        <error type="open_perens">Make sure every open parenthesis has a matching closed parenthesis and vice versa.</error>
         <error type="too_many_operators">There are too many operators for the operands you gave me.</error>
     </function>
 

@@ -91,13 +91,18 @@ def __formatCard(card, givenUri=None, givenPrice=None):
             for f in card['card_faces']:
                 toReturn.append(__formatCard(f, givenUri=uri, givenPrice=price))
         else:
-            textBox = card['type_line']
-            for f in card['card_faces']:
-                textBox = (textBox + "\n\n" + 
-                           "**" + f['name'] + "  " + f['mana_cost'] + "**" +
-                           "\n" + __makeTextBox(f))
-            cost = card['mana_cost']
             imageUri = card['image_uris']['normal']
+            toReturn = emb.Embeddable(
+                url=uri,
+                title=name + " " + cost,
+                image=imageUri)
+            
+            for f in card['card_faces']:
+                fieldName = "**" + f['name'] + "  " + f['mana_cost'] + "**" 
+                fieldText = __makeTextBox(f)
+                toReturn.addField({"name": fieldName,
+                                   "value": fieldText,
+                                   "inline": "true"})
             
             if 'prices' in card and card['prices'][g.props['magic_currency']] != None:
                 price = card['prices'][g.props['magic_currency']]
@@ -105,12 +110,7 @@ def __formatCard(card, givenUri=None, givenPrice=None):
                     price = "$" + price
                 elif g.props['magic_currency'] == 'eur':
                     price = "€" + price
-                
-            toReturn = emb.Embeddable(
-                url=uri,
-                title=name + " " + cost,
-                text=textBox,
-                image=imageUri)
+            
             toReturn.setColor(__colorEmbed(card))
             toReturn.setFooter(price)
 

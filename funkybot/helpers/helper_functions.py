@@ -309,16 +309,10 @@ def __readConfig():
 
 #==== Verify properties ====
 def __verifyProps():
-    expectedProps = []
-    
-    #Grab prop names from sample file since it is a reference to defaults
-    with open(filePath("funkybot.conf.sample")) as f:
-        for line in f:
-            ln = line.strip()
-            if not ln.startswith("#") and ln != "":
-                prop = ln.split("=")[0]
-                if prop not in ('announce', 'magic', 'wiki', 'game'):
-                    expectedProps.append(prop)
+    expectedProps = ['token','request_name','request_email','giantbomb_key',
+                     'cute_delete','react_delete','roll_max_args',
+                     'choose_max_args','binary_max_args','hex_max_args',
+                     'time_max_duration','poll_run_duration','magic_currency']
 
     try:
         for key in expectedProps:

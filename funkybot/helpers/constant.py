@@ -23,6 +23,8 @@ HELLO_HELP = "For a list of commands, send '!help'."
 
 HELLO_URL = "https://github.com/JamesNiedfeldt/FunkyBot"
 
+HELLO_CHANGELOG = "[Click here](https://github.com/JamesNiedfeldt/FunkyBot/wiki/Changelog) to see all of the v{} changes in greater detail.".format(VERSION)
+
 BAD_ARGS_1 = "I couldn't understand your command!\n\n"
 
 BAD_ARGS_2 = "If you need more help with this command, send `!help [!%s]`."

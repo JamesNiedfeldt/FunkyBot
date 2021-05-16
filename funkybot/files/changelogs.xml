@@ -4,15 +4,12 @@
     <!-- These are specifically user-facing changes and thus do not need detail about inner workings of FunkyBot. Changes to jokes and pics do not need to be noted unless significant. -->
 
     <version num="2.0.0">
-        <change>All commands now use a different syntax. Instead of using double brackets `[[like this]]`, arguments must be in single brackets `[like this]`. For commands that take multiple arguments, each argument must be in its own set of brackets `[like][this]`. Each argument can be anywhere in your message, even if there are words in between them.</change>
+        <change>Arguments now use a different syntax. Instead of using double brackets `[[like this]]`, arguments must be in single brackets `[like this]`. For commands that take multiple arguments, each one must be in its own set of brackets `[like][this]`.</change>
         <change>Added the `!game` command to search [Giant Bomb](https://giantbomb.com) for a game. Send `!help [!game]` for details.</change>
-        <change>Added the `!rps` to play rock paper scissors. Send `!rps` and `[rock]`, `[paper]`, or `[scissors]` to play!</change>
-        <change>`!remind` and `!announce` now accept more different date formats. You can now use two-digit years and omit the date argument altogether, and timezones are now accepted as UTC offsets in hours (e.g. +8.5 or -6 instead of +0850 or -0600). Send `!help [!remind]` or `!help [!announce]` for details.</change>
-        <change>The command list from sending `!help` is now much easier to read.</change>
-        <change>Embeds from the `!magic` command are now colored according to their card's color identity.</change>
+        <change>Added the `!rps` to play rock paper scissors. Send `!help [!rps]` for details.</change>
+        <change>`!remind` and `!announce` now accept more date formats and timezones are now accepted as UTC offsets in hours (e.g. +8.5 or -6 instead of +0850 or -0600). Send `!help [!remind]` or `!help [!announce]` for details.</change>
         <change>You can now search for a Magic card from a specific set by adding a `|` and the set code like `!magic [Lightning Bolt|STA]`. Send `!help [!magic]` for more details.</change>
-        <change>The `!calc` command now better distinguishes negative numbers from subtraction, can read implicit multiplication (for example, `2(2)`), and can now calculate absolute value `abs()` and base 10 logarithms `log()`.</change>
-        <change>Fixed `!remind` and `!announce` to correctly accept time between 12:00 and 12:59 AM or PM.</change>
+        <change>The `!calc` command now better distinguishes negative numbers from subtraction, can read implicit multiplication, and can now calculate absolute value and base 10 logarithms.</change>
     </version>
 
     <version num="1.9.0">

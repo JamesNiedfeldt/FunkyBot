@@ -24,24 +24,6 @@ request_name=
 request_email=
 giantbomb_key=
 
-# Toggle certain commands on/off
-#
-# If any of these commands are disabled, they will not appear in command lists and can't be
-# called. These values must be either true or false. Only !announce, !magic, !wiki,
-# and !game are listed here as they either tag everyone or send API requests, 
-# but any command can go here and be toggled if you choose. 
-# If a command is not present, it is enabled by default.
-#
-# DEFAULT:
-# announce=true
-# magic=true
-# wiki=true
-# game=true
-announce=true
-magic=true
-wiki=true
-game=true
-
 # Toggle message deletion of picture post commands
 #
 # If any of these are set to true, the message sent to call them will be deleted by FunkyBot
@@ -88,3 +70,21 @@ poll_run_duration=3
 # DEFAULT:
 # magic_currency=usd
 magic_currency=usd
+
+# Toggle commands on/off
+#
+# If any of these commands are disabled, they will not appear in command lists and can't be
+# called. These values must be either true or false. Only !announce, !magic, !wiki,
+# and !game are listed here as they either tag everyone or send API requests, 
+# but any command can go here and be toggled if you choose. 
+# If a command is not present, it is enabled by default.
+#
+# DEFAULT:
+# announce=true
+# magic=true
+# wiki=true
+# game=true
+announce=true
+magic=true
+wiki=true
+game=true

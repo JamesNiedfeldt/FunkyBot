@@ -14,20 +14,22 @@ from errors import errors
 
 #==== Introduce FunkyBot ====
 def sayHello():
-    txt = ("**Uptime:**\n%s" % h.formatTime(h.getTime(),offset=g.begin)
-           + c.LINE_BREAK
-           + "**Latest changes:**")
+    timeField = {'name': 'Uptime', 'value': ''}
+    changeField = {'name': 'Latest changes', 'value': ''}
+    linkField = {'name': 'Full list of changes', 'value': c.HELLO_CHANGELOG}
+    
+    timeField['value'] = h.formatTime(h.getTime(),offset=g.begin)
     
     changeList = h.getXmlTree('changelogs').find("./version/[@num='{}']".format(c.VERSION))
     if changeList is None:
-        txt = txt + "\n*No changes were found.*"
+        changeField['value'] = "\n*No changes were found.*"
     else:
         for change in changeList.findall('change'):
-            txt = txt + "\n\N{BULLET} %s\n" % change.text
+            changeField['value'] += "\n\N{BULLET} %s\n" % change.text
     
     emb = embeddable.Embeddable(url=c.HELLO_URL,
-                                title="FunkyBot v%s" % c.VERSION,
-                                text=txt)
+                                title="FunkyBot v%s" % c.VERSION)
+    emb.addField(timeField, changeField, linkField)
     emb.setThumbnail(str(g.client.user.avatar_url))
     emb.setFooter(c.HELLO_HELP)
 

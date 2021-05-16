@@ -61,6 +61,17 @@ async def hexadec(message):
     except errors.Error as e:
         await message.channel.send(helpers.badArgs(e))
 
+#==== Search for a Wikipedia article ====
+async def game(message):
+    try:
+        a = useful.fetchGame(message)
+        if a.empty():
+            await message.channel.send(a.description)
+        else:
+            await message.channel.send("", embed=discord.Embed.from_dict(a.asDict()))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))
+
 #==== Search for Magic cards ====
 async def magic(message):
     try:

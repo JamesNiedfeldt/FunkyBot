@@ -40,7 +40,10 @@ def __formatArticle(article):
 
     textBox = description + "\n-----\n" + extract
 
-    return embed.Embeddable(url=url,
+    toReturn = embed.Embeddable(url=url,
                             title=title,
                             text=textBox,
                             image=imageUri)
+    toReturn.setFooter("Powered by Wikipedia.org")
+
+    return toReturn

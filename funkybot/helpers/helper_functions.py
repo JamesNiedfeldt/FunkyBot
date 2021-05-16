@@ -317,13 +317,16 @@ def __verifyProps():
             ln = line.strip()
             if not ln.startswith("#") and ln != "":
                 prop = ln.split("=")[0]
-                if prop not in ('announce', 'magic', 'wiki'):
+                if prop not in ('announce', 'magic', 'wiki', 'game'):
                     expectedProps.append(prop)
 
     try:
         for key in expectedProps:
-            if g.props[key] == '':
+            if g.props[key] == '' and key != 'giantbomb_key':
                 raise RuntimeError(c.BAD_PROPERTY_BLANK % key)
+        if (('game' not in g.props or g.props['game'] == 'true')
+            and g.props['giantbomb_key'] == ''):
+            raise RuntimeError(c.BAD_PROPERTY_GAME)
 
 
         if g.props['cute_delete'] not in ('true', 'false'):
@@ -364,6 +367,7 @@ def __verifyProps():
         raise
     except KeyError:
         print(c.CANT_BOOT)
+        raise
 
 #==== Start reminders from database ====
 def startReminders():

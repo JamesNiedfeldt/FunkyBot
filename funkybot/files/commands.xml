@@ -94,6 +94,20 @@
     </function>
 
     <function category="useful">
+        <command>game</command>
+        <format>!game [X]</format>
+        <body>
+            <description>Send `!game [X]` to have me search Giant Bomb for a video game.</description>
+            <hint>I can only search for one game at a time.</hint>
+            <hint>If you didn't get quite what you were searching for, I will also give you a link to the full search on Giant Bomb's website.</hint>
+            <hint>For example, to search for Minecraft, you should send: `!game [Minecraft]`.</hint>
+        </body>
+        <error type="brackets">Make sure the game you want me to search for is surrounded by brackets.</error>
+        <error type="empty">I need a game to search for.</error>
+        <error type="too_many">I can only search for one game at a time.</error>
+    </function>
+
+    <function category="useful">
         <command>hex</command>
         <format>!hex [X][...]</format>
         <body>
@@ -113,7 +127,7 @@
         <command>magic</command>
         <format>!magic [X][...]</format>
         <body>
-            <description>Send `!magic [X]` to have me search for a Magic: The Gathering card.</description>
+            <description>Send `!magic [X]` to have me search Scryfall for a Magic: The Gathering card.</description>
             <hint>I can search for up to three cards.</hint>
             <hint>For example, to search for Island, you should send: `!magic [island]`.</hint>
             <hint>I can also search for a random card using the word "random". For example: `!magic [random]`.</hint>

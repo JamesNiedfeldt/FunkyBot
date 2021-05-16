@@ -5,6 +5,7 @@
 
     <version num="2.0.0">
         <change>All commands now use a different syntax. Instead of using double brackets `[[like this]]`, arguments must be in single brackets `[like this]`. For commands that take multiple arguments, each argument must be in its own set of brackets `[like][this]`. Each argument can be anywhere in your message, even if there are words in between them.</change>
+        <change>Added the `!game` command to search [Giant Bomb](https://giantbomb.com) for a game. Send `!help [!game]` for details.</change>
         <change>Added the `!rps` to play rock paper scissors. Send `!rps` and `[rock]`, `[paper]`, or `[scissors]` to play!</change>
         <change>`!remind` and `!announce` now accept more different date formats. You can now use two-digit years and omit the date argument altogether, and timezones are now accepted as UTC offsets in hours (e.g. +8.5 or -6 instead of +0850 or -0600). Send `!help [!remind]` or `!help [!announce]` for details.</change>
         <change>The command list from sending `!help` is now much easier to read.</change>

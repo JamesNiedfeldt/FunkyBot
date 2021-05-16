@@ -10,29 +10,37 @@ token=
 # need someone to contact, though this is extremely unlikely as FunkyBot under 
 # normal use does not make many API requests.
 #
-# These properties are required even if the !magic and !wiki command are both disabled,
-# though they won't be used.
+# The giantbomb_key is the API key you get from registering an account at giantbomb.com
+# and is used for the !game command. This is optional if the !game command is disabled.
+#
+# request_name and request_email are required even if the !magic, !wiki, and !game commands 
+# are all disabled, though they won't be used.
 # 
 # EXAMPLE:
 # request_name=Firstname Lastname
 # request_email=email@email.com
+# giantbomb_key=1234abcd
 request_name=
 request_email=
+giantbomb_key=
 
 # Toggle certain commands on/off
 #
 # If any of these commands are disabled, they will not appear in command lists and can't be
-# called. These values must be either true or false. Only !announce, !magic, and !wiki are listed
-# here as they either tag everyone or send API requests, but any command can go here and be 
-# toggled if you choose. If a command is not present, it is enabled by default.
+# called. These values must be either true or false. Only !announce, !magic, !wiki,
+# and !game are listed here as they either tag everyone or send API requests, 
+# but any command can go here and be toggled if you choose. 
+# If a command is not present, it is enabled by default.
 #
 # DEFAULT:
 # announce=true
 # magic=true
 # wiki=true
+# game=true
 announce=true
 magic=true
 wiki=true
+game=true
 
 # Toggle message deletion of picture post commands
 #

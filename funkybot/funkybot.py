@@ -82,6 +82,9 @@ async def on_message(message):
         elif cmd == 'hex':
             await u.hexadec(message)
 
+        elif cmd == 'game':
+            await u.game(message)
+
         elif cmd == 'magic':
             await u.magic(message)
 

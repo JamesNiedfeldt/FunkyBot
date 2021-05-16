@@ -54,12 +54,13 @@ def fetchCard(query):
         h.logException(e)
         return emb.empty("Sorry, something went wrong finding \"{}\"!".format(query))
 
-def __formatCard(card, givenUri=None, givenPrice=None):
+def __formatCard(card, givenUri=None, givenPrice=None, givenColor=None):
     name = card['name']
     cost = ""
     textBox = ""
     imageUri = ""
     price = "No price info found"
+    color = 0
     toReturn = []
 
     if givenUri == None:
@@ -76,6 +77,11 @@ def __formatCard(card, givenUri=None, givenPrice=None):
                     price = "€" + price
     else:
         price = givenPrice
+
+    if givenColor == None:
+        color = __colorEmbed(card)
+    else:
+        color = givenColor
     
     if 'card_faces' in card:
         if card['layout'] == "transform" or card['layout'] == "modal_dfc":
@@ -89,7 +95,7 @@ def __formatCard(card, givenUri=None, givenPrice=None):
                     price = "€" + price
                     
             for f in card['card_faces']:
-                toReturn.append(__formatCard(f, givenUri=uri, givenPrice=price))
+                toReturn.append(__formatCard(f, givenUri=uri, givenPrice=price, givenColor=color))
         else:
             imageUri = card['image_uris']['normal']
             toReturn = emb.Embeddable(
@@ -111,8 +117,8 @@ def __formatCard(card, givenUri=None, givenPrice=None):
                 elif g.props['magic_currency'] == 'eur':
                     price = "€" + price
             
-            toReturn.setColor(__colorEmbed(card))
-            toReturn.setFooter(price)
+            toReturn.setColor(color)
+            toReturn.setFooter(price + " | Powered by Scryfall.com")
 
     else:
         textBox = __makeTextBox(card)
@@ -131,8 +137,8 @@ def __formatCard(card, givenUri=None, givenPrice=None):
             title=name + " " + cost,
             text=textBox,
             image=imageUri)
-        toReturn.setColor(__colorEmbed(card))
-        toReturn.setFooter(price)
+        toReturn.setColor(color)
+        toReturn.setFooter(price + " | Powered by Scryfall.com")
         
     return toReturn
 

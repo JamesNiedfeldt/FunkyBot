@@ -8,7 +8,8 @@ import random
 import re
 
 from helpers import (helper_functions as h, constant as c, global_vars as g,
-                     card_fetcher as cf, wiki_fetcher as wf, calculator as ca)
+                     card_fetcher as cf, wiki_fetcher as wf, calculator as ca,
+                     game_fetcher as gf)
 from helpers.objects import reminder, poll
 from errors import errors
 
@@ -114,6 +115,17 @@ def toHex(message):
         raise errors.BadValueException("hex")
     except RuntimeError: #Non-integer sent or invalid number
         raise errors.BadNumberException("hex")
+
+#==== Fetch a game from GiantBomb ====
+def fetchGame(message):
+    try:
+        terms = h.parseArgs(message.content, "game", 1, 1)
+    except errors.Error as e:
+        raise e
+
+    for i in set(terms): terms = i #Convert back to a string
+
+    return gf.fetchGame(terms)
 
 #==== Fetch a card ====
 def fetchCard(message):

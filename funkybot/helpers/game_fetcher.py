@@ -62,9 +62,12 @@ def __formatResult(newUri, siteUrl):
 
     #Grab genres
     genreField = {"inline": "true", "name": "Genre", "value": ""}
-    for r in gameResult['results']['genres']:
-        genreField['value'] += r['name'] + ", "
-    genreField['value'] = genreField['value'][:-2]
+    if 'genres' not in gameResult['results']:
+        genreField['value'] = "No genre information found"
+    else:
+        for r in gameResult['results']['genres']:
+            genreField['value'] += r['name'] + ", "
+        genreField['value'] = genreField['value'][:-2]
 
     #Grab release date
     releaseField = {"inline": "true", "name": "Release date", "value": ""}
@@ -89,9 +92,12 @@ def __formatResult(newUri, siteUrl):
 
     #Grab publishers
     pubField = {"inline": "true", "name": "Publishers", "value": ""}
-    for p in gameResult['results']['publishers']:
-        pubField['value'] += p['name'] + ", "
-    pubField['value'] = pubField['value'][:-2]
+    if gameResult['results']['publishers'] == None:
+        pubField['value'] = "No publisher information found"
+    else:
+        for p in gameResult['results']['publishers']:
+            pubField['value'] += p['name'] + ", "
+        pubField['value'] = pubField['value'][:-2]
 
     #Grab similar games
     similarField = {"name": "Here are some similar games:", "value": ""}

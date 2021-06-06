@@ -3,6 +3,10 @@
 <root>
     <!-- These are specifically user-facing changes and thus do not need detail about inner workings of FunkyBot. Changes to jokes and pics do not need to be noted unless significant. -->
 
+    <version num="2.0.1">
+        <change>Fixed the `!game` command not finding games with missing information.</change>
+    </version>
+
     <version num="2.0.0">
         <change>Arguments now use a different syntax. Instead of using double brackets `[[like this]]`, arguments must be in single brackets `[like this]`. For commands that take multiple arguments, each one must be in its own set of brackets `[like][this]`.</change>
         <change>Added the `!game` command to search [Giant Bomb](https://giantbomb.com) for a game. Send `!help [!game]` for details.</change>

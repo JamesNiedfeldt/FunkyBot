@@ -284,7 +284,7 @@
 
     <function category="fun">
         <command>rate</command>
-        <format>!rate</format>
+        <format>!rate [X]</format>
         <body>
             <description>Send `!rate [X]` to have me rate something on a scale from 1 to 10.</description>
             <hint>I can only rate one thing at a time.</hint>

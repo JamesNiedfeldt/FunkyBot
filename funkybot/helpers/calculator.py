@@ -149,18 +149,18 @@ def __verifyTokens(tokens):
     numOperands = sum(__isNumber(t) for t in tokens)
     numFuncs = sum(re.fullmatch(_funcsRe, t) != None for t in tokens)
     numOperators = (sum(re.fullmatch(_opsRe, t) != None for t in tokens) +
-                    sum(re.fullmatch('\|', t) != None for t in tokens)
                     - numLeftPeren - numRightPeren)
 
-    if (tokens[-1] in _prec.keys()
-        or (tokens[0] in _prec.keys() and tokens[0] != '|')):
+    if (tokens[-1] in _prec
+        or (tokens[0] in _prec and tokens[0] != '|')):
         raise errors.CustomCommandException("calc", "missing_operand")
 
     for i in range(len(tokens)-1):
         if re.match('^(?!{}|\|)'.format(_parseRe), tokens[i]) != None:
             raise errors.CustomCommandException("calc", "bad_tokens")
         elif (tokens[i] in _prec
-              and tokens[i-1] in _prec):
+              and tokens[i-1] in _prec
+              and tokens[i-1] != '|'):
             raise errors.CustomCommandException("calc", "missing_operand")
 
     if numOperators + numFuncs <= 0:

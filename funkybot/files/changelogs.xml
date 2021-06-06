@@ -5,6 +5,7 @@
 
     <version num="2.0.1">
         <change>Fixed the `!game` command not finding games with missing information.</change>
+        <change>Improved the `!calc` command to better read equations.</change>
     </version>
 
     <version num="2.0.0">

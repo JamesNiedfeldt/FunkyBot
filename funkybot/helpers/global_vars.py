@@ -19,8 +19,11 @@ begin = None
 #Denylist
 denylist = []
 
-#Reminder database
+#Database
 db = None
+
+#Active reminders
+reminders = []
 
 #List of active polls
 activePolls = []

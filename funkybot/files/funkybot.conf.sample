@@ -24,6 +24,15 @@ request_name=
 request_email=
 giantbomb_key=
 
+# Toggle reset of command usage stats
+#
+# If the following property is set to true, then on FunkyBot startup the statistics for command
+# usage displayed in the !help command will be reset, as if no commands had ever been recorded.
+# This value must be either 'true' or 'false'.
+# DEFAULT:
+# reset_command_usage=false
+reset_command_usage=false
+
 # Toggle message deletion of picture post commands
 #
 # If any of these are set to true, the message sent to call them will be deleted by FunkyBot

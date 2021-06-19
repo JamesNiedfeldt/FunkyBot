@@ -61,9 +61,10 @@ async def on_message(message):
         #Check if command is enabled
         if helpers.isDisabled(cmd):
             await message.channel.send("Sorry, that command is disabled.")
+            return
 
         #Information commands
-        elif cmd == 'hello':
+        if cmd == 'hello':
             await i.hello(message)
 
         elif cmd == 'help':
@@ -124,6 +125,11 @@ async def on_message(message):
 
         elif cmd == 'rps':
             await f.rps(message)
+
+        else:
+            return
+
+        helpers.logCommand(cmd)
 
     except Exception as e:
         #If an exception makes it all the way here, output it to a log file

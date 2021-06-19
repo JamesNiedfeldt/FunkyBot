@@ -57,7 +57,7 @@ class Reminder():
             try:
                 await g.client.get_channel(self.destination).send(self.message)
                 self.live = False
-                g.db.deleteFromDb(self)
+                g.db.deleteReminder(self)
             #If bot is trying to reconnect, delay the message
             except client_exceptions.ClientConnectorError:
                 await self.timer.timeForDuration(1)

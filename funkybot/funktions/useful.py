@@ -269,7 +269,7 @@ def confirmReminder(message,timer):
 #==== Send confirmation message of reminder ====
 def startReminder(timer):
     timer.beginThread()
-    g.db.insertToDb(timer)
+    g.db.insertReminder(timer)
 
     try:
         if timer.live:

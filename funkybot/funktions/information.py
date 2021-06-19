@@ -15,21 +15,36 @@ from errors import errors
 #==== Introduce FunkyBot ====
 def sayHello():
     timeField = {'name': 'Uptime', 'value': ''}
+    cmdField = {'inline': 'true', 'name': 'Most popular commands', 'value': ''}
+    procField = {'inline': 'true', 'name': 'Currently running timers', 'value': ''}
     changeField = {'name': 'Latest changes', 'value': ''}
     linkField = {'name': 'Full list of changes', 'value': c.HELLO_CHANGELOG}
     
     timeField['value'] = h.formatTime(h.getTime(),offset=g.begin)
+
+    cmds = h.getTopCommands()
+    if len(cmds) == 0:
+        cmdField['value'] = "`!hello` -- used 1 time\n"
+    else:
+        for cmd in cmds:
+            if cmd[0] == "hello":
+                cmd[1] = cmd[1] + 1
+            cmdField['value'] += (
+                "\N{BULLET} `!%s` - used %s\n" % (cmd[0], h.pluralize(cmd[1], "time")))
+
+    procField['value'] = "\N{BULLET} " + h.pluralize(h.getNumReminders(), "reminder")
+    procField['value'] += "\n\N{BULLET} " + h.pluralize(len(g.activePolls), "poll")
     
     changeList = h.getXmlTree('changelogs').find("./version/[@num='{}']".format(c.VERSION))
     if changeList is None:
         changeField['value'] = "\n*No changes were found.*"
     else:
         for change in changeList.findall('change'):
-            changeField['value'] += "\n\N{BULLET} %s\n" % change.text
+            changeField['value'] += "\n\N{BULLET} %s" % change.text
     
     emb = embeddable.Embeddable(url=c.HELLO_URL,
                                 title="FunkyBot v%s" % c.VERSION)
-    emb.addField(timeField, changeField, linkField)
+    emb.addField(timeField, cmdField, procField, changeField, linkField)
     emb.setThumbnail(str(g.client.user.avatar_url))
     emb.setFooter(c.HELLO_HELP)
 

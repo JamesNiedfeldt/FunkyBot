@@ -6,6 +6,7 @@ funkybot/files/denylist.xml
 funkybot/files/funkybot.conf
 **/__pycache__
 funkybot/reminders.db
+funkybot/funkydata.db
 tests/test_logs/*
 !funkybot/files/reaction_pics/.gitkeep
 !funkybot/files/cute_pics/.gitkeep

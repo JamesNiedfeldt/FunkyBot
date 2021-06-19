@@ -164,9 +164,26 @@ def logException(e):
         f.write('\n')
         traceback.print_exc(file=f)
 
+#==== Log command use into db ====
+def logCommand(cmd):
+    g.db.incrementCommand(cmd)
+
+#==== Get command usage stats ====
+def getTopCommands():
+    return g.db.getTopCommands()
+
 #=========================================
 #======== Global var manipulation ========
 #=========================================
+
+#==== Check if randomized image was recently used ====
+def duplicateImage(img, path):
+    if path == 'cute_pics':
+        return img in g.recentCute
+    elif path == 'reaction_pics':
+        return img in g.recentReact
+    else:
+        return False
 
 #==== Add image to recently used randomized images ====
 def updateDuplicateImages(img, path):
@@ -193,7 +210,7 @@ def removeFromActivePolls(activeId):
 
 #==== Return number of reminders running ====
 def getNumReminders():
-    return len(g.db.reminders)
+    return len(g.reminders)
 
 #==== Initalize global variables ====
 def initGlobals(client):
@@ -211,10 +228,15 @@ def initGlobals(client):
 
     g.db = database.Database()
 
+    if g.props['reset_command_usage'] == 'true':
+        g.db.clearCommands()
+
 #==== Start reminders from database ====
 def startReminders():
-    g.db.runThreads()
-
+    g.db.loadReminders()    
+    for r in g.reminders:
+        r.beginThread()
+                
 #================================
 #======== Time functions ========
 #================================
@@ -357,7 +379,7 @@ def __readConfig():
 #==== Verify properties ====
 def __verifyProps():
     expectedProps = ['token','request_name','request_email','giantbomb_key',
-                     'cute_delete','react_delete','roll_max_args',
+                     'reset_command_usage','cute_delete','react_delete','roll_max_args',
                      'choose_max_args','binary_max_args','hex_max_args',
                      'time_max_duration','poll_run_duration','magic_currency']
 
@@ -370,6 +392,8 @@ def __verifyProps():
             raise RuntimeError(c.BAD_PROPERTY_GAME)
 
 
+        if g.props['reset_command_usage'] not in ('true', 'false'):
+            raise RuntimeError(c.BAD_PROPERTY_BOOL % 'reset_command_usage')
         if g.props['cute_delete'] not in ('true', 'false'):
             raise RuntimeError(c.BAD_PROPERTY_BOOL % 'cute_delete')
         if g.props['react_delete'] not in ('true', 'false'):

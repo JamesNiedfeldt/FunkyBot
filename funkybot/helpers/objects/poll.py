@@ -4,7 +4,7 @@ Keeps track of active polls
 """
 
 #==== Imports ====
-from helpers import constant as c
+from helpers import constant as c, global_vars as g, helper_functions as h
 
 #==== Poll class ====
 class Poll():
@@ -28,7 +28,9 @@ class Poll():
         if self.question == "":
             self.question = "*No question was given*"
         self.question = self.question + "\n"
-        body = (c.POLL_START + c.LINE_BREAK) % self.author + self.question
+        body = c.POLL_START % (
+            h.pluralize(g.props['poll_run_duration'], "hour"), self.author)
+        body = body + c.LINE_BREAK + self.question
 
         for o in self.options:
             body = body + "\n" + "{} - {}".format(o, self.options[o])

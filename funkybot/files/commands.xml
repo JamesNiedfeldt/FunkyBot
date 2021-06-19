@@ -60,13 +60,13 @@
         <format>!binary [X][...]</format>
         <body>
             <description>Send `!binary [X]` to have me convert your numbers to binary.</description>
-            <hint>I can convert up to {binary_max_args} numbers.</hint>
+            <hint>I can convert up to {binary_max_args}.</hint>
             <hint>I can only convert numbers 0-65535.</hint>
             <hint>For example, to convert 5 to binary, you should send: `!binary [5]`.</hint>
         </body>
         <error type="brackets">Make sure the numbers you want me to convert are surrounded by brackets.</error>
         <error type="empty">I need a number to convert.</error>
-        <error type="too_many">I can only convert at most {binary_max_args} numbers at a time.</error>
+        <error type="too_many">I can only convert at most {binary_max_args} at a time.</error>
         <error type="bad_value">I can only convert integers to binary.</error>
         <error type="bad_number">I can only convert numbers 0-65535 to binary.</error>
     </function>
@@ -112,13 +112,13 @@
         <format>!hex [X][...]</format>
         <body>
             <description>Send `!hex [X]` to have me convert your numbers to hexadecimal.</description>
-            <hint>I can convert up to {hex_max_args} numbers.</hint>
+            <hint>I can convert up to {hex_max_args}.</hint>
             <hint>I can only convert numbers 0-65535.</hint>
             <hint>For example, to convert 5 to hexadecimal, you should send: `!hex [5]`.</hint>
         </body>
         <error type="brackets">Make sure the numbers you want me to convert is surrounded by brackets.</error>
         <error type="empty">I need a number to convert.</error>
-        <error type="too_many">I can only convert at most {hex_max_args} numbers at a time.</error>
+        <error type="too_many">I can only convert at most {hex_max_args} at a time.</error>
         <error type="bad_value">I can only convert integers to hexadecimal.</error>
         <error type="bad_number">I can only convert numbers 0-65535 to hexadecimal.</error>
     </function>
@@ -146,7 +146,7 @@
         <body>
             <description>Send `!poll [X][Y]` to have me start a poll with the given options.</description>
             <hint>When the poll is running, people can vote on the choices by increasing the corresponding reactions that I add to the poll message. Adding new reactions will not do anything.</hint>
-            <hint>The poll will automatically be open for {poll_max_duration} hours, but you can end it early by sending `!end` in the same channel.</hint>
+            <hint>The poll will automatically be open for {poll_max_duration}, but you can end it early by sending `!end` in the same channel.</hint>
             <hint>When the poll is concluded, I will display the results.</hint>
             <hint>You can set a custom poll question by typing anywhere in the message outside of the brackets.</hint>
             <hint>I need at least two options, but you can send up to five.</hint>
@@ -187,14 +187,14 @@
         <format>!roll [X][...]</format>
         <body>
             <description>Send `!roll [X]` to have me roll a die with X sides.</description>
-            <hint>I can roll up to {roll_max_args} dice.</hint>
+            <hint>I can roll up to {roll_max_args}.</hint>
             <hint>If you send me multiple dice I will also tell you the total roll.</hint>
             <hint>Each die must have at least 2 sides (I guess that's just a coin?) and can have up to 1000 sides.</hint>
             <hint>For example, to roll a 6-sided dice, you should send: `!roll [6]`.</hint>
         </body>
         <error type="brackets">Make sure the number of sides of each die is surrounded by brackets.</error>
         <error type="empty">I need a number of sides to roll a die.</error>
-        <error type="too_many">I can only roll at most {roll_max_args} dice at a time.</error>
+        <error type="too_many">I can only roll at most {roll_max_args} at a time.</error>
         <error type="bad_value">I can only roll dice with an integer number of sides.</error>
         <error type="bad_number">I can only roll dice with 2-1000 sides.</error>
     </function>
@@ -205,7 +205,7 @@
         <body>
             <description>Send `!time [X]` to have me send you a notification after the set time.</description>
             <hint>Time can be set with s(econds), h(ours), and d(ays).</hint>
-            <hint>Time cannot exceed {time_max_duration} days.</hint>
+            <hint>Time cannot exceed {time_max_duration}.</hint>
             <hint>Each unit of time must be in separate brackets.</hint>
             <hint>I need at least one argument but I can take up to three.</hint>
             <hint>You can set a custom message by typing anywhere in the message outside of the brackets.</hint>
@@ -215,7 +215,7 @@
         <error type="too_many">I can only take three arguments.</error>
         <error type="too_few">I need at least one argument to set your reminder.</error>
         <error type="bad_duration">Make sure your arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
-        <error type="too_long">Time cannot exceed {time_max_duration} days.</error>
+        <error type="too_long">Time cannot exceed {time_max_duration}.</error>
         <error type="empty">You must put something in the brackets.</error>
 	    <error type="no_duration">The time for the reminder to run must last at least one second.</error>
     </function>

@@ -131,7 +131,7 @@
             <hint>I can search for up to three cards.</hint>
             <hint>For example, to search for Island, you should send: `!magic [island]`.</hint>
             <hint>I can also search for a random card using the word "random". For example: `!magic [random]`.</hint>
-            <hint>You can also use Scryfall's syntax to narrow down possible cards when searching for a random card. For example, to search for a random red and green commander, you should send: `!magic [random c=rg is:commander]`.</hint>
+            <hint>You can also use Scryfall's syntax to narrow down possible cards when searching for a random card. For example, to search for a random red and green commander, you should send: `!magic [random|c=rg is:commander]`.</hint>
             <hint>You can also search for a specific printing of a card by adding `|` and a set code. If I can't find that specific printing, I'll ignore it and search for your card anyway. For example, to search for Lightning Bolt from 4th Edition, you should send `!magic [Lightning Bolt|4ED]`.</hint>
         </body>
         <error type="brackets">Make sure the cards you want me to search for are surrounded by brackets.</error>

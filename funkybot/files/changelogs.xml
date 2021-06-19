@@ -4,8 +4,11 @@
     <!-- These are specifically user-facing changes and thus do not need detail about inner workings of FunkyBot. Changes to jokes and pics do not need to be noted unless significant. -->
 
     <version num="2.0.1">
-        <change>Fixed the `!game` command not finding games with missing information.</change>
+        <change>When searching for a random card with the `!magic` command, the `|` character is now used to separate additional Scryfall syntax. For example, to get a random commander, send `!magic [random|is:commander]`.</change>
+        <change>The `!magic` command is now more accurate when sending a replacement card if a requested printing isn't found.</change>
+        <change>The `!game` command now ignores pinball tables.</change>
         <change>Improved the `!calc` command to better read equations.</change>
+        <change>Fixed the `!game` command not finding games with missing information.</change>
     </version>
 
     <version num="2.0.0">

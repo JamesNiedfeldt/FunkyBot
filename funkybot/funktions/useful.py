@@ -138,12 +138,15 @@ def fetchCard(message):
         raise e
     
     for i in cards:
-        result = cf.fetchCard(i)
-        
-        if isinstance(result, list):
-            toReturn = toReturn + result
+        if i.startswith("|"):
+            raise errors.TooFewArgumentsException("magic")
         else:
-            toReturn.append(result)
+            result = cf.fetchCard(i)
+        
+            if isinstance(result, list):
+                toReturn = toReturn + result
+            else:
+                toReturn.append(result)
 
     return toReturn
 

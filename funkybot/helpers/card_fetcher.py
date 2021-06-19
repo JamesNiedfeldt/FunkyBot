@@ -14,29 +14,35 @@ def fetchCard(query):
     name = "https://api.scryfall.com/cards/named"
     search = "https://api.scryfall.com/cards/search"
     random = "https://api.scryfall.com/cards/random"
-    expansion = ""
+    mod = ""
     
     try:
-        #Random card requested
-        if query.upper().startswith("RANDOM"):
-            response = requests.get(url = random, params = {'q':__parseRandom(query)}, headers = g.apiHeaders)
-            results = response.json()
+        if '|' in query:
+            mod = query.split('|')[1].strip()
+            query = query.split('|')[0].strip()
 
+        if query.lower() == "random":
+            response = requests.get(url=random, params={'q':mod}, headers = g.apiHeaders)
+            
+        #Find by name first
         else:
-            if '|' in query:
-                expansion = query.split('|')[1].strip()
-                query = query.split('|')[0].strip()
-                
-            #Find by name first
             response = requests.get(url = name,
-                                    params = {'fuzzy':query, 'set': expansion},
+                                    params = {'fuzzy':query, 'set': mod},
                                     headers = g.apiHeaders)
-            results = response.json()
 
-            if results['object'] == "error":
-                #Try a search if not found by name
-                response = requests.get(url = search, params = {'q':query}, headers = g.apiHeaders)
-                results = response.json()
+            #Try finding by name without set code
+            if response.status_code == 404 and mod != "":
+                response = requests.get(url = name,
+                                        params = {'fuzzy':query},
+                                        headers=g.apiHeaders)
+
+            #Try general search
+            if response.status_code == 404:
+                response = requests.get(url = search,
+                                        params = {'q':query},
+                                        headers=g.apiHeaders)
+
+        results = response.json()
 
         #If found multiple cards, take the first
         if results['object'] == "list":
@@ -169,13 +175,3 @@ def __makeTextBox(card):
             textBox = textBox + '\n' + card['power'] + '/' + card['toughness']
 
     return textBox
-
-def __parseRandom(query):
-    q = ""
-    
-    terms = query.upper().split("RANDOM")
-
-    if terms[1] != "":
-        q = terms[1]
-
-    return q

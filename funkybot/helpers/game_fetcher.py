@@ -21,21 +21,22 @@ def fetchGame(query):
         'query': query,
         'api_key': g.props['giantbomb_key'],
         'format': 'json',
-        'limit': '1',
+        'limit': '5',
         'resources': 'game',
-        'field_list': 'api_detail_url,site_detail_url'}
+        'field_list': 'api_detail_url,site_detail_url,platforms'}
 
     try:
         response = requests.get(url=uri, headers=g.apiHeaders, params=params)
-        results = response.json()
+        res = response.json()
 
-        if results['number_of_total_results'] == 0:
-            return embed.empty("Sorry, I couldn't find \"{}\"!".format(query))
-        else:
-            toReturn = __formatResult(results['results'][0]['api_detail_url'],
-                                      results['results'][0]['site_detail_url'])
-            toReturn.addField(searchField)
-            return toReturn
+        for i in range(res['number_of_total_results']):
+            if "pinball" not in [p['name'].lower() for p in res['results'][i]['platforms']]:
+                toReturn = __formatResult(res['results'][i]['api_detail_url'],
+                                      res['results'][i]['site_detail_url'])
+                toReturn.addField(searchField)
+                return toReturn
+
+        return embed.empty("Sorry, I couldn't find \"{}\"!".format(query))
 
     except Exception as e:
         h.logException(e)

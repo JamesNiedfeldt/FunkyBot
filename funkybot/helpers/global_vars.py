@@ -28,6 +28,9 @@ reminders = []
 #List of active polls
 activePolls = []
 
+#List of common mistakes for command suggestions
+commonMistakes = {}
+
 """
 These are changed after initialization to make !react
 and !cute appear more random

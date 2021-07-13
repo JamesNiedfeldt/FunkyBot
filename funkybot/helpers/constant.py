@@ -3,7 +3,7 @@
 Contains constants
 """
 
-VERSION = "2.0.1"
+VERSION = "2.0.2"
 
 HELP_REMINDER = "If you need specific information on commands or general use, send the `!help` command with the command you want help with. For example, `!help [!ask]`."
 
@@ -54,13 +54,3 @@ CANT_BOOT = "ERROR STARTING FUNKYBOT: Could not verify properties."
 BOOT_UP = """===============
 %s %s
 I'm ready to work!"""
-
-#Common mistaken command names, to be updated as they become apparent
-COMMON_MISTAKES = {
-        '!bin': '!binary',
-        '!math': '!calc',
-        '!choice': '!choose',
-        '!shibe': '!cute',
-        '!mtg': '!magic',
-        '!card': '!magic',
-        '!vote': '!poll'}

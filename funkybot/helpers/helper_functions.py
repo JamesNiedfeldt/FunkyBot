@@ -67,8 +67,8 @@ def parseCommand(cmd):
             return cmd
         
     #Is it a common mistake for an enabled command?
-    if cmd in c.COMMON_MISTAKES and not isDisabled(c.COMMON_MISTAKES[cmd]):
-        return c.COMMON_MISTAKES[cmd]
+    if cmd in g.commonMistakes and not isDisabled(g.commonMistakes[cmd]):
+        return g.commonMistakes[cmd]
     #If not, find the best match
     else:
         return _lDistance(cmd, cmdList)
@@ -148,7 +148,7 @@ def filePath(directory):
 
 #==== Grab a root XML tree from a file ====
 def getXmlTree(fileName):
-    tree = et.parse(filePath('{}.xml'.format(fileName)))
+    tree = et.parse(filePath('xml/{}.xml'.format(fileName)))
     return tree.getroot()
 
 #==== Log startup ====
@@ -225,6 +225,10 @@ def initGlobals(client):
     root = getXmlTree("denylist")
     for u in root.findall("user"):
         g.denylist.append(u.text)
+
+    root = getXmlTree("common_mistakes")
+    for m in root.findall("command"):
+        g.commonMistakes[m.text] = m.get("suggestion")
 
     g.db = database.Database()
 
@@ -378,54 +382,31 @@ def __readConfig():
 
 #==== Verify properties ====
 def __verifyProps():
-    expectedProps = ['token','request_name','request_email','giantbomb_key',
-                     'reset_command_usage','cute_delete','react_delete','roll_max_args',
-                     'choose_max_args','binary_max_args','hex_max_args',
-                     'time_max_duration','poll_run_duration','magic_currency']
+    expectedProps = getXmlTree("expected_properties").findall("./property")
 
     try:
-        for key in expectedProps:
-            if g.props[key] == '' and key != 'giantbomb_key':
-                raise RuntimeError(c.BAD_PROPERTY_BLANK % key)
-        if (('game' not in g.props or g.props['game'] == 'true')
-            and g.props['giantbomb_key'] == ''):
-            raise RuntimeError(c.BAD_PROPERTY_GAME)
-
-
-        if g.props['reset_command_usage'] not in ('true', 'false'):
-            raise RuntimeError(c.BAD_PROPERTY_BOOL % 'reset_command_usage')
-        if g.props['cute_delete'] not in ('true', 'false'):
-            raise RuntimeError(c.BAD_PROPERTY_BOOL % 'cute_delete')
-        if g.props['react_delete'] not in ('true', 'false'):
-            raise RuntimeError(c.BAD_PROPERTY_BOOL % 'react_delete')
-        if g.props['magic_currency'] not in ('usd', 'eur', 'tix'):
-            raise RuntimeError(c.BAD_PROPERTY_MAGIC)
-
-        # roll_max_args: min 1, max 10
-        if (not g.props['roll_max_args'].isnumeric()
-            or int(g.props['roll_max_args']) < 1 or int(g.props['roll_max_args']) > 10):
-            raise RuntimeError(c.BAD_PROPERTY_INT % ('roll_max_args', 1, 10))
-        # choose_max_args: min 2, max 10
-        if (not g.props['choose_max_args'].isnumeric()
-            or int(g.props['choose_max_args']) < 2 or int(g.props['choose_max_args']) > 10):
-            raise RuntimeError(c.BAD_PROPERTY_INT % ('choose_max_args', 2, 10))
-        # binary_max_args: min 1, max 10
-        if (not g.props['binary_max_args'].isnumeric()
-            or int(g.props['binary_max_args']) < 1 or int(g.props['binary_max_args']) > 10):
-            raise RuntimeError(c.BAD_PROPERTY_INT % ('binary_max_args', 1, 10))
-        # hex_max_args: min 1, max 10
-        if (not g.props['hex_max_args'].isnumeric()
-            or int(g.props['hex_max_args']) < 1 or int(g.props['hex_max_args']) > 10):
-            raise RuntimeError(c.BAD_PROPERTY_INT % ('hex_max_args', 1, 10))
-        # time_max_duration: min 1, max 30
-        if (not g.props['time_max_duration'].isnumeric()
-            or int(g.props['time_max_duration']) < 1 or int(g.props['time_max_duration']) > 30):
-            raise RuntimeError(c.BAD_PROPERTY_INT % ('time_max_duration', 1, 30))
-        # poll_run_duration: min 1, max 10
-        if (not g.props['poll_run_duration'].isnumeric()
-            or int(g.props['poll_run_duration']) < 1 or int(g.props['poll_run_duration']) > 10):
-            raise RuntimeError(c.BAD_PROPERTY_INT % ('poll_run_duration', 1, 10))
-        
+        for prop in expectedProps:
+            if prop.text == "giantbomb_key":
+                if (('game' not in g.props or g.props['game'] == 'true')
+                    and g.props['giantbomb_key'] == ''):
+                    raise RuntimeError(c.BAD_PROPERTY_GAME)
+                
+            elif prop.text == "magic_currency":
+                if (('magic' not in g.props or g.props['magic'] == 'true')
+                    and g.props[prop.text] not in prop.get("options").split(',')):
+                    raise RuntimeError(c.BAD_PROPERTY_MAGIC)
+                
+            else:
+                if g.props[prop.text] == '':
+                    raise RuntimeError(c.BAD_PROPERTY_BLANK % prop.text)
+                elif prop.get("type") == "bool":
+                    if g.props[prop.text] not in ('true', 'false'):
+                        raise RuntimeError(c.BAD_PROPERTY_BOOL % prop.text)
+                elif prop.get("type") == "int":
+                    if (int(g.props[prop.text]) < int(prop.get("min")) or
+                        int(g.props[prop.text]) > int(prop.get("max"))):
+                        raise RuntimeError(c.BAD_PROPERTY_INT % (prop.text, prop.get("min"), prop.get("max")))
+                
 
     except RuntimeError:
         print(c.CANT_BOOT)

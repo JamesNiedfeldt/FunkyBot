@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+    <property type="string" required="true">token</property>
+    <property type="string" required="true">request_name</property>
+    <property type="string" required="true">request_email</property>
+    <property type="string" required="false">giantbomb_key</property>
+    <property type="bool" required="true">reset_command_usage</property>
+
+    <property type="bool" required="true">cute_delete</property>
+    <property type="bool" required="true">react_delete</property>
+
+    <property type="int" required="true" min="1" max="10">roll_max_args</property>
+    <property type="int" required="true" min="2" max="10">choose_max_args</property>
+    <property type="int" required="true" min="1" max="10">binary_max_args</property>
+    <property type="int" required="true" min="1" max="10">hex_max_args</property>
+    <property type="int" required="true" min="1" max="30">time_max_duration</property>
+    <property type="int" required="true" min="1" max="10">poll_run_duration</property>
+
+    <property type="string" required="false" options="usd,eur,tix">magic_currency</property>
+</root>

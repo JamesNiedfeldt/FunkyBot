@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+    <command suggestion="binary">bin</command>
+
+    <command suggestion="calc">math</command>
+
+    <command suggestion="choose">choice</command>
+
+    <command suggestion="cute">shibe</command>
+
+    <command suggestion="magic">mtg</command>
+    <command suggestion="magic">card</command>
+
+    <command suggestion="poll">vote</command>
+</root>

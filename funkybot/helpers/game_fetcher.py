@@ -81,15 +81,21 @@ def __formatResult(newUri, siteUrl):
 
     #Grab platforms
     platField = {"name": "Playable on", "value": ""}
-    for p in gameResult['results']['platforms']:
-        platField['value'] += p['name'] + ", "
-    platField['value'] = platField['value'][:-2]
+    if gameResult['results']['platforms'] == None:
+        platField['value'] = "No platform information found"
+    else:
+        for p in gameResult['results']['platforms']:
+            platField['value'] += p['name'] + ", "
+        platField['value'] = platField['value'][:-2]
 
     #Grab developers
     devField = {"inline": "true", "name": "Developers", "value": ""}
-    for d in gameResult['results']['developers']:
-        devField['value'] += d['name'] + ", "
-    devField['value'] = devField['value'][:-2]
+    if gameResult['results']['developers'] == None:
+        devField['value'] = "No developer information found"
+    else:
+        for d in gameResult['results']['developers']:
+            devField['value'] += d['name'] + ", "
+        devField['value'] = devField['value'][:-2]
 
     #Grab publishers
     pubField = {"inline": "true", "name": "Publishers", "value": ""}

@@ -5,6 +5,7 @@
 
     <version num="2.0.2">
       <change>Improved command suggestion when entering an incorrect command.</change>
+      <change>Fixed the `!time` command accepting negative time arguments.</change>
     </version>
 
     <version num="2.0.1">

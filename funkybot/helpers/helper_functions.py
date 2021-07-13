@@ -274,14 +274,16 @@ def convertDurationTime(timeArgs):
          
     for i in timeArgs:
         key = re.findall("[smhd]", i, flags=re.IGNORECASE)
-        
-        if len(key) is 0:
-            return None
-        else:
-            num = re.split(key[0] ,i)[0]
-            key = key[0].lower()
 
         try:
+            if len(key) is 0:
+                return None
+            else:
+                num = float(re.split(key[0] ,i)[0])
+                if num < 0:
+                    raise errors.CustomCommandException('time', 'negative_time')
+                key = key[0].lower()
+
             if num == "":
                 pass
             elif key == 's':

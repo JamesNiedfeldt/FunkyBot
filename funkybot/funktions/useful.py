@@ -207,7 +207,7 @@ def makeDurationReminder(message):
         raise errors.CustomCommandException("time", "bad_duration")
     elif duration > int(g.props['time_max_duration']) * 86400: #Duration longer than set property
         raise errors.CustomCommandException("time", "too_long")
-    elif duration <= 0: #Duration empty or negative
+    elif duration < 1: #Duration less than 1 second
         raise errors.CustomCommandException("time", "no_duration")
 
     timer = reminder.Reminder(duration=duration,msg=message,dt=False)

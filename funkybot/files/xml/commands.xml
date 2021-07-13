@@ -217,7 +217,8 @@
         <error type="bad_duration">Make sure your arguments use only integers and use letters to set s(econds), h(ours), or d(ays).</error>
         <error type="too_long">Time cannot exceed {time_max_duration}.</error>
         <error type="empty">You must put something in the brackets.</error>
-	    <error type="no_duration">The time for the reminder to run must last at least one second.</error>
+	<error type="no_duration">The time for the reminder to run must last at least one second.</error>
+        <error type="negative_time">Time arguments cannot be negative.</error>
     </function>
 
     <function category="useful">

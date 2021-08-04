@@ -6,6 +6,7 @@
     <property type="string" required="true">request_email</property>
     <property type="string" required="false">giantbomb_key</property>
     <property type="bool" required="true">reset_command_usage</property>
+    <property type="bool" required="true">poll_pin</property>
 
     <property type="bool" required="true">cute_delete</property>
     <property type="bool" required="true">react_delete</property>

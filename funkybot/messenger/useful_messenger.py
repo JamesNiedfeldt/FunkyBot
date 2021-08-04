@@ -85,7 +85,7 @@ async def magic(message):
             
 #==== Setup a poll ====
 async def poll(message):
-    activeId = str(message.author.id) + str(message.channel.id)
+    activeId = str(message.author.id) + "." + str(message.channel.id)
 
     if helpers.isPollRunning(activeId): #Only begin a poll if not already one in channel
         await message.channel.send("Sorry, you already have a poll running in this channel. If you want to end it, send `!end`.")
@@ -102,6 +102,12 @@ async def poll(message):
                         msg.channel == message.channel and
                         msg.content.upper().startswith('!END'))
 
+            if globs.props['poll_pin']:
+                try:
+                    await sentMsg.pin(reason="Poll started")
+                except discord.errors.Forbidden: #Can't pin
+                    pass
+
             for o in poll.options:
                 await sentMsg.add_reaction(o)
 
@@ -113,6 +119,12 @@ async def poll(message):
 
             fetchedMsg = await message.channel.fetch_message(sentMsg.id) #Update message information
             await message.channel.send(useful.finishPoll(fetchedMsg,poll))
+
+            try:
+                await fetchedMsg.unpin(reason="Poll finished")
+            except discord.errors.Forbidden: #Can't unpin
+                pass
+            
             helpers.removeFromActivePolls(activeId)
             
         except errors.Error as e:

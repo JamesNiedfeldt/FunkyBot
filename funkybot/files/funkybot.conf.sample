@@ -29,9 +29,21 @@ giantbomb_key=
 # If the following property is set to true, then on FunkyBot startup the statistics for command
 # usage displayed in the !help command will be reset, as if no commands had ever been recorded.
 # This value must be either 'true' or 'false'.
+#
 # DEFAULT:
 # reset_command_usage=false
 reset_command_usage=false
+
+# Toggle poll pinning
+#
+# If the following property is set to true, then polls will be pinned in the channels they're
+# started in for the duration of their run time. When the poll is over the message will be
+# unpinned regardless of this setting. If the property is enabled but FunkyBot doesn't have
+# permission, it will simply not pin the message.
+#
+# DEFAULT:
+# poll_pin=true
+poll_pin=true
 
 # Toggle message deletion of picture post commands
 #

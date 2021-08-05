@@ -151,7 +151,7 @@
             <hint>You can set a custom poll question by typing anywhere in the message outside of the brackets.</hint>
             <hint>I need at least two options, but you can send up to five.</hint>
             <hint>You can only run a single poll per channel at a time.</hint>
-            <hint>If I am able to, I will pin the poll while it is running so it is easy to find.</change>
+            <hint>If I am able to, I will pin the poll while it is running so it is easy to find.</hint>
             <hint>For example, to poll people on what their favorite color is, send: `!poll What is your favorite color? [Red][Yellow][Blue]`.</hint>
         </body>
         <error type="brackets">Make sure each option you want on the poll are surrounded by brackets.</error>

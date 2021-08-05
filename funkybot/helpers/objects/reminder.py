@@ -6,7 +6,6 @@ Keeps track of reminder requests from users and sends reminders when ready
 #==== Imports ====
 import asyncio
 import re
-import discord
 from aiohttp import client_exceptions
 
 from helpers.objects import timer

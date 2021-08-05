@@ -8,12 +8,14 @@ from helpers import constant as c, global_vars as g, helper_functions as h
 
 #==== Poll class ====
 class Poll():
-    def __init__(self,author,question,options):
-        self.author = author.display_name
+    def __init__(self,msg,question,options):
+        self.author = msg.author.display_name
         self.question = question
         self.options = self.__formatOptions(options)
         if self.options != None:
             self.body = self.__formatBody()
+        self.messageId = None
+        self.activeId = str(msg.author.id) + "|" + str(msg.channel.id)
 
     def __formatOptions(self,optList):
         optDict = {}    

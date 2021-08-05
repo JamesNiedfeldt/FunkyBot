@@ -9,7 +9,7 @@ import time
 import os
 
 from helpers import global_vars as g
-from helpers.objects import reminder
+from helpers.objects import reminder, poll
 
 #==== Database class ====
 class Database():
@@ -27,6 +27,7 @@ class Database():
         self.db = sqlite3.connect(os.path.join(absolute,"funkydata.db"))
         self.__createRemindersTable()
         self.__createCommandUsageTable()
+        self.__createPollTable()
 
     #==== Create tables ====
     def __createRemindersTable(self):
@@ -47,30 +48,38 @@ class Database():
         self.db.cursor().execute(query)
         self.db.commit()
 
+    def __createPollTable(self):
+        query = ("CREATE TABLE IF NOT EXISTS polls\n" +
+                 "(id INTEGER PRIMARY KEY, \n" +
+                 "message_id STRING, \n" +
+                 "active_id STRING)")
+        self.db.cursor().execute(query)
+        self.db.commit()
+
     #==== Reminder functions ====
-    def insertReminder(self,reminder):
+    def insertReminder(self,inReminder):
         if self.db != None:
-            values = (reminder.begin, reminder.duration, reminder.message,
-                      reminder.destination)
+            values = (inReminder.begin, inReminder.duration, inReminder.message,
+                      inReminder.destination)
             cursor = self.db.cursor()
             cursor.execute("INSERT INTO reminders (begin, duration, message, destination)"+
                            "VALUES(?,?,?,?)",(values))
-            reminder.id = cursor.lastrowid
+            inReminder.id = cursor.lastrowid
             self.db.commit()
             
-            if reminder.live:
-                g.reminders.append(reminder)
+            if inReminder.live:
+                g.reminders.append(inReminder)
         else:
             raise RuntimeError("Database was not initialized")
 
-    def deleteReminder(self,reminder):
+    def deleteReminder(self,inReminder):
         if self.db != None:
             if reminder.id != -1:
                 self.db.cursor().execute("DELETE FROM reminders WHERE id=?",(reminder.id,))
                 self.db.commit()
 
             try:
-                g.reminders.remove(reminder)
+                g.reminders.remove(inReminder)
             except ValueError:
                 pass
         else:
@@ -127,3 +136,44 @@ class Database():
         if self.db != None:
             self.db.execute("DELETE FROM command_usage")
             self.db.commit()
+
+    #==== Poll ID functions ====
+    def insertPoll(self,inPoll):
+        if self.db != None:
+            values = (inPoll.messageId, inPoll.activeId)
+            cursor = self.db.cursor()
+            cursor.execute("INSERT INTO polls (message_id, active_id)"+
+                           "VALUES(?,?)",(values))
+            self.db.commit()
+            
+            g.activePolls.append(inPoll.activeId)
+        else:
+            raise RuntimeError("Database was not initialized")
+
+    def deletePoll(self,inPoll):
+        if self.db != None:
+            self.db.cursor().execute("DELETE FROM polls WHERE active_id=?",(inPoll.activeId,))
+            self.db.commit()
+
+            g.activePolls.remove(inPoll.activeId)
+        else:
+            raise RuntimeError("Database was not initialized")
+
+    def clearDeadPolls(self):
+    #ONLY call on startup! Gets all ids from polls table and deletes all table entries.
+        if self.db != None:
+            cursor = self.db.cursor()
+            cursor.execute("SELECT * FROM polls")
+            idPairs = {}
+
+            for i in cursor.fetchall():
+                #Create dict of message_id: channel_id
+                idPairs[i[1]] = int(i[2].split('|')[1])
+
+            cursor.execute("DELETE FROM polls")
+            self.db.commit()
+
+            return idPairs
+        
+        else:
+            raise RuntimeError("Database was not initialized") 

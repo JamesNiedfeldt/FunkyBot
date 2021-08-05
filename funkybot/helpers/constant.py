@@ -11,6 +11,10 @@ POLL_START = "To vote in this poll, click on the reaction corresponding to the o
 
 POLL_END = "%s's poll is over! Here are the results: %s"
 
+POLL_ALREADY_RUNNING = "Sorry, you already have a poll running in this channel. If you want to end it early, send `!end`."
+
+CANT_ADD_REACTIONS = "Sorry, I can't start a poll because I don't have permissions to add reactions."
+
 REMIND_CONFIRM_1 = "Ok %s, I will remind you in %s with the following message:\n\n"
 
 REMIND_CONFIRM_2 = "If that is ok, reply with `!yes`. If not, reply with `!no`."

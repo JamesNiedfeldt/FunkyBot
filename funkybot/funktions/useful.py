@@ -164,7 +164,7 @@ def makePoll(message):
     question = (re.sub("\[([^\[\]]*)\]", "",
                        message.content.split(' ',1)[1], flags=re.IGNORECASE))
             
-    return poll.Poll(message.author, question, options)
+    return poll.Poll(message, question, options)
 
 #==== Analyze poll results ====
 def finishPoll(message,poll):
@@ -190,6 +190,9 @@ def finishPoll(message,poll):
                     + h.blockQuote(poll.options[r])
                     + h.blockQuote("`[%s%s]` %s votes, %s%%" %
                                    (bar, spaces, results[r], percent)))
+        
+    toReturn = (toReturn + c.LINE_BREAK
+                + "Poll link: " + message.jump_url)
 
     return toReturn
 

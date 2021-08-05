@@ -8,7 +8,7 @@ import asyncio
 import discord
 
 from funktions import useful
-from helpers import helper_functions as helpers, global_vars as globs
+from helpers import helper_functions as helpers, global_vars as globs, constant as c
 from errors import errors
 
 #==== Setup a reminder for everyone ====
@@ -85,17 +85,19 @@ async def magic(message):
             
 #==== Setup a poll ====
 async def poll(message):
-    activeId = str(message.author.id) + "." + str(message.channel.id)
+    try:
+        poll = useful.makePoll(message)
+        
+        if helpers.isPollRunning(poll): #Only begin a poll if not already one in channel
+            await message.channel.send(c.POLL_ALREADY_RUNNING)
+        elif message.guild.me.permissions_in(message.channel).add_reactions == False:
+            await message.channel.send(c.CANT_ADD_REACTIONS)
 
-    if helpers.isPollRunning(activeId): #Only begin a poll if not already one in channel
-        await message.channel.send("Sorry, you already have a poll running in this channel. If you want to end it, send `!end`.")
-
-    else:                          
-        try:
-            poll = useful.makePoll(message)
+        else:
             reactions = []
-            helpers.addToActivePolls(activeId)
             sentMsg = await message.channel.send(poll.body)
+            poll.messageId = sentMsg.id
+            helpers.addToActivePolls(poll)
 
             def pred(msg):
                 return (msg.author == message.author and
@@ -104,7 +106,8 @@ async def poll(message):
 
             if globs.props['poll_pin']:
                 try:
-                    await sentMsg.pin(reason="Poll started")
+                    await sentMsg.pin(
+                        reason="Poll started by %s: '%s'" % (poll.author, poll.question))
                 except discord.errors.Forbidden: #Can't pin
                     pass
 
@@ -117,18 +120,19 @@ async def poll(message):
             except asyncio.TimeoutError:
                 pass
 
-            fetchedMsg = await message.channel.fetch_message(sentMsg.id) #Update message information
+            fetchedMsg = await message.channel.fetch_message(poll.messageId) #Update message information
             await message.channel.send(useful.finishPoll(fetchedMsg,poll))
 
             try:
-                await fetchedMsg.unpin(reason="Poll finished")
+                await fetchedMsg.unpin(
+                    reason="Poll by %s finished: '%s'" % (poll.author, poll.question))
             except discord.errors.Forbidden: #Can't unpin
                 pass
             
-            helpers.removeFromActivePolls(activeId)
+            helpers.removeFromActivePolls(poll)
             
-        except errors.Error as e:
-            await message.channel.send(helpers.badArgs(e))
+    except errors.Error as e:
+        await message.channel.send(helpers.badArgs(e))
 
 #==== Setup reminder ====
 async def remind(message, time=False):

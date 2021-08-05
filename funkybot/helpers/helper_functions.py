@@ -5,6 +5,7 @@ Contains the non-command functions needed to run
 
 #==== Imports ====
 from datetime import datetime, date, timezone, timedelta
+import discord
 import os
 import re
 import xml.etree.ElementTree as et
@@ -197,16 +198,16 @@ def updateDuplicateImages(img, path):
             g.recentReact.pop(0)
 
 #==== Check if a poll is already being run by someone ====
-def isPollRunning(activeId):
-    return activeId in g.activePolls
+def isPollRunning(poll):
+    return poll.activeId in g.activePolls
 
 #==== Add an ID to active running polls ====
-def addToActivePolls(activeId):
-    g.activePolls.append(activeId)
+def addToActivePolls(poll):
+    g.db.insertPoll(poll)
 
 #==== Remove an ID from active running polls ====
-def removeFromActivePolls(activeId):
-    g.activePolls.remove(activeId)
+def removeFromActivePolls(poll):
+    g.db.deletePoll(poll)
 
 #==== Return number of reminders running ====
 def getNumReminders():
@@ -240,6 +241,19 @@ def startReminders():
     g.db.loadReminders()    
     for r in g.reminders:
         r.beginThread()
+
+#==== Unpin dead polls and clear them from database ====
+async def clearDeadPolls():
+    idPairs = g.db.clearDeadPolls()
+
+    if idPairs != None:
+        try:
+            for m in idPairs:
+                channel = g.client.get_channel(idPairs[m])
+                message = await channel.fetch_message(m)
+                await message.unpin(reason="Poll can't be finished")
+        except discord.errors.Forbidden: #Can't unpin
+            pass
                 
 #================================
 #======== Time functions ========

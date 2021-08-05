@@ -20,6 +20,7 @@ async def on_ready():
     
     await globs.client.change_presence(activity=discord.Game("!help"))
     helpers.startReminders()
+    await helpers.clearDeadPolls()
     helpers.logStartup()
     print("Number of reminders from DB: %s" % helpers.getNumReminders())
 

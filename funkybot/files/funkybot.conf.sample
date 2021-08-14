@@ -109,3 +109,12 @@ announce=true
 magic=true
 wiki=true
 game=true
+
+# Toggle debug output
+#
+# If the following property is set to true, then FunkyBot will display exceptions in stderr 
+# as well as in the log files. If set to false, they will only appear in the log files.
+#
+# DEFAULT:
+# debug=false
+debug=false

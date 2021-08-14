@@ -16,7 +16,7 @@ Finally, certain files must exist within the project directory for FunkyBot to p
   - This contains certain properties required for FunkyBot to run. See below what properties are in this file. 
   - `funkybot/files/funkybot.conf.sample` contains an example of this file.
 - `funkybot/files/denylist.xml`
-  - This file must contain any Discord user IDs of users you don't want to use the bot enclosed in a `user` tag. There do not need to be any IDs, but the file must still contain the root XML tags found in the sameple file.
+  - This file must contain any Discord user IDs of users you don't want to use the bot enclosed in a `user` tag. There do not need to be any IDs, but the file must still contain the root XML tags found in the sample file.
   - `funkybot/files/denylist.xml.sample` contains an example of this file.
 - Reaction images/cute images
   - The two image folders (`funkybot/files/reaction_pics` and `funkybot/files/cute_pics`) should contain images for their respective commands to randomly choose from. If either folder contain no images, the commands will work but return a message stating there was nothing to find.
@@ -32,24 +32,30 @@ New in version 2.0.0 is the `funkybot/files/funkybot.conf` file, which contains 
   - This is your email which will be attached to API request headers in order to achieve best practice when making API requests. This is required even if all request-related commands are disabled, but it won't be used anywhere in that case.
 - `giantbomb_key`
   - This is your Giant Bomb API key required for making API requests using the `!game` command. If that command is disabled, this property may be left blank.
+- `reset_command_usage`
+  - Sets whether to clear command usage stats from the database at startup. If set to true, FunkyBot will "start fresh" recording command statistics for the `!hello` command when it starts up, as if no commands had ever been called. This must either be set to `true` or `false`.
+- `poll_pin`
+  - Sets whether FunkyBot will attempt to pin polls as long as they run. Regardless of this setting, FunkyBot will attempt to unpin polls that can't be finished due to a restart. This must either be set to `true` or `false`.
 - `cute_delete`
-  - This determines if messages calling the `!cute` command should be deleted if FunkyBot has permissions to do so. This must either be set to `true` or `false`.
+  - Sets whether messages calling the `!cute` command should be deleted if FunkyBot has permissions to do so. This must either be set to `true` or `false`.
 - `react_delete`
-  - This determines if messages calling the `!react` command should be deleted if FunkyBot has permissions to do so. This must either be set to `true` or `false`.
+  - Sets whether messages calling the `!react` command should be deleted if FunkyBot has permissions to do so. This must either be set to `true` or `false`.
 - `roll_max_args`
-  - This determines the maximum number of arguments allowed in the `!roll` command. This must be an integer min 1 and max 10.
+  - Sets the maximum number of arguments allowed in the `!roll` command. This must be an integer min 1 and max 10.
 - `choose_max_args`
-  - This determines the maximum number of arguments allowed in the `!choose` command. This must be an integer min 2 and max 10.
+  - Sets the maximum number of arguments allowed in the `!choose` command. This must be an integer min 2 and max 10.
 - `binary_max_args`
-  - This determines the maximum number of arguments allowed in the `!binary` command. This must be an integer min 1 and max 10.
+  - Setss the maximum number of arguments allowed in the `!binary` command. This must be an integer min 1 and max 10.
 - `hex_max_args`
-  - This determines the maximum number of arguments allowed in the `!hex` command. This must be an integer min 1 and max 10.
+  - Sets the maximum number of arguments allowed in the `!hex` command. This must be an integer min 1 and max 10.
 - `time_max_duration`
-  - This determines the maximum duration a reminder set with the `!time` command can run, in days. This must be an integer min 1 and max 30.
+  - Sets the maximum duration a reminder set with the `!time` command can run, in days. This must be an integer min 1 and max 30.
 - `poll_run_duration`
-  - This determines the time a poll started with the `!poll` command will run before automatically closing, in hours. This must be an integer min 1 and max 10.
+  - Sets the time a poll started with the `!poll` command will run before automatically closing, in hours. This must be an integer min 1 and max 10.
 - `magic_currency`
-  - This determines the currency used when displaying card prices via the `!magic` command. This can only be `usd`, `eur`, or `tix`.
+  - Sets the currency used when displaying card prices via the `!magic` command. This can only be `usd`, `eur`, or `tix`.
+- `debug`
+  - Sets whether FunkyBot will print exceptions to stderr. Regardless of this setting, FunkyBot will write exceptions to the logs in `files/logs/`. This must either be set to `true` or `false`.
 ##### Disabling commands
 You can also disable commands via the `files/funkybot.conf` file. To do so, add a property with the command's call (no `!` prefix), and set that property to `false`. By default, the `files/funkybot.conf.sample` file contains properties for `announce`, `magic`, `wiki`, and `game` all set to true. This is for convenience as these commands either use API calls or tag everyone, and thus are likely candidates for disabling.
 

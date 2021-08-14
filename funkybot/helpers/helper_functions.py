@@ -164,6 +164,8 @@ def logException(e):
     with open(filePath("logs/funkybot-%s.log" % date.today()), 'a+') as f:
         f.write('\n')
         traceback.print_exc(file=f)
+    if g.props['debug'] == 'true':
+        traceback.print_exc()
 
 #==== Log command use into db ====
 def logCommand(cmd):

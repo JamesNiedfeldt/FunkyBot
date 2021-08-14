@@ -19,4 +19,6 @@
     <property type="int" required="true" min="1" max="10">poll_run_duration</property>
 
     <property type="string" required="false" options="usd,eur,tix">magic_currency</property>
+
+    <property type="bool" required="true">debug</property>
 </root>

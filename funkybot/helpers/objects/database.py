@@ -74,8 +74,8 @@ class Database():
 
     def deleteReminder(self,inReminder):
         if self.db != None:
-            if reminder.id != -1:
-                self.db.cursor().execute("DELETE FROM reminders WHERE id=?",(reminder.id,))
+            if inReminder.id != -1:
+                self.db.cursor().execute("DELETE FROM reminders WHERE id=?",(inReminder.id,))
                 self.db.commit()
 
             try:
@@ -120,6 +120,22 @@ class Database():
         else:
             raise RuntimeError("Database was not initialized")
 
+    def getTotalCommands(self):
+        if self.db != None:
+            query = ("SELECT SUM(count) FROM command_usage")
+            result = self.db.execute(query).fetchone()[0]
+            
+            if result == None:
+                total = 0
+            else:
+                total = result
+                
+            self.db.commit()
+
+            return total
+        else:
+            raise RuntimeError("Database was not initialized")
+
     def getTopCommands(self):
         if self.db != None:
             query = ("SELECT name, count FROM command_usage "+
@@ -127,7 +143,11 @@ class Database():
             lst = [list(i) for i in self.db.execute(query).fetchall()]
             self.db.commit()
 
-            return lst
+            di = {}
+            for cmd, count in lst:
+                di.setdefault(cmd, count)
+
+            return di
         else:
             raise RuntimeError("Database was not initialized")
 

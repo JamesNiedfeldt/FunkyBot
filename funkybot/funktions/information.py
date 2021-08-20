@@ -23,14 +23,10 @@ def sayHello():
     timeField['value'] = h.formatTime(h.getTime(),offset=g.begin)
 
     cmds = h.getTopCommands()
-    if len(cmds) == 0:
-        cmdField['value'] = "`!hello` -- used 1 time\n"
-    else:
-        for cmd in cmds:
-            if cmd[0] == "hello":
-                cmd[1] = cmd[1] + 1
-            cmdField['value'] += (
-                "\N{BULLET} `!%s` - used %s\n" % (cmd[0], h.pluralize(cmd[1], "time")))
+    for cmd, count in cmds.items():
+        percent = "({}\%)".format(int((count / g.totalCommands) * 100))
+        cmdField['value'] += (
+            "\N{BULLET} `!{}` - used {} {}\n".format(cmd, h.pluralize(count, "time"), percent))
 
     procField['value'] = "\N{BULLET} " + h.pluralize(h.getNumReminders(), "reminder")
     procField['value'] += "\n\N{BULLET} " + h.pluralize(len(g.activePolls), "poll")

@@ -38,8 +38,10 @@ async def on_message(message):
             corrected = False #Only used for commands that delete messages
             cmd = message.content.split(' ',1)[0].lower()[1:]
             expected = helpers.parseCommand(cmd)
-            
-            if cmd != expected:
+
+            if expected == None: #Contextual command, ignore it
+                return
+            elif cmd != expected:
                 corrected = True
                 suggestion = (constant.UNKNOWN_COMMAND % cmd + "\n\n" +
                               constant.SUGGESTED_COMMAND % expected)
@@ -63,6 +65,8 @@ async def on_message(message):
         if helpers.isDisabled(cmd):
             await message.channel.send("Sorry, that command is disabled.")
             return
+
+        helpers.logCommand(cmd)
 
         #Information commands
         if cmd == 'hello':
@@ -129,8 +133,6 @@ async def on_message(message):
 
         else:
             return
-
-        helpers.logCommand(cmd)
 
     except Exception as e:
         #If an exception makes it all the way here, output it to a log file

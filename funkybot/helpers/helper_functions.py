@@ -65,6 +65,8 @@ def parseCommand(cmd):
 
     for i in cmdList:
         if i.find("command").text == cmd:
+            if i.get("category") == "contextual":
+                return None #Ignore contextual commands
             return cmd
         
     #Is it a common mistake for an enabled command?
@@ -169,6 +171,7 @@ def logException(e):
 
 #==== Log command use into db ====
 def logCommand(cmd):
+    g.totalCommands += 1
     g.db.incrementCommand(cmd)
 
 #==== Get command usage stats ====
@@ -237,6 +240,8 @@ def initGlobals(client):
 
     if g.props['reset_command_usage'] == 'true':
         g.db.clearCommands()
+
+    g.totalCommands = g.db.getTotalCommands()
 
 #==== Start reminders from database ====
 def startReminders():

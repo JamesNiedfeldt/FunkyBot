@@ -32,10 +32,12 @@ activePolls = []
 commonMistakes = {}
 
 """
-These are changed after initialization to make !react
-and !cute appear more random
+These are changed after initialization to track runtime changes
 """
 #Last sent cute/react pics
 recentCute = []
 recentReact = []
+
+#Lifetime commands used
+totalCommands = -1
 

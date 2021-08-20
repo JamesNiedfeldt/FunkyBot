@@ -104,7 +104,7 @@ async def poll(message):
                         msg.channel == message.channel and
                         msg.content.upper().startswith('!END'))
 
-            if globs.props['poll_pin']:
+            if globs.props['poll_pin'] == "true":
                 try:
                     await sentMsg.pin(
                         reason="Poll started by %s: '%s'" % (poll.author, poll.question))

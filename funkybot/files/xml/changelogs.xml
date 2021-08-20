@@ -8,6 +8,8 @@
       <change>Improved command suggestion when entering an incorrect command.</change>
       <change>Fixed the `!time` command accepting negative time arguments.</change>
       <change>Fixed the `!game` command not finding games with missing information.</change>
+      <change>Fixed the `!poll` command starting a poll when FunkyBot doesn't have permissions to add reactions.</change>
+      <change>Fixed bug where usage of certain commands wouldn't be recorded without extra user input.</change>
     </version>
 
     <version num="2.0.1">

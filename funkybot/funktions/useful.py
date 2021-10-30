@@ -19,7 +19,7 @@ def toBin(message):
     
     #Parse number, convert it to usable string
     try:
-        numbers = h.parseArgs(message.content, "binary", 1, int(g.props['binary_max_args']))
+        numbers = h.parseArgs(message.content, "binary", 1, g.props['binary_max_args'])
     except errors.Error as e:
         raise e
 
@@ -85,7 +85,7 @@ def toHex(message):
     
     #Parse number, convert it to usable string
     try:
-        numbers = h.parseArgs(message.content, "hex", 1, int(g.props['hex_max_args']))
+        numbers = h.parseArgs(message.content, "hex", 1, g.props['hex_max_args'])
     except errors.Error as e:
         raise e
 
@@ -208,7 +208,7 @@ def makeDurationReminder(message):
 
     if duration == None: #Duration was formatted incorrectly
         raise errors.CustomCommandException("time", "bad_duration")
-    elif duration > int(g.props['time_max_duration']) * 86400: #Duration longer than set property
+    elif duration > g.props['time_max_duration'] * 86400: #Duration longer than set property
         raise errors.CustomCommandException("time", "too_long")
     elif duration < 1: #Duration less than 1 second
         raise errors.CustomCommandException("time", "no_duration")
@@ -292,7 +292,7 @@ def rollDice(message):
     total = 0
     
     try:
-        numbers = h.parseArgs(message.content, "roll", 1, int(g.props['roll_max_args']))
+        numbers = h.parseArgs(message.content, "roll", 1, g.props['roll_max_args'])
     except errors.Error as e:
         raise e
     

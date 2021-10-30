@@ -104,7 +104,7 @@ async def poll(message):
                         msg.channel == message.channel and
                         msg.content.upper().startswith('!END'))
 
-            if globs.props['poll_pin'] == "true":
+            if globs.props['poll_pin']:
                 try:
                     await sentMsg.pin(
                         reason="Poll started by %s: '%s'" % (poll.author, poll.question))
@@ -116,7 +116,7 @@ async def poll(message):
 
             try:
                 reply = await globs.client.wait_for(
-                    'message', check=pred, timeout = int(globs.props['poll_run_duration']) * 3600)
+                    'message', check=pred, timeout = globs.props['poll_run_duration'] * 3600)
             except asyncio.TimeoutError:
                 pass
 

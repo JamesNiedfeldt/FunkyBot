@@ -20,7 +20,7 @@ def eightBall():
 def choose(message):
     #Parse choices
     try:
-        choices = h.parseArgs(message.content, "choose", 2, int(g.props['choose_max_args']))
+        choices = h.parseArgs(message.content, "choose", 2, g.props['choose_max_args'])
     except errors.Error as e:
         raise e
 

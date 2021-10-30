@@ -95,10 +95,9 @@ magic_currency=usd
 # Toggle commands on/off
 #
 # If any of these commands are disabled, they will not appear in command lists and can't be
-# called. These values must be either true or false. Only !announce, !magic, !wiki,
-# and !game are listed here as they either tag everyone or send API requests, 
-# but any command can go here and be toggled if you choose. 
-# If a command is not present, it is enabled by default.
+# called. Only !announce, !magic, !wiki, and !game are listed here as they either tag 
+# everyone or send API requests, but any command can go here and be toggled if you choose. 
+# If a command is not present or is set to anything but 'false', it is enabled by default.
 #
 # DEFAULT:
 # announce=true

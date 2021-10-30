@@ -24,7 +24,7 @@ async def choose(message):
 #==== Send random cute animal image ====
 async def cute(message, corrected):
     #If this command was sent via suggestion, don't delete
-    if not corrected and globs.props['cute_delete'] == 'true':
+    if not corrected and globs.props['cute_delete']:
         try:
             await message.delete()
             helpers.logMessage(message)
@@ -42,7 +42,7 @@ async def joke(message):
 #==== Send random reaction image ====
 async def react(message, corrected):
     #If this command was sent via suggestion, don't delete
-    if not corrected and globs.props['react_delete'] == 'true': 
+    if not corrected and globs.props['react_delete']: 
         try:
             await message.delete()
             helpers.logMessage(message)

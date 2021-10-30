@@ -57,7 +57,7 @@ def badArgs(exc):
 
 #==== Determine if a function is disabled ====
 def isDisabled(cmd):
-    return cmd in g.props and g.props[cmd] != 'true'
+    return cmd in g.props and g.props[cmd] == False
 
 #==== Decide if a user was trying to send unknown command ====
 def parseCommand(cmd):
@@ -156,17 +156,23 @@ def getXmlTree(fileName):
 
 #==== Log startup ====
 def logStartup():
-    with open(filePath("logs/funkybot-%s.log" % date.today()), 'a+') as f:
+    with open(filePath("logs/funkybot-%s.log" % date.today()), 'a+') as f:            
         f.write(c.LINE_BREAK + "Starting session at {}\n".format(
             datetime.fromtimestamp(g.begin)))
         f.write("Number of reminders from DB: {}\n".format(getNumReminders()))
+
+        for prop, value in g.props.items():
+            ln = prop + ": [" + str(value) + "]"
+            f.write(ln + '\n')
+            if g.props['debug']:
+                print(ln)
 
 #==== Log exceptions ====
 def logException(e):
     with open(filePath("logs/funkybot-%s.log" % date.today()), 'a+') as f:
         f.write('\n')
         traceback.print_exc(file=f)
-    if g.props['debug'] == 'true':
+    if g.props['debug']:
         traceback.print_exc()
 
 #==== Log command use into db ====
@@ -238,7 +244,7 @@ def initGlobals(client):
 
     g.db = database.Database()
 
-    if g.props['reset_command_usage'] == 'true':
+    if g.props['reset_command_usage']:
         g.db.clearCommands()
 
     g.totalCommands = g.db.getTotalCommands()
@@ -406,30 +412,51 @@ def __readConfig():
 #==== Verify properties ====
 def __verifyProps():
     expectedProps = getXmlTree("expected_properties").findall("./property")
+    commandList = getXmlTree("commands").findall("./function")
 
     try:
+        #Read all command toggles
+        for cmd in commandList:
+            cmdText = cmd.find("command").text
+            if cmdText in g.props:
+                if g.props[cmdText].lower() == 'false':
+                    g.props[cmdText] = False
+                else:
+                    g.props[cmdText] = True
+
+        #Verify required properties
         for prop in expectedProps:
             if prop.text == "giantbomb_key":
-                if (('game' not in g.props or g.props['game'] == 'true')
+                if (('game' not in g.props or g.props['game'])
                     and g.props['giantbomb_key'] == ''):
                     raise RuntimeError(c.BAD_PROPERTY_GAME)
                 
             elif prop.text == "magic_currency":
-                if (('magic' not in g.props or g.props['magic'] == 'true')
+                g.props[prop.text] = g.props[prop.text].lower()
+                if (('magic' not in g.props or g.props['magic'])
                     and g.props[prop.text] not in prop.get("options").split(',')):
                     raise RuntimeError(c.BAD_PROPERTY_MAGIC)
                 
             else:
                 if g.props[prop.text] == '':
                     raise RuntimeError(c.BAD_PROPERTY_BLANK % prop.text)
-                elif prop.get("type") == "bool":
-                    if g.props[prop.text] not in ('true', 'false'):
-                        raise RuntimeError(c.BAD_PROPERTY_BOOL % prop.text)
-                elif prop.get("type") == "int":
-                    if (int(g.props[prop.text]) < int(prop.get("min")) or
-                        int(g.props[prop.text]) > int(prop.get("max"))):
-                        raise RuntimeError(c.BAD_PROPERTY_INT % (prop.text, prop.get("min"), prop.get("max")))
                 
+                elif prop.get("type") == "bool":
+                    if g.props[prop.text].lower() == 'true':
+                        g.props[prop.text] = True
+                    elif g.props[prop.text].lower() == 'false':
+                        g.props[prop.text] = False
+                    else:
+                        raise RuntimeError(c.BAD_PROPERTY_BOOL % prop.text)
+                    
+                elif prop.get("type") == "int":
+                    try:
+                        g.props[prop.text] = int(g.props[prop.text])
+                    except ValueError:
+                        raise RuntimeError(c.BAD_PROPERTY_INT % (prop.text, prop.get("min"), prop.get("max")))
+                    if (g.props[prop.text] < int(prop.get("min")) or
+                        g.props[prop.text] > int(prop.get("max"))):
+                        raise RuntimeError(c.BAD_PROPERTY_INT % (prop.text, prop.get("min"), prop.get("max")))
 
     except RuntimeError:
         print(c.CANT_BOOT)

@@ -152,10 +152,6 @@ def fetchCard(message):
 
 #==== Setup a poll ====
 def makePoll(message):
-    optDict = {}
-    description = ""
-    results = []
-
     try:
         options = h.parseArgs(message.content, "poll", 2, 5)
     except errors.Error as e:
@@ -255,12 +251,16 @@ def confirmReminder(message,timer):
             formattedTime = h.formatTime(timer.duration)
 
         if isinstance(timer, reminder.Announcement):
-            confirmation = c.ANNOUNCE_CONFIRM_1 % (message.author.display_name, formattedTime)
-            reminderText = re.split("@everyone ", timer.message, maxsplit=1)[1]
+            confirmation = c.ANNOUNCE_CONFIRM_1 % (h.escapeCodeBlock(message.author.display_name),
+                                                   formattedTime)
+            reminderText = h.escapeCodeBlock(
+                re.split("@everyone ", timer.message, maxsplit=1)[1])
             
         else:
-            confirmation = c.REMIND_CONFIRM_1 % (message.author.display_name, formattedTime)
-            reminderText = re.split("\<*\> ", timer.message, maxsplit=1)[1]
+            confirmation = c.REMIND_CONFIRM_1 % (h.escapeCodeBlock(message.author.display_name),
+                                                 formattedTime)
+            reminderText = h.escapeCodeBlock(
+                re.split("\<*\> ", timer.message, maxsplit=1)[1])
 
         if reminderText == "":
             reminderText = "*No message was given*"

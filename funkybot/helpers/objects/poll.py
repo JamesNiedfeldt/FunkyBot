@@ -9,7 +9,7 @@ from helpers import constant as c, global_vars as g, helper_functions as h
 #==== Poll class ====
 class Poll():
     def __init__(self,msg,question,options):
-        self.author = msg.author.display_name
+        self.author = h.escapeCodeBlock(msg.author.display_name)
         self.question = question
         self.options = self.__formatOptions(options)
         if self.options != None:
@@ -21,7 +21,7 @@ class Poll():
         optDict = {}    
 
         for o in range(len(optList)):
-            optDict[chr(0x1f1e6 + o)] = optList[o]
+            optDict[chr(0x1f1e6 + o)] = h.escapeCodeBlock(optList[o])
 
         return optDict
 

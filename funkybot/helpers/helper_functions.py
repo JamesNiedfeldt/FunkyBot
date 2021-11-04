@@ -396,6 +396,10 @@ def pluralize(num, string):
     else:
         return str(num) + " " + string
 
+#==== Escape tick marks in string ====
+def escapeCodeBlock(string):
+    return string.replace('`', '\`')
+
 #=======================================
 #======== Property verification ========
 #=======================================

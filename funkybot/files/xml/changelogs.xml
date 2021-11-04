@@ -3,6 +3,10 @@
 <root>
     <!-- These are specifically user-facing changes and thus do not need detail about inner workings of FunkyBot. Changes to jokes and pics do not need to be noted unless significant. -->
 
+    <version num="2.0.3">
+      <change>Fixed backticks in nicknames or arguments breaking some formatting.</change>
+    </version>
+
     <version num="2.0.2">
       <change>Polls will now be pinned for their duration if FunkyBot is able to manage messages.</change>
       <change>Improved command suggestion when entering an incorrect command.</change>

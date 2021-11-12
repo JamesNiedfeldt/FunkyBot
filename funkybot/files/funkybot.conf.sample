@@ -84,13 +84,18 @@ hex_max_args=3
 time_max_duration=30
 poll_run_duration=3
 
-# What currency to display with the !magic command
+# Properties for the !magic command
 # 
-# Must be either 'usd', 'eur', or 'tix'. It can be left blank only if the !magic command is disabled.
+# magic_currency: The currency to use for card prices. Can only be 'usd', 'eur', or 'tix'
+# This value must be one of 'usd', 'eur', or 'tix'.
+# magic_ignore_digital: Whether or not to ignore digital printings if a paper one exists.
+# This value must either be 'true' or 'false'.
 #
 # DEFAULT:
 # magic_currency=usd
+# magic_ignore_digital=true
 magic_currency=usd
+magic_ignore_digital=true
 
 # Toggle commands on/off
 #

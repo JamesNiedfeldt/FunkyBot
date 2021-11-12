@@ -4,6 +4,8 @@
     <!-- These are specifically user-facing changes and thus do not need detail about inner workings of FunkyBot. Changes to jokes and pics do not need to be noted unless significant. -->
 
     <version num="2.0.3">
+      <change>The `!magic` command now shows the set code of fetched cards in the embed footer.</change>
+      <change>The `!magic` command can now be set to ignore digital printings of cards. If a card is only available digitally or a digital set is specified, it will find the card as normal.</change>
       <change>Fixed backticks in nicknames or arguments breaking some formatting.</change>
     </version>
 

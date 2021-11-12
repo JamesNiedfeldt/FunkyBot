@@ -54,6 +54,8 @@ New in version 2.0.0 is the `funkybot/files/funkybot.conf` file, which contains 
   - Sets the time a poll started with the `!poll` command will run before automatically closing, in hours. This must be an integer min 1 and max 10.
 - `magic_currency`
   - Sets the currency used when displaying card prices via the `!magic` command. This can only be `usd`, `eur`, or `tix`.
+- `magic_ignore_digital`
+  - Sets whether the `!magic` command will ignore digital printings of cards. If set to `true` and the command finds a digital printing, it will attempt to find a non-digital print of the same card. If it can't find one or a digital set was specified, then the original card that was fetched will be sent. This must either be set to `true` or `false`.
 - `debug`
   - Sets whether FunkyBot will print exceptions to stderr. Regardless of this setting, FunkyBot will write exceptions to the logs in `files/logs/`. This must either be set to `true` or `false`.
 ##### Disabling commands

@@ -440,6 +440,18 @@ def __verifyProps():
                 if (('magic' not in g.props or g.props['magic'])
                     and g.props[prop.text] not in prop.get("options").split(',')):
                     raise RuntimeError(c.BAD_PROPERTY_MAGIC)
+
+            elif prop.text == "magic_ignore_digital":
+                if 'magic' not in g.props or g.props['magic']:
+                    if g.props[prop.text] == '':
+                        raise RuntimeError(c.BAD_PROPERTY_BOOL % prop.text)
+                    
+                    if g.props[prop.text].lower() == 'true':
+                        g.props[prop.text] = True
+                    elif g.props[prop.text].lower() == 'false':
+                        g.props[prop.text] = False
+                    else:
+                        raise RuntimeError(c.BAD_PROPERTY_BOOL % prop.text)
                 
             else:
                 if g.props[prop.text] == '':

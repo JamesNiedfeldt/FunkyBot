@@ -125,7 +125,7 @@ def __formatCard(card, givenUri=None, givenPrice=None, givenColor=None, givenSet
             for f in card['card_faces']:
                 toReturn.append(__formatCard(f, givenUri=uri, givenPrice=price, givenColor=color, givenSetCode=setCode))
         else:
-            imageUri = card['image_uris']['normal']
+            imageUri = card['image_uris']['grid']
             toReturn = emb.Embeddable(
                 url=uri,
                 title=name + " " + cost,
@@ -144,7 +144,7 @@ def __formatCard(card, givenUri=None, givenPrice=None, givenColor=None, givenSet
     else:
         textBox = __makeTextBox(card)
         cost = card['mana_cost']
-        imageUri = card['image_uris']['normal']
+        imageUri = card['image_uris']['grid']
         
         if 'prices' in card and card['prices'][g.props['magic_currency']] != None:
             price = card['prices'][g.props['magic_currency']]
